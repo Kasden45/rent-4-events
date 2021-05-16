@@ -61,9 +61,19 @@ class Order(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
 
 
+class Category(models.Model):
+    catId = models.BigAutoField(primary_key=True)
+    catName = models.CharField(max_length=50, unique=True)
+
+
 class Product(models.Model):
     prodId = models.BigAutoField(primary_key=True)
     prodName = models.CharField(max_length=50, unique=True)
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        verbose_name="catId",
+    )
     quantity = models.PositiveIntegerField(default=1)
     available = models.PositiveIntegerField()  # <= quantity
     price = models.DecimalField(max_digits=10, decimal_places=2)
