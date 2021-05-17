@@ -73,6 +73,8 @@ class Product(models.Model):
         Category,
         on_delete=models.CASCADE,
         verbose_name="catId",
+        to_field='catId',
+        related_name='products'
     )
     quantity = models.PositiveIntegerField(default=1)
     available = models.PositiveIntegerField()  # <= quantity

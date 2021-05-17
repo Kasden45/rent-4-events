@@ -2,21 +2,21 @@ from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
 from Rent4Events.models import *
-
+import django.contrib.auth.models as auth
 from django.views.decorators.csrf import csrf_exempt
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = auth.User
         fields = ['id', 'username', 'email', 'groups']
 
     def create(self, validated_data):
         """
         Create and return a new `Snippet` instance, given the validated data.
         """
-        return User.objects.create(**validated_data)
+        return auth.User.objects.create(**validated_data)
 
-    def update(self, instance: User, validated_data):
+    def update(self, instance: auth.User, validated_data):
         """
         Update and return an existing `Snippet` instance, given the validated data.
         """
@@ -28,7 +28,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Group
+        model = auth.Group
         fields = ['id', 'name']
 
 
@@ -45,9 +45,10 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    products = ProductSerializer(many=True)
     class Meta:
         model = Category
-        fields = ['catId', 'catName']
+        fields = ['catId', 'catName', 'products']
 
     def create(self, validated_data):
         """
