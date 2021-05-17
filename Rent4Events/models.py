@@ -2,7 +2,7 @@ import datetime
 
 from django.db import models
 from django.contrib.auth import models as m
-import django.utils.timezone as timezone
+import django.utils.timezone as timezones
 # Create your models here.
 
 
@@ -12,25 +12,27 @@ class User(m.User):
 
 class Driver(models.Model):
     # driverId = models.BigAutoField(primary_key=True)
-    userId = models.ForeignKey(
-        User,
+    userId = models.OneToOneField(
+        m.User,
         primary_key=True,
+        to_field='id',
         on_delete=models.CASCADE,
         verbose_name='DriverUser'
     )
     firstName = models.CharField(max_length=30)
     lastName = models.CharField(max_length=30)
     birthDate = models.DateField()
-    employmentDate = models.DateField(default=timezone.now())
+    employmentDate = models.DateField(default=timezones.now)
     salary = models.DecimalField(max_digits=10, decimal_places=2)
     phoneNumber = models.CharField(max_length=12, unique=True)
 
 
 class Client(models.Model):
     # clientId = models.BigAutoField(primary_key=True)
-    userId = models.ForeignKey(
-        User,
+    userId = models.OneToOneField(
+        m.User,
         primary_key=True,
+        to_field='id',
         on_delete=models.CASCADE,
         verbose_name='ClientUser'
     )
@@ -51,6 +53,7 @@ class Order(models.Model):
     orderId = models.BigAutoField(primary_key=True)
     client = models.ForeignKey(
         Client,
+        to_field='userId',
         on_delete=models.CASCADE,
         verbose_name="clientId",
     )
@@ -87,12 +90,14 @@ class OrderPosition(models.Model):
     order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,
+        to_field='orderId',
         verbose_name="orderId",
 
     )
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
+        to_field='prodId',
         verbose_name="productId"
     )
     quantity = models.PositiveIntegerField(default=1)
@@ -132,16 +137,19 @@ class Course(models.Model):
     order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,
+        to_field='orderId',
         verbose_name='orderId'
     )
     driver = models.ForeignKey(
         Driver,
         on_delete=models.CASCADE,
+        to_field='userId',
         verbose_name='driverId'
     )
     vehicle = models.ForeignKey(
         Vehicle,
         on_delete=models.CASCADE,
+        to_field='vehicleId',
         verbose_name='vehicleId'
     )
     courseDate = models.DateField()

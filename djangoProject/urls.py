@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User, Group
 from django.urls import path, include
 from rest_framework import serializers, viewsets, routers
+from rest_framework_swagger.views import get_swagger_view
 
 from Rent4Events import views
 
@@ -33,6 +34,8 @@ router.register(r'order-positions', views.OrderPositionViewSet)
 router.register(r'vehicles', views.VehicleViewSet)
 router.register(r'courses', views.CourseViewSet)
 
+schema_view = get_swagger_view(title='Pastebin API')
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^api/public/', views.public),
@@ -40,4 +43,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('rent-rest/', include('Rent4Events.urls')),
+    url(r'^swagger/', schema_view)
 ]

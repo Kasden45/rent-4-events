@@ -62,7 +62,7 @@ class CategorySerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 class OrderSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['orderId', 'prodName', 'category', 'quantity', 'available', 'price', 'description', 'image']
+        fields = ['orderId', 'client', 'startDate', 'endDate', 'address', 'totalCost', 'status']
 
     def create(self, validated_data):
         """
@@ -72,6 +72,7 @@ class OrderSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 
 
 class ClientSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
+    # client_user = UserSerializer(many=False)
     class Meta:
         model = Client
         fields = ['userId', 'firstName', 'lastName', 'phoneNumber']
@@ -86,7 +87,7 @@ class ClientSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 class DriverSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = Driver
-        fields = ['userId', 'firstName', 'lastName', 'birthdate', 'employmentDate', 'salary', 'phoneNumber']
+        fields = ['userId', 'firstName', 'lastName', 'birthDate', 'employmentDate', 'salary', 'phoneNumber']
 
     def create(self, validated_data):
         """
