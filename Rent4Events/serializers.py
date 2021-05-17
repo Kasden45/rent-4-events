@@ -4,11 +4,13 @@ from rest_framework import serializers
 from Rent4Events.models import *
 import django.contrib.auth.models as auth
 from django.views.decorators.csrf import csrf_exempt
+from django_restql.mixins import DynamicFieldsMixin
 
-class UserSerializer(serializers.ModelSerializer):
+
+class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = auth.User
-        fields = ['id', 'username', 'email', 'groups']
+        fields = ['id', 'username', 'email', 'password', 'groups']
 
     def create(self, validated_data):
         """
@@ -26,13 +28,13 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
 
-class GroupSerializer(serializers.ModelSerializer):
+class GroupSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = auth.Group
         fields = ['id', 'name']
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class ProductSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['prodId', 'prodName', 'category', 'quantity', 'available', 'price', 'description', 'image']
@@ -44,7 +46,7 @@ class ProductSerializer(serializers.ModelSerializer):
         return Product.objects.create(**validated_data)
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class CategorySerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     products = ProductSerializer(many=True)
     class Meta:
         model = Category
@@ -57,7 +59,7 @@ class CategorySerializer(serializers.ModelSerializer):
         return Category.objects.create(**validated_data)
 
 
-class OrderSerializer(serializers.ModelSerializer):
+class OrderSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['orderId', 'prodName', 'category', 'quantity', 'available', 'price', 'description', 'image']
@@ -69,7 +71,7 @@ class OrderSerializer(serializers.ModelSerializer):
         return Order.objects.create(**validated_data)
 
 
-class ClientSerializer(serializers.ModelSerializer):
+class ClientSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = Client
         fields = ['userId', 'firstName', 'lastName', 'phoneNumber']
@@ -81,7 +83,7 @@ class ClientSerializer(serializers.ModelSerializer):
         return Client.objects.create(**validated_data)
 
 
-class DriverSerializer(serializers.ModelSerializer):
+class DriverSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = Driver
         fields = ['userId', 'firstName', 'lastName', 'birthdate', 'employmentDate', 'salary', 'phoneNumber']
@@ -93,7 +95,7 @@ class DriverSerializer(serializers.ModelSerializer):
         return Driver.objects.create(**validated_data)
 
 
-class OrderPositionSerializer(serializers.ModelSerializer):
+class OrderPositionSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = OrderPosition
         fields = ['order', 'product', 'quantity']
@@ -105,7 +107,7 @@ class OrderPositionSerializer(serializers.ModelSerializer):
         return OrderPosition.objects.create(**validated_data)
 
 
-class VehicleSerializer(serializers.ModelSerializer):
+class VehicleSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = Vehicle
         fields = ['vehicleId', 'brand', 'model', 'year', 'licensePlate', 'carServiceTo', 'type', 'status']
@@ -117,7 +119,7 @@ class VehicleSerializer(serializers.ModelSerializer):
         return Vehicle.objects.create(**validated_data)
 
 
-class CourseSerializer(serializers.ModelSerializer):
+class CourseSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ['order', 'driver', 'vehicle', 'courseDate', 'type', 'status']
