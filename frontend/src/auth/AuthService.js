@@ -39,7 +39,7 @@ export default class AuthService {
         this.setSession(authResult)
       } else if (err) {
         console.log(err)
-        alert(`Error: ${err.error}. Check the console for further details.`)
+        // alert(`Error: ${err.error}. Check the console for further details.`)
       } else {
         // no authResult and no error? lets try silent auth
         console.log('silent')
@@ -49,7 +49,7 @@ export default class AuthService {
           })
           .catch((err) => {
             console.log(err)
-            alert(`Error: ${err.error}. Check the console for further details.`)
+            // alert(`Error: ${err.error}. Check the console for further details.`)
           })
       }
       router.replace('/')
