@@ -15,12 +15,29 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from django.urls import path
+from django.contrib.auth.models import User, Group
+from django.urls import path, include
+from rest_framework import serializers, viewsets, routers
 
 from Rent4Events import views
+
+router = routers.DefaultRouter()
+router.register(r'users', views.UserViewSet)
+router.register(r'groups', views.GroupViewSet)
+router.register(r'categories', views.CategoryViewSet)
+router.register(r'products', views.ProductViewSet)
+router.register(r'orders', views.OrderViewSet)
+router.register(r'clients', views.ClientViewSet)
+router.register(r'drivers', views.DriverViewSet)
+router.register(r'order-positions', views.OrderPositionViewSet)
+router.register(r'vehicles', views.VehicleViewSet)
+router.register(r'courses', views.CourseViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^api/public/', views.public),
-    url(r'^api/private/', views.private)
+    url(r'^api/private/', views.private),
+    path('', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('rent-rest/', include('Rent4Events.urls')),
 ]
