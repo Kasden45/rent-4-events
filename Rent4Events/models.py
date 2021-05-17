@@ -108,7 +108,7 @@ class Vehicle(models.Model):
         ('WW', 'W warsztacie'),
         ('NI', 'Niesprawny')
     )
-    vehicleId = models.BigAutoField(primary_key=True),
+    vehicleId = models.BigAutoField(primary_key=True)
     brand = models.CharField(max_length=30) # nullable
     model = models.CharField(max_length=30) # nullable
     year = models.PositiveIntegerField() # nullable
