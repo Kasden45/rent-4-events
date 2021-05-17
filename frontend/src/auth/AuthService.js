@@ -83,7 +83,11 @@ export default class AuthService {
     delete this.idToken
     delete this.expiresAt
     delete this.profile
+    this.auth0.logout({
+      client_id: 'FlaPgcpoh2bPwhHuNn6rDXw6BNAr75oR'
+    })
     this.authNotifier.emit('authChange', false)
+
     // navigate to the home route
     router.replace('/')
   }

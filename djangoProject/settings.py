@@ -16,6 +16,8 @@ from six.moves.urllib import request
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.hazmat.backends import default_backend
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+import Rent4Events.utils
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -33,10 +35,14 @@ ALLOWED_HOSTS = []
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny'
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
 }
 
 # Application definition
@@ -53,13 +59,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Rent4Events.apps.Rent4EventsConfig',
 ]
-
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'django.contrib.auth.backends.RemoteUserBackend',
+]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.RemoteUserMiddleware',  # <-- New
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -158,15 +168,20 @@ if AUTH0_DOMAIN:
 def jwt_get_username_from_payload_handler(payload):
     return 'rentAdmin'
 
+
+
+
 JWT_AUTH = {
-    'JWT_PAYLOAD_GET_USERNAME_HANDLER': jwt_get_username_from_payload_handler,
+    'JWT_PAYLOAD_GET_USERNAME_HANDLER': Rent4Events.utils.jwt_get_username_from_payload_handler,
     'JWT_PUBLIC_KEY': PUBLIC_KEY,
     'JWT_ALGORITHM': 'RS256',
     'JWT_AUDIENCE': API_IDENTIFIER,
     'JWT_ISSUER': JWT_ISSUER,
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_DECODE_HANDLER':
+        Rent4Events.utils.jwt_decode_token,
 }
 
-CORS_ORIGIN_WHITELIST = (
+CORS_ORIGIN_WHITELIST = [
     'http://localhost:8080',
-)
+]

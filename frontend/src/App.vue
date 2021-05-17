@@ -14,7 +14,6 @@
 
     <button
       class="btn btn-primary btn-margin"
-      v-if="authenticated"
       @click="privateMessage()">
       Call Private
     </button>
@@ -65,18 +64,14 @@ export default {
       auth.handleAuthentication()
     },
     logout () {
-      // auth.logout({
-      //   returnTo: window.location.origin,
-      //   federated: true,
-      // });
-
       auth.logout()
     },
     privateMessage () {
-      const url = `${API_URL}/api/private/`
+      const url = `${API_URL}/rent-rest/api/private-scoped`
+      // const url = `${API_URL}/users/?query={email, username}`
       return axios.get(url, {headers: {Authorization: `Bearer ${auth.getAuthToken()}`}}).then((response) => {
         console.log(response.data)
-        this.message = response.data + ' test'
+        this.message = JSON.stringify(response.data)
       })
     }
   }
