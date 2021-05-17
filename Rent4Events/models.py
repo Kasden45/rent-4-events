@@ -36,9 +36,9 @@ class Client(models.Model):
         on_delete=models.CASCADE,
         verbose_name='ClientUser'
     )
-    firstName = models.CharField(max_length=30)  # nullable
-    lastName = models.CharField(max_length=30)  # nullable
-    phoneNumber = models.CharField(max_length=12, unique=True)  # nullable
+    firstName = models.CharField(max_length=30, blank=True, null=True)  # nullable
+    lastName = models.CharField(max_length=30, blank=True, null=True)  # nullable
+    phoneNumber = models.CharField(max_length=12, unique=True, blank=True, null=True)  # nullable
     # address?
 
 
@@ -82,8 +82,8 @@ class Product(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     available = models.PositiveIntegerField()  # <= quantity
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    description = models.CharField(max_length=500)  # nullable
-    image = models.CharField(max_length=300, null=True)
+    description = models.CharField(max_length=500, blank=True, null=True)  # nullable
+    image = models.CharField(max_length=300, blank=True, null=True)
 
 
 class OrderPosition(models.Model):
@@ -114,13 +114,13 @@ class Vehicle(models.Model):
         ('NI', 'Niesprawny')
     )
     vehicleId = models.BigAutoField(primary_key=True)
-    brand = models.CharField(max_length=30) # nullable
-    model = models.CharField(max_length=30) # nullable
-    year = models.PositiveIntegerField() # nullable
+    brand = models.CharField(max_length=30, blank=True, null=True) # nullable
+    model = models.CharField(max_length=30, blank=True, null=True) # nullable
+    year = models.PositiveIntegerField(blank=True, null=True) # nullable
     licensePlate = models.CharField(max_length=9, unique=True)
-    carServiceTo = models.DateField() # nullable
-    type = models.CharField(max_length=10, choices=TYPE_CHOICE) # nullable
-    status = models.CharField(max_length=12, choices=STATUS_CHOICE) # nullable
+    carServiceTo = models.DateField(blank=True, null=True) # nullable
+    type = models.CharField(max_length=10, choices=TYPE_CHOICE, blank=True, null=True) # nullable
+    status = models.CharField(max_length=12, choices=STATUS_CHOICE, blank=True, null=True) # nullable
 
 
 class Course(models.Model):
@@ -154,4 +154,4 @@ class Course(models.Model):
     )
     courseDate = models.DateField()
     type = models.CharField(max_length=7, choices=TYPE_CHOICES)
-    status = models.CharField(max_length=12, choices=STATUS_CHOICES) # Default = zaplanowany
+    status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='ZA') # Default = zaplanowany
