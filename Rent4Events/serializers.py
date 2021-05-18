@@ -11,7 +11,7 @@ from django_restql.mixins import DynamicFieldsMixin
 
 
 
-class GroupSerializer(DynamicFieldsMixin, PrimaryKeyRelatedField, serializers.ModelSerializer):
+class GroupSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = auth.Group
         fields = ['id', 'name']
@@ -20,7 +20,7 @@ class GroupSerializer(DynamicFieldsMixin, PrimaryKeyRelatedField, serializers.Mo
 class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = auth.User
-        fields = ['id', 'username', 'email', 'password']
+        fields = ['id', 'username', 'email', 'password', 'groups']
 
     def create(self, validated_data):
         """
@@ -36,6 +36,13 @@ class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 
         new_user.set_password(new_user.password)
         new_user.save()
+
+        for group in validated_data['groups']:
+            my_group = Group.objects.get(name=group)
+            new_user.groups.add(my_group)
+            new_user.save()
+        # my_group.user_set.add(new_user)
+        # my_group.save()
         return new_user
 
     def update(self, instance: auth.User, validated_data):
