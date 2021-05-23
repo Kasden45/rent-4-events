@@ -20,7 +20,8 @@ class GroupSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = auth.User
-        fields = ['id', 'username', 'email', 'password', 'groups']
+        fields = ['id', 'username', 'email', 'password', 'groups', 'is_active']
+        read_only_fields = ['is_active', 'is_staff']
 
     def create(self, validated_data):
         """

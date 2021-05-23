@@ -68,6 +68,8 @@ class Category(models.Model):
     catId = models.BigAutoField(primary_key=True)
     catName = models.CharField(max_length=50, unique=True)
 
+    def __str__(self):
+        return self.catName
 
 class Product(models.Model):
     prodId = models.BigAutoField(primary_key=True)
@@ -85,6 +87,8 @@ class Product(models.Model):
     description = models.CharField(max_length=500, blank=True, null=True)  # nullable
     image = models.CharField(max_length=300, blank=True, null=True)
 
+    def __str__(self):
+        return self.prodName
 
 class OrderPosition(models.Model):
     order = models.ForeignKey(
@@ -102,6 +106,8 @@ class OrderPosition(models.Model):
     )
     quantity = models.PositiveIntegerField(default=1)
 
+    def __str__(self):
+        return f'{self.order.client.firstName} {self.order.client.lastName} : {self.product.prodName} : {self.quantity}'
 
 class Vehicle(models.Model):
     TYPE_CHOICE = (
