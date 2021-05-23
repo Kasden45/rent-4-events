@@ -1,45 +1,80 @@
 <template>
   <div class="layout-guest">
-    <div class="layout-guest-nav">
 
-      <router-link to="/">Home</router-link>
-      <router-link to="/Oferta">Oferta</router-link>
+        <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <!-- Container wrapper -->
+        <div class="container-fluid">
+          <!-- Navbar brand -->
+          <a class="navbar-brand" href="#">
+            <img src="../logo/logo_transparent_cropped.png" alt="Logo" width="150px" height="auto">
+          </a>
 
-      <button
-        class="btn btn-primary btn-margin"
-        v-if="!authenticated"
-        @click="login()">
-        Log In
-      </button>
+          <!-- Toggle button -->
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-mdb-toggle="collapse"
+            data-mdb-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <i class="fas fa-bars"></i>
+          </button>
 
-      <button
-        class="btn btn-primary btn-margin"
-        @click="privateMessage()">
-        Call Private
-      </button>
-
-      <button
-        class="btn btn-primary btn-margin"
-        v-if="authenticated"
-        @click="logout()">
-        Log Out
-      </button>
-
+          <!-- Collapsible wrapper -->
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- Left links -->
+            <ul class="navbar-nav me-auto">
+              <li class="nav-item">
+                <router-link class="nav-link" to="/">Home</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/Oferta">Oferta</router-link>
+              </li>
+            </ul>
+            <button
+              class="btn btn-primary btn-margin"
+              @click="privateMessage()">
+              Call Private
+            </button>
+            <button
+              class="btn btn-primary btn-margin"
+              v-if="!authenticated"
+              @click="login()">
+              Log In
+            </button>
+            <button
+              class="btn btn-primary btn-margin"
+              v-if="authenticated"
+              @click="logout()">
+              Log Out
+            </button>
+            <!-- Left links -->
+          </div>
+          <!-- Collapsible wrapper -->
+        </div>
+        <!-- Container wrapper -->
+      </nav>
+      <!-- Navbar -->
     {{ message }}
     <br>
-    </div>
     <slot/>
+    <my-footer/>
   </div>
 </template>
 
 <script>
 import AuthService from '../auth/AuthService'
 import axios from 'axios'
+import MyFooter from '../components/MyFooter'
 
 const API_URL = 'http://localhost:8000'
 const auth = new AuthService()
 export default {
   name: 'LayoutGuest',
+  components: {MyFooter},
   data () {
     this.handleAuthentication()
     this.authenticated = false
