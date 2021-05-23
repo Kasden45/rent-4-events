@@ -7,73 +7,65 @@
       <!-- Grid row -->
       <div class="row mt-3">
         <!-- Grid column -->
-        <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
-          <!-- Content -->
+        <div class="col-md-4 col-lg-3 mx-auto mb-4">
+          <!-- Links -->
           <h6 class="text-uppercase fw-bold mb-4">
-            <i class="fas fa-gem me-3"></i>Company name
+            Firma
           </h6>
           <p>
-            Here you can use rows and columns to organize your footer content. Lorem ipsum
-            dolor sit amet, consectetur adipisicing elit.
+            <a href="#!" class="text-reset">O nas</a>
+          </p>
+          <p>
+            <a href="#!" class="text-reset">Praca</a>
+          </p>
+          <p>
+            <a href="#!" class="text-reset">Reklama</a>
+          </p>
+          <p>
+            <a href="#!" class="text-reset">Współpraca</a>
           </p>
         </div>
         <!-- Grid column -->
 
         <!-- Grid column -->
-        <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+        <div class="col-md-4 col-lg-3 mx-auto mb-4">
           <!-- Links -->
           <h6 class="text-uppercase fw-bold mb-4">
-            Products
+            Informacje
           </h6>
           <p>
-            <a href="#!" class="text-reset">Angular</a>
+            <a href="#!" class="text-reset">Aktualności</a>
           </p>
           <p>
-            <a href="#!" class="text-reset">React</a>
+            <a href="#!" class="text-reset">Strefa klienta</a>
           </p>
           <p>
-            <a href="#!" class="text-reset">Vue</a>
+            <a href="#!" class="text-reset">Dla firm</a>
           </p>
           <p>
-            <a href="#!" class="text-reset">Laravel</a>
+            <a href="#!" class="text-reset">Regulamin</a>
           </p>
         </div>
         <!-- Grid column -->
 
         <!-- Grid column -->
-        <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+        <div class="col-md-4 col-lg-6 mx-auto mb-md-0 mb-4">
           <!-- Links -->
           <h6 class="text-uppercase fw-bold mb-4">
-            Useful links
+            Kontakt
           </h6>
-          <p>
-            <a href="#!" class="text-reset">Pricing</a>
-          </p>
-          <p>
-            <a href="#!" class="text-reset">Settings</a>
-          </p>
-          <p>
-            <a href="#!" class="text-reset">Orders</a>
-          </p>
-          <p>
-            <a href="#!" class="text-reset">Help</a>
-          </p>
-        </div>
-        <!-- Grid column -->
-
-        <!-- Grid column -->
-        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-          <!-- Links -->
-          <h6 class="text-uppercase fw-bold mb-4">
-            Contact
-          </h6>
-          <p><i class="fas fa-home me-3"></i> New York, NY 10012, US</p>
+          <div class="col-lg-7 col-md-12">
+            <div id="map">
+              <div style="width: 100%">
+                <iframe src="https://maps.google.com/maps?q=Kościerzyńska+9,+Wrocław,+Polska&output=embed" width="500" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>              </div>
+            </div>
+          </div>
+          <p><i class="fas fa-home me-3"></i> ul. Kościerzyńska 9, Wrocław</p>
           <p>
             <i class="fas fa-envelope me-3"></i>
-            info@example.com
+            kontakt@rent4events.com
           </p>
-          <p><i class="fas fa-phone me-3"></i> + 01 234 567 88</p>
-          <p><i class="fas fa-print me-3"></i> + 01 234 567 89</p>
+          <p><i class="fas fa-phone me-3"></i> +48 234 567 88</p>
         </div>
         <!-- Grid column -->
       </div>
@@ -84,8 +76,7 @@
 
   <!-- Copyright -->
   <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-    © 2021 Copyright:
-    <a class="text-reset fw-bold" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+    © 2021 Rent4Events
   </div>
   <!-- Copyright -->
 </footer>

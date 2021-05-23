@@ -16,7 +16,6 @@
     "bootstrap": "^5.0.0-beta2",
     "eventemitter3": "^4.0.7",
     "vue": "^2.5.2",
-    "vue-fontawesome": "0.0.2",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
