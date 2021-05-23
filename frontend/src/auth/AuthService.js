@@ -29,6 +29,7 @@ export default class AuthService {
   // which triggers the Auth0 login page
   login () {
     this.auth0.authorize()
+    router.replace('/')
   }
 
   // this method calls the parseHash() method of Auth0
