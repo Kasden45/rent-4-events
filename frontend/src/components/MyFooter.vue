@@ -7,7 +7,7 @@
       <!-- Grid row -->
       <div class="row mt-3">
         <!-- Grid column -->
-        <div class="col-md-4 col-lg-3 mx-auto mb-4">
+        <div class="col-sm-6 col-md-4 col-lg-3 mx-auto mb-4">
           <!-- Links -->
           <h6 class="text-uppercase fw-bold mb-4">
             Firma
@@ -28,7 +28,7 @@
         <!-- Grid column -->
 
         <!-- Grid column -->
-        <div class="col-md-4 col-lg-3 mx-auto mb-4">
+        <div class="col-sm-6 col-md-4 col-lg-3 mx-auto mb-4">
           <!-- Links -->
           <h6 class="text-uppercase fw-bold mb-4">
             Informacje
@@ -54,12 +54,12 @@
           <h6 class="text-uppercase fw-bold mb-4">
             Kontakt
           </h6>
-          <div class="col-lg-7 col-md-12">
-            <div id="map">
-              <div style="width: 100%">
-                <iframe src="https://maps.google.com/maps?q=Kościerzyńska+9,+Wrocław,+Polska&output=embed" width="500" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>              </div>
-            </div>
+
+          <div id="map">
+            <div style="width: 100%">
+              <iframe src="https://maps.google.com/maps?q=Kościerzyńska+9,+Wrocław,+Polska&output=embed" width="100%" height="auto" frameborder="0" style="border:0" allowfullscreen></iframe>              </div>
           </div>
+
           <p><i class="fas fa-home me-3"></i> ul. Kościerzyńska 9, Wrocław</p>
           <p>
             <i class="fas fa-envelope me-3"></i>
