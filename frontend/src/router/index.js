@@ -3,6 +3,7 @@ import Router from 'vue-router'
 // import HelloWorld from '@/components/HelloWorld'
 import Home from '../views/Home'
 import Offer from '../views/Offer'
+import Orders from '../views/Orders'
 
 Vue.use(Router)
 
@@ -17,6 +18,11 @@ export default new Router({
       path: '/Oferta',
       name: 'Offer',
       component: Offer
+    },
+    {
+      path: '/Zamowienia',
+      name: 'Orders',
+      component: Orders
     }
   ]
 })

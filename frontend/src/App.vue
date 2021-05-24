@@ -4,10 +4,6 @@
       <img src="./assets/logo.png">
       <router-view></router-view>
     </my-menu>
-
-      <!--  </div>-->
-<!--  <div>-->
-
   </div>
 </template>
 
@@ -18,8 +14,7 @@ export default {
   name: 'app',
   components: {
     MyMenu
-  },
-
+  }
 }
 </script>
 
