@@ -129,7 +129,7 @@ class DriverViewSet(viewsets.ModelViewSet):
 
 class OrderViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows orders to be viewed or edited.
     """
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
@@ -158,7 +158,7 @@ class OrderPositionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Order.objects.all()
+    queryset = OrderPosition.objects.all()
     serializer_class = OrderPositionSerializer
     permission_classes = [permissions.AllowAny]
 

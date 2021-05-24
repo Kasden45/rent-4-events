@@ -20,6 +20,12 @@
 
     <button
       class="btn btn-primary btn-margin"
+      @click="createUser()">
+      Create user
+    </button>
+
+    <button
+      class="btn btn-primary btn-margin"
       v-if="authenticated"
       @click="logout()">
       Log Out
@@ -73,6 +79,21 @@ export default {
         console.log(response.data)
         this.message = JSON.stringify(response.data)
       })
+    },
+    createUser () {
+
+      const url =`${API_URL}/users/`
+      return axios.post(url, {
+        "username": "NewUser3",
+        "email": "newUser3@example.com",
+        "password": "NewPassword1/2",
+        "groups": [
+          1
+        ]
+      }, {headers: {Authorization: `Bearer ${auth.getAuthToken()}`}}).then((response) => {
+              console.log(response.data)
+              this.message = JSON.stringify(response.data)
+            })
     }
   }
 }
