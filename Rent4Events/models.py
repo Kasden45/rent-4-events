@@ -2,7 +2,7 @@ import datetime
 
 from django.db import models
 from django.contrib.auth import models as m
-import django.utils.timezone as timezone
+import django.utils.timezone as timezones
 # Create your models here.
 
 
@@ -12,31 +12,33 @@ class User(m.User):
 
 class Driver(models.Model):
     # driverId = models.BigAutoField(primary_key=True)
-    userId = models.ForeignKey(
-        User,
+    userId = models.OneToOneField(
+        m.User,
         primary_key=True,
+        to_field='id',
         on_delete=models.CASCADE,
         verbose_name='DriverUser'
     )
     firstName = models.CharField(max_length=30)
     lastName = models.CharField(max_length=30)
     birthDate = models.DateField()
-    employmentDate = models.DateField(default=timezone.now())
+    employmentDate = models.DateField(default=timezones.now)
     salary = models.DecimalField(max_digits=10, decimal_places=2)
     phoneNumber = models.CharField(max_length=12, unique=True)
 
 
 class Client(models.Model):
     # clientId = models.BigAutoField(primary_key=True)
-    userId = models.ForeignKey(
-        User,
+    userId = models.OneToOneField(
+        m.User,
         primary_key=True,
+        to_field='id',
         on_delete=models.CASCADE,
         verbose_name='ClientUser'
     )
-    firstName = models.CharField(max_length=30)  # nullable
-    lastName = models.CharField(max_length=30)  # nullable
-    phoneNumber = models.CharField(max_length=12, unique=True)  # nullable
+    firstName = models.CharField(max_length=30, blank=True, null=True)  # nullable
+    lastName = models.CharField(max_length=30, blank=True, null=True)  # nullable
+    phoneNumber = models.CharField(max_length=12, unique=True, blank=True, null=True)  # nullable
     # address?
 
 
@@ -51,6 +53,7 @@ class Order(models.Model):
     orderId = models.BigAutoField(primary_key=True)
     client = models.ForeignKey(
         Client,
+        to_field='userId',
         on_delete=models.CASCADE,
         verbose_name="clientId",
     )
@@ -65,6 +68,8 @@ class Category(models.Model):
     catId = models.BigAutoField(primary_key=True)
     catName = models.CharField(max_length=50, unique=True)
 
+    def __str__(self):
+        return self.catName
 
 class Product(models.Model):
     prodId = models.BigAutoField(primary_key=True)
@@ -79,24 +84,30 @@ class Product(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     available = models.PositiveIntegerField()  # <= quantity
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    description = models.CharField(max_length=500)  # nullable
-    image = models.CharField(max_length=300, null=True)
+    description = models.CharField(max_length=500, blank=True, null=True)  # nullable
+    image = models.CharField(max_length=300, blank=True, null=True)
 
+    def __str__(self):
+        return self.prodName
 
 class OrderPosition(models.Model):
     order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,
+        to_field='orderId',
         verbose_name="orderId",
 
     )
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
+        to_field='prodId',
         verbose_name="productId"
     )
     quantity = models.PositiveIntegerField(default=1)
 
+    def __str__(self):
+        return f'{self.order.client.firstName} {self.order.client.lastName} : {self.product.prodName} : {self.quantity}'
 
 class Vehicle(models.Model):
     TYPE_CHOICE = (
@@ -109,13 +120,13 @@ class Vehicle(models.Model):
         ('NI', 'Niesprawny')
     )
     vehicleId = models.BigAutoField(primary_key=True)
-    brand = models.CharField(max_length=30) # nullable
-    model = models.CharField(max_length=30) # nullable
-    year = models.PositiveIntegerField() # nullable
+    brand = models.CharField(max_length=30, blank=True, null=True) # nullable
+    model = models.CharField(max_length=30, blank=True, null=True) # nullable
+    year = models.PositiveIntegerField(blank=True, null=True) # nullable
     licensePlate = models.CharField(max_length=9, unique=True)
-    carServiceTo = models.DateField() # nullable
-    type = models.CharField(max_length=10, choices=TYPE_CHOICE) # nullable
-    status = models.CharField(max_length=12, choices=STATUS_CHOICE) # nullable
+    carServiceTo = models.DateField(blank=True, null=True) # nullable
+    type = models.CharField(max_length=10, choices=TYPE_CHOICE, blank=True, null=True) # nullable
+    status = models.CharField(max_length=12, choices=STATUS_CHOICE, blank=True, null=True) # nullable
 
 
 class Course(models.Model):
@@ -132,18 +143,21 @@ class Course(models.Model):
     order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,
+        to_field='orderId',
         verbose_name='orderId'
     )
     driver = models.ForeignKey(
         Driver,
         on_delete=models.CASCADE,
+        to_field='userId',
         verbose_name='driverId'
     )
     vehicle = models.ForeignKey(
         Vehicle,
         on_delete=models.CASCADE,
+        to_field='vehicleId',
         verbose_name='vehicleId'
     )
     courseDate = models.DateField()
     type = models.CharField(max_length=7, choices=TYPE_CHOICES)
-    status = models.CharField(max_length=12, choices=STATUS_CHOICES) # Default = zaplanowany
+    status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='ZA') # Default = zaplanowany
