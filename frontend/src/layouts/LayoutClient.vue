@@ -104,8 +104,6 @@ export default {
 </script>
 
 <style scoped>
-
-
 .navbar {
   position: sticky;
 }

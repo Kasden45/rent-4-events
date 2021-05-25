@@ -2,21 +2,15 @@
   <div class="orders">
     <div class="row justify-content-end my-3">
       <div class="col-3">
-        <button class="btn btn-primary btn-primary">
-          NOWE ZAMÓWIENIE
-        </button>
+          <router-link class="btn btn-primary btn-primary" to="/Zamowienia/Nowe">NOWE ZAMÓWIENIE</router-link>
       </div>
     </div>
     <div class="row">
-      <div class="col-9 align-content-center px-5">
+      <div class="col align-content-center px-5">
 
         <h1>Zamówienia</h1>
         <orders-table :orders-source="orders"/>
 
-      </div>
-      <div class="col-3">
-        <div class="row order">
-        </div>
       </div>
     </div>
   </div>
@@ -26,7 +20,6 @@
 import OrdersTable from '../components/OrdersTable'
 import axios from 'axios'
 const API_URL = 'http://localhost:8000'
-// const auth = new AuthService()
 export default {
   name: 'Orders',
   components: {

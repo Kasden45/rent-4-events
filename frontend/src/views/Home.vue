@@ -42,7 +42,12 @@ export default {
 <style scoped>
 
 html {
-  width: 100%;
+    width: 100%;
+
+}
+
+#intro {
+    color: #FFFFFF;
 }
 
 #intro {
