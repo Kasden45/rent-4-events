@@ -13,7 +13,6 @@ def jwt_get_username_from_payload_handler(payload):
 
 
 def jwt_decode_token(token):
-    print("decode token", token)
     header = jwt.get_unverified_header(token)
     print(header)
     jwks = requests.get('https://{}/.well-known/jwks.json'.format('ztw-kl.eu.auth0.com')).json()

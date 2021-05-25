@@ -2,9 +2,7 @@
   <div class="orders">
     <div class="row justify-content-end my-3">
       <div class="col-3">
-        <button class="btn btn-primary btn-primary">
-          NOWE ZAMÓWIENIE
-        </button>
+          <router-link class="btn btn-primary btn-primary" to="/Zamowienia/Nowe/">NOWE ZAMÓWIENIE</router-link>
       </div>
     </div>
     <div class="row">
@@ -40,10 +38,11 @@ export default {
   methods: {
     async getOrders () {
       const url = `${API_URL}/orders/`
-      console.log(this.$auth)
+      console.log(this.$auth.getIdTokenClaims())
       const token = await this.$auth.getTokenSilently()
       // const token = this.$auth.getIdTokenClaims()
       console.log(token)
+        console.log(this.$auth.user)
       const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         console.log(JSON.stringify(response.data))
         this.orders = response.data['results']
