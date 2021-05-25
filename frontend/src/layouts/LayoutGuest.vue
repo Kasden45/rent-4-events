@@ -34,6 +34,14 @@
                 <router-link class="nav-link" to="/Oferta">Oferta</router-link>
               </li>
             </ul>
+
+            <div v-if="!$auth.loading">
+              <!-- show login when not authenticated -->
+              <button v-if="!$auth.isAuthenticated" @click="login">Log in</button>
+              <!-- show logout when authenticated -->
+              <button v-if="$auth.isAuthenticated" @click="logout">Log out</button>
+            </div>
+
             <button
               class="btn btn-primary btn-margin"
               @click="privateMessage()">
@@ -66,12 +74,12 @@
 </template>
 
 <script>
-import AuthService from '../auth/AuthService'
+// import AuthService from '../auth/AuthService'
 import axios from 'axios'
 import MyFooter from '../components/MyFooter'
 
 const API_URL = 'http://localhost:8000'
-const auth = new AuthService()
+// const auth = new AuthService()
 export default {
   name: 'LayoutGuest',
   components: {MyFooter},
@@ -79,7 +87,7 @@ export default {
     this.handleAuthentication()
     this.authenticated = false
 
-    auth.authNotifier.on('authChange', authState => {
+    this.$auth.authNotifier.on('authChange', authState => {
       this.authenticated = authState.authenticated
     })
 
@@ -91,18 +99,18 @@ export default {
   methods: {
     // this method calls the AuthService login() method
     login () {
-      auth.login()
+      this.$auth.login()
     },
     handleAuthentication () {
-      auth.handleAuthentication()
+      this.$auth.handleAuthentication()
     },
     logout () {
-      auth.logout()
+      this.$auth.logout()
     },
     privateMessage () {
       const url = `${API_URL}/rent-rest/api/private-scoped`
       // const url = `${API_URL}/users/?query={email, username}`
-      return axios.get(url, {headers: {Authorization: `Bearer ${auth.getAuthToken()}`}}).then((response) => {
+      return axios.get(url, {headers: {Authorization: `Bearer ${this.$auth.getTokenSilently()}`}}).then((response) => {
         console.log(response.data)
         this.message = JSON.stringify(response.data)
       })
