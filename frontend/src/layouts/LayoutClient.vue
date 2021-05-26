@@ -79,8 +79,7 @@ export default {
   components: {MyFooter, CollapseTransition},
   data () {
     return {
-      message: 'a',
-      isOpen: true
+      message: 'a'
     }
   },
   methods: {

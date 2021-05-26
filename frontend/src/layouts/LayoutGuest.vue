@@ -35,12 +35,12 @@
               </li>
             </ul>
 
-            <div v-if="!$auth.loading">
-              <!-- show login when not authenticated -->
-              <button v-if="!$auth.isAuthenticated" @click="login">Log in</button>
-              <!-- show logout when authenticated -->
-              <button v-if="$auth.isAuthenticated" @click="logout">Log out</button>
-            </div>
+<!--            <div v-if="!$auth.loading">-->
+<!--              &lt;!&ndash; show login when not authenticated &ndash;&gt;-->
+<!--              <button v-if="!$auth.isAuthenticated" @click="login">Log in</button>-->
+<!--              &lt;!&ndash; show logout when authenticated &ndash;&gt;-->
+<!--              <button v-if="$auth.isAuthenticated" @click="logout">Log out</button>-->
+<!--            </div>-->
 
             <button
               class="btn btn-primary btn-margin"
@@ -49,13 +49,13 @@
             </button>
             <button
               class="btn btn-primary btn-margin"
-              v-if="!authenticated"
+              v-if="!this.$auth.isAuthenticated"
               @click="login()">
               Log In
             </button>
             <button
               class="btn btn-primary btn-margin"
-              v-if="authenticated"
+              v-if="this.$auth.isAuthenticated"
               @click="logout()">
               Log Out
             </button>
@@ -84,25 +84,14 @@ export default {
   name: 'LayoutGuest',
   components: {MyFooter},
   data () {
-    this.handleAuthentication()
-    this.authenticated = false
-
-    this.$auth.authNotifier.on('authChange', authState => {
-      this.authenticated = authState.authenticated
-    })
-
     return {
-      authenticated: false,
       message: 'a'
     }
   },
   methods: {
     // this method calls the AuthService login() method
     login () {
-      this.$auth.login()
-    },
-    handleAuthentication () {
-      this.$auth.handleAuthentication()
+      this.$auth.loginWithRedirect()
     },
     logout () {
       this.$auth.logout()

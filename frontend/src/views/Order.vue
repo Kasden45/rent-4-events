@@ -6,11 +6,17 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-3">
+            <div class="col-2">
                 <categories-checkbox :categories-source="categories"/>
             </div>
-            <div class="col-6 align-content-center">
-
+            <div class="col-7">
+                <div class="row align-content-center">
+                    <div class="col-4 px-3 py-3 products-gallery" v-for="prod in products" :key="prod.prodId">
+<!--                        <div class="col-3">?-->
+                            <product :product-source="prod"/>
+<!--                        </div>-->
+                    </div>
+                </div>
             </div>
             <div class="col-3">
                 <div class="row">
@@ -25,6 +31,7 @@
 <script>
 import CategoriesCheckbox from '../components/CategoriesCheckbox'
 import NewOrder from '../components/NewOrder'
+import Product from '../components/Product'
 import axios from 'axios'
 const API_URL = 'http://localhost:8000'
 
@@ -32,12 +39,14 @@ export default {
   name: 'Order',
   components: {
     CategoriesCheckbox,
-    NewOrder
+    NewOrder,
+    Product
   },
   data () {
     return {
       categories: [],
-      neworder: {}
+      neworder: {},
+      products: []
     }
   },
   methods: {
@@ -53,17 +62,29 @@ export default {
         // console.log(this.categories)
         return resp
       })
+    },
+    async getProducts () {
+      const url = `${API_URL}/products/?query={prodId, prodName, price, image}`
+      console.log(this.$auth)
+      const token = await this.$auth.getTokenSilently()
+      // const token = this.$auth.getIdTokenClaims()
+      console.log(token)
+      const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+        // console.log(JSON.stringify(response.data['results']))
+        this.products = response.data['results']
+        // console.log(this.categories)
+        return resp
+      })
     }
   },
   mounted () {
     this.getCategories()
+    this.getProducts()
   }
 }
 </script>
 
 <style scoped>
-.order {
-    background-color: #000000;
-}
+
 
 </style>

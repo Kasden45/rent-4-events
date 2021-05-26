@@ -18,8 +18,7 @@ export default new Router({
     {
       path: '/Oferta',
       name: 'Offer',
-      component: Offer,
-      beforeEnter: authGuard
+      component: Offer
     },
     {
       path: '/Zamowienia',
