@@ -1,11 +1,11 @@
 <template>
   <div class="orders">
-    <div class="row justify-content-end my-3">
+    <div class="row justify-content-end py-3 mw-100">
       <div class="col-3">
           <router-link class="btn btn-primary btn-primary" to="/Zamowienia/Nowe">NOWE ZAMÓWIENIE</router-link>
       </div>
     </div>
-    <div class="row">
+    <div class="row mw-100">
       <div class="col align-content-center px-5">
 
         <h1>Zamówienia</h1>
@@ -53,12 +53,6 @@ export default {
 <style scoped>
 h1 {
   color: #000000;
-}
-
-.order {
-  background: #000000;
-  height: 80vh;
-  border-radius: 10px 0px 0px 10px;
 }
 
 </style>

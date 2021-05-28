@@ -11,7 +11,7 @@
             </div>
             <div class="col-7">
                 <div class="row align-content-center">
-                    <div class="col-4 px-3 py-3 products-gallery" v-for="prod in products" :key="prod.prodId">
+                    <div class="col-4 px-5 py-3 products-gallery" v-for="prod in products" :key="prod.prodId">
 <!--                        <div class="col-3">?-->
                             <product :product-source="prod"/>
 <!--                        </div>-->
@@ -85,6 +85,5 @@ export default {
 </script>
 
 <style scoped>
-
 
 </style>
