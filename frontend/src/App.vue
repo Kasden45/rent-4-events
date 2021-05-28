@@ -10,7 +10,6 @@
 
 <script>
 import MyMenu from './components/MyMenu'
-// import LayoutGuest from './layouts/LayoutGuest'
 export default {
   name: 'app',
   components: {
@@ -20,10 +19,39 @@ export default {
 </script>
 
 <style>
+@import "./assets/colors.css";
 #app {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #FFFFFF;
+  color: #000000;
+}
+
+.btn-1 {
+    color: #fff;
+    background-color: var(--COLOR1);
+    border-color: var(--COLOR1);
+}
+
+.btn-2 {
+    color: #fff;
+    background-color: var(--COLOR2);
+    border-color: var(--COLOR2);
+}
+
+.btn-3 {
+    color: #fff;
+    background-color: var(--COLOR3);
+    border-color: var(--COLOR3);
+}
+
+.btn-4 {
+    color: #fff;
+    background-color: var(--COLOR4);
+    border-color: var(--COLOR4);
+}
+
+.btn {
+    border-radius: 0px;
 }
 </style>

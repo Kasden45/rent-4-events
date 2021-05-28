@@ -1,10 +1,85 @@
 <template>
-<router-link class="btn btn-primary btn-primary" to="/Zamowienia">Zamówienia</router-link>
+    <div>
+        <div class="row justify-content-end my-3">
+            <div class="col-3">
+                <router-link class="btn btn-primary btn-primary" to="/Zamowienia">Powrót do zamówień</router-link>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <categories-checkbox :categories-source="categories"/>
+            </div>
+            <div class="col-7">
+                <div class="row align-content-center">
+                    <div class="col-4 px-5 py-3 products-gallery" v-for="prod in products" :key="prod.prodId">
+<!--                        <div class="col-3">?-->
+                            <product :product-source="prod"/>
+<!--                        </div>-->
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="row">
+                    <new-order :order-source="neworder"/>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
+import CategoriesCheckbox from '../components/CategoriesCheckbox'
+import NewOrder from '../components/NewOrder'
+import Product from '../components/Product'
+import axios from 'axios'
+const API_URL = 'http://localhost:8000'
+
 export default {
-    name: "Order"
+  name: 'Order',
+  components: {
+    CategoriesCheckbox,
+    NewOrder,
+    Product
+  },
+  data () {
+    return {
+      categories: [],
+      neworder: {},
+      products: []
+    }
+  },
+  methods: {
+    async getCategories () {
+      const url = `${API_URL}/categories/?query={catId, catName}`
+      console.log(this.$auth)
+      const token = await this.$auth.getTokenSilently()
+      // const token = this.$auth.getIdTokenClaims()
+      console.log(token)
+      const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+        // console.log(JSON.stringify(response.data['results']))
+        this.categories = response.data['results']
+        // console.log(this.categories)
+        return resp
+      })
+    },
+    async getProducts () {
+      const url = `${API_URL}/products/?query={prodId, prodName, price, image}`
+      console.log(this.$auth)
+      const token = await this.$auth.getTokenSilently()
+      // const token = this.$auth.getIdTokenClaims()
+      console.log(token)
+      const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+        // console.log(JSON.stringify(response.data['results']))
+        this.products = response.data['results']
+        // console.log(this.categories)
+        return resp
+      })
+    }
+  },
+  mounted () {
+    this.getCategories()
+    this.getProducts()
+  }
 }
 </script>
 

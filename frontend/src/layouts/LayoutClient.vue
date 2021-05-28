@@ -14,13 +14,13 @@
           <button
             class="navbar-toggler"
             type="button"
-            data-mdb-toggle="collapse"
-            data-mdb-target="#navbarSupportedContent"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent"
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
-            <i class="fas fa-bars"></i>
+            <font-awesome-icon icon="bars"></font-awesome-icon>
           </button>
 
           <!-- Collapsible wrapper -->
@@ -38,18 +38,18 @@
               </li>
             </ul>
             <button
-              class="btn btn-primary btn-margin"
+              class="btn btn-4 mx-2"
               id="idk">
               Call Private
             </button>
             <button
-              class="btn btn-primary btn-margin"
+              class="btn btn-4 mx-2"
               v-if="!this.$auth.isAuthenticated"
               @click="login()">
               Log In
             </button>
             <button
-              class="btn btn-primary btn-margin"
+              class="btn btn-4 mx-2"
               v-if="this.$auth.isAuthenticated"
               @click="logout()">
               Log Out
@@ -79,8 +79,7 @@ export default {
   components: {MyFooter, CollapseTransition},
   data () {
     return {
-      message: 'a',
-      isOpen: true
+      message: 'a'
     }
   },
   methods: {
@@ -104,9 +103,11 @@ export default {
 </script>
 
 <style scoped>
-
-
 .navbar {
   position: sticky;
+}
+
+.nav-link:focus {
+    border-bottom: 1px solid var(--COLOR4);
 }
 </style>

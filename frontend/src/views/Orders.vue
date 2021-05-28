@@ -1,20 +1,16 @@
 <template>
   <div class="orders">
-    <div class="row justify-content-end my-3">
+    <div class="row justify-content-end py-3 mw-100">
       <div class="col-3">
           <router-link class="btn btn-primary btn-primary" to="/Zamowienia/Nowe/">NOWE ZAMÓWIENIE</router-link>
       </div>
     </div>
-    <div class="row">
-      <div class="col-9 align-content-center px-5">
+    <div class="row mw-100">
+      <div class="col align-content-center px-5">
 
         <h1>Zamówienia</h1>
         <orders-table :orders-source="orders"/>
 
-      </div>
-      <div class="col-3">
-        <div class="row order">
-        </div>
       </div>
     </div>
   </div>
@@ -24,7 +20,6 @@
 import OrdersTable from '../components/OrdersTable'
 import axios from 'axios'
 const API_URL = 'http://localhost:8000'
-// const auth = new AuthService()
 export default {
   name: 'Orders',
   components: {
@@ -59,12 +54,6 @@ export default {
 <style scoped>
 h1 {
   color: #000000;
-}
-
-.order {
-  background: #000000;
-  height: 80vh;
-  border-radius: 10px 0px 0px 10px;
 }
 
 </style>

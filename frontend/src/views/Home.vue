@@ -7,7 +7,8 @@
               <p id="photo-text">
                 Urządź swoje <br /> przyjęcie razem z nami
               </p>
-              <div class="row step justify-content-center">
+            </div>
+              <div class="row step justify-content-center mw-100">
                 <div class="col-md-3 line">
                   <img src="../assets/number1.png" alt="one" height="50px" width="auto" class="mx-auto d-block my-3">
                   <p class="step-title">Wybierz asortyment</p>
@@ -23,9 +24,7 @@
                   <p class="step-title">Czekaj na odpowiedź</p>
                   <p>Nasz zespoł stara się odpowiadać jak najszybciej na zamówienia naszych Klientów, niedługo się odezwiemy!</p>
                 </div>
-
               </div>
-            </div>
           </div>
         </div>
       </div>
@@ -41,8 +40,10 @@ export default {
 
 <style scoped>
 
-html {
-  width: 100%;
+
+
+#intro {
+    color: #FFFFFF;
 }
 
 #intro {
@@ -66,7 +67,7 @@ html {
 
 #photo-text {
   position: absolute;
-  width: 100%;
+  width: 80%;
   bottom: 55%;
   left: 10%;
   padding: 10px;
