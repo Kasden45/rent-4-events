@@ -14,8 +14,8 @@
           <button
             class="navbar-toggler"
             type="button"
-            data-mdb-toggle="collapse"
-            data-mdb-target="#navbarSupportedContent"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent"
             aria-expanded="false"
             aria-label="Toggle navigation"
@@ -38,18 +38,18 @@
               </li>
             </ul>
             <button
-              class="btn btn-2 btn-margin"
+              class="btn btn-4 mx-2"
               id="idk">
               Call Private
             </button>
             <button
-              class="btn btn-3 btn-margin"
+              class="btn btn-4 mx-2"
               v-if="!this.$auth.isAuthenticated"
               @click="login()">
               Log In
             </button>
             <button
-              class="btn btn-3 btn-margin"
+              class="btn btn-4 mx-2"
               v-if="this.$auth.isAuthenticated"
               @click="logout()">
               Log Out
@@ -105,5 +105,9 @@ export default {
 <style scoped>
 .navbar {
   position: sticky;
+}
+
+.nav-link:focus {
+    border-bottom: 1px solid var(--COLOR4);
 }
 </style>

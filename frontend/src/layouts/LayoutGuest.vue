@@ -14,8 +14,8 @@
           <button
             class="navbar-toggler"
             type="button"
-            data-mdb-toggle="collapse"
-            data-mdb-target="#navbarSupportedContent"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent"
             aria-expanded="false"
             aria-label="Toggle navigation"
@@ -43,18 +43,18 @@
 <!--            </div>-->
 
             <button
-              class="btn btn-primary btn-margin"
+              class="btn btn-4 mx-2"
               @click="privateMessage()">
               Call Private
             </button>
             <button
-              class="btn btn-primary btn-margin"
+              class="btn btn-4 mx-2"
               v-if="!this.$auth.isAuthenticated"
               @click="login()">
               Log In
             </button>
             <button
-              class="btn btn-primary btn-margin"
+              class="btn btn-4 mx-2"
               v-if="this.$auth.isAuthenticated"
               @click="logout()">
               Log Out
