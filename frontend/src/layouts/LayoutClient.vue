@@ -38,18 +38,18 @@
               </li>
             </ul>
             <button
-              class="btn btn-primary btn-margin"
+              class="btn btn-2 btn-margin"
               id="idk">
               Call Private
             </button>
             <button
-              class="btn btn-primary btn-margin"
+              class="btn btn-3 btn-margin"
               v-if="!this.$auth.isAuthenticated"
               @click="login()">
               Log In
             </button>
             <button
-              class="btn btn-primary btn-margin"
+              class="btn btn-3 btn-margin"
               v-if="this.$auth.isAuthenticated"
               @click="logout()">
               Log Out
