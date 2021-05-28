@@ -55,12 +55,25 @@ class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         instance.save()
         return instance
 
+class ImageSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = ['imageId', 'imageName', 'imageUrl', 'product']
+
+    def create(self, validated_data):
+        """
+        Create and return a new `Snippet` instance, given the validated data.
+        """
+        return Image.objects.create(**validated_data)
+
 
 class ProductSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
+    images = ImageSerializer(many=True, allow_null=True, required=False)
+
     class Meta:
         model = Product
-        fields = ['prodId', 'prodName', 'category', 'quantity', 'available', 'price', 'description', 'image']
-
+        fields = ['prodId', 'prodName', 'category', 'quantity', 'available', 'price', 'description', 'images']
+        read_only_fields = ['images']
     def create(self, validated_data):
         """
         Create and return a new `Snippet` instance, given the validated data.
@@ -69,7 +82,8 @@ class ProductSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 
 
 class CategorySerializer(DynamicFieldsMixin, serializers.ModelSerializer):
-    products = ProductSerializer(many=True)
+    products = ProductSerializer(many=True, allow_null=True, required=False)
+
     class Meta:
         model = Category
         fields = ['catId', 'catName', 'products']
@@ -81,10 +95,24 @@ class CategorySerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         return Category.objects.create(**validated_data)
 
 
+class OrderPositionSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
+    class Meta:
+        model = OrderPosition
+        fields = ['order', 'product', 'quantity']
+
+    def create(self, validated_data):
+        """
+        Create and return a new `Snippet` instance, given the validated data.
+        """
+        return OrderPosition.objects.create(**validated_data)
+
+
 class OrderSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
+    positions = OrderPositionSerializer(many=True, allow_null=True, required=False)
+
     class Meta:
         model = Order
-        fields = ['orderId', 'client', 'startDate', 'endDate', 'address', 'totalCost', 'status']
+        fields = ['orderId', 'client', 'startDate', 'endDate', 'address', 'totalCost', 'status', 'positions']
 
     def create(self, validated_data):
         """
@@ -118,18 +146,6 @@ class DriverSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         return Driver.objects.create(**validated_data)
 
 
-class OrderPositionSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
-    class Meta:
-        model = OrderPosition
-        fields = ['order', 'product', 'quantity']
-
-    def create(self, validated_data):
-        """
-        Create and return a new `Snippet` instance, given the validated data.
-        """
-        return OrderPosition.objects.create(**validated_data)
-
-
 class VehicleSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = Vehicle
@@ -152,3 +168,5 @@ class CourseSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         Create and return a new `Snippet` instance, given the validated data.
         """
         return Course.objects.create(**validated_data)
+
+

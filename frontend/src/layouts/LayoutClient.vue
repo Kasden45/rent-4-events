@@ -85,7 +85,7 @@ export default {
   methods: {
     // this method calls the AuthService login() method
     login () {
-      this.$auth.loginWithRedirect()
+        this.$auth.loginWithRedirect()
     },
     logout () {
       this.$auth.logout()
