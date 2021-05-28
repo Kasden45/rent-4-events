@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth import models as m
 import django.utils.timezone as timezones
 # Create your models here.
-
+from django.db.models import UniqueConstraint
 
 
 class User(m.User):
@@ -43,12 +43,17 @@ class Client(models.Model):
 
 
 class Order(models.Model):
+    class Meta:
+        constraints = [
+            models.CheckConstraint(check=models.Q(startDate__lt=models.F("endDate")), name='constraint_start_end'),
+        ]
     STATUS_CHOICES = (
-        ('OD', 'Odrzucone'),
-        ('OC', 'Oczekujące'),
-        ('DR', 'Do realizacji'),
-        ('WT', 'W trakcie realizacji'),
-        ('ZR', 'Zrealizowane'),
+        ('Odrzucone', 'Odrzucone'),
+        ('Oczekujące', 'Oczekujące'),
+        ('Do realizacji', 'Do realizacji'),
+        ('W trakcie realizacji', 'W trakcie realizacji'),
+        ('Zrealizowane', 'Zrealizowane'),
+        ('Robocze', 'Robocze'),
     )
     orderId = models.BigAutoField(primary_key=True)
     client = models.ForeignKey(
@@ -71,6 +76,7 @@ class Category(models.Model):
     def __str__(self):
         return self.catName
 
+
 class Product(models.Model):
     prodId = models.BigAutoField(primary_key=True)
     prodName = models.CharField(max_length=50, unique=True)
@@ -85,17 +91,22 @@ class Product(models.Model):
     available = models.PositiveIntegerField()  # <= quantity
     price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.CharField(max_length=500, blank=True, null=True)  # nullable
-    image = models.CharField(max_length=300, blank=True, null=True)
 
     def __str__(self):
         return self.prodName
 
+
 class OrderPosition(models.Model):
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['order_id', 'product_id'], name='constraint_PK_OrderPosition'),
+        ]
     order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,
         to_field='orderId',
         verbose_name="orderId",
+        related_name='positions',
 
     )
     product = models.ForeignKey(
@@ -106,18 +117,21 @@ class OrderPosition(models.Model):
     )
     quantity = models.PositiveIntegerField(default=1)
 
+
+
     def __str__(self):
         return f'{self.order.client.firstName} {self.order.client.lastName} : {self.product.prodName} : {self.quantity}'
 
+
 class Vehicle(models.Model):
     TYPE_CHOICE = (
-        ('BU', 'Bus'),
-        ('CI', 'Ciężarówka')
+        ('Bus', 'Bus'),
+        ('Ciężarówka', 'Ciężarówka')
     )
     STATUS_CHOICE = (
-        ('SP', 'Sprawny'),
-        ('WW', 'W warsztacie'),
-        ('NI', 'Niesprawny')
+        ('Sprawny', 'Sprawny'),
+        ('W warsztacie', 'W warsztacie'),
+        ('Niesprawny', 'Niesprawny')
     )
     vehicleId = models.BigAutoField(primary_key=True)
     brand = models.CharField(max_length=30, blank=True, null=True) # nullable
@@ -131,13 +145,13 @@ class Vehicle(models.Model):
 
 class Course(models.Model):
     TYPE_CHOICES = (
-        ('DO', 'Dostawa'),
-        ('OD', 'Odbiór')
+        ('Dostawa', 'Dostawa'),
+        ('Odbiór', 'Odbiór')
     )
     STATUS_CHOICES = (
-        ('ZA', 'Zaplanowany'),
-        ('WT', 'W trasie'),
-        ('ZR', 'Zrealizowany')
+        ('Zaplanowany', 'Zaplanowany'),
+        ('W trasie', 'W trasie'),
+        ('Zrealizowany', 'Zrealizowany')
     )
     courseId = models.BigAutoField(primary_key=True)
     order = models.ForeignKey(
@@ -160,4 +174,18 @@ class Course(models.Model):
     )
     courseDate = models.DateField()
     type = models.CharField(max_length=7, choices=TYPE_CHOICES)
-    status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='ZA') # Default = zaplanowany
+    status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='Zaplanowany')  # Default = zaplanowany
+
+
+class Image(models.Model):
+    imageId = models.BigAutoField(primary_key=True)
+    imageName = models.CharField(max_length=255, blank=True, null=True)
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        verbose_name="prodId",
+        to_field='prodId',
+        related_name='images',
+        null=True
+    )
+    imageUrl = models.CharField(max_length=300)

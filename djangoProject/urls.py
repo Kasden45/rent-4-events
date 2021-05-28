@@ -33,6 +33,7 @@ router.register(r'drivers', views.DriverViewSet)
 router.register(r'order-positions', views.OrderPositionViewSet)
 router.register(r'vehicles', views.VehicleViewSet)
 router.register(r'courses', views.CourseViewSet)
+router.register(r'images', views.ImageViewSet)
 
 schema_view = get_swagger_view(title='Pastebin API')
 
