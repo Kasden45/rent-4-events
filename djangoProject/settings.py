@@ -20,7 +20,6 @@ import Rent4Events.utils
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -39,7 +38,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
-       'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -99,7 +98,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'djangoProject.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -109,7 +107,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -129,7 +126,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -142,7 +138,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -167,10 +162,9 @@ if AUTH0_DOMAIN:
     PUBLIC_KEY = certificate.public_key()
     JWT_ISSUER = 'https://' + AUTH0_DOMAIN + '/'
 
+
 def jwt_get_username_from_payload_handler(payload):
     return 'rentAdmin'
-
-
 
 
 JWT_AUTH = {
@@ -186,4 +180,5 @@ JWT_AUTH = {
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:8080',
+    'http://localhost:8000',
 ]

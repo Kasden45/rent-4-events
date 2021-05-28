@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-guest">
+<div class="layout-client">
 
         <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -33,29 +33,24 @@
               <li class="nav-item">
                 <router-link class="nav-link" to="/Oferta">Oferta</router-link>
               </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/Zamowienia">Zamówienia</router-link>
+              </li>
             </ul>
-
-            <div v-if="!$auth.loading">
-              <!-- show login when not authenticated -->
-              <button v-if="!$auth.isAuthenticated" @click="login">Log in</button>
-              <!-- show logout when authenticated -->
-              <button v-if="$auth.isAuthenticated" @click="logout">Log out</button>
-            </div>
-
             <button
               class="btn btn-primary btn-margin"
-              @click="privateMessage()">
+              id="idk">
               Call Private
             </button>
             <button
               class="btn btn-primary btn-margin"
-              v-if="!authenticated"
+              v-if="!this.$auth.isAuthenticated"
               @click="login()">
               Log In
             </button>
             <button
               class="btn btn-primary btn-margin"
-              v-if="authenticated"
+              v-if="this.$auth.isAuthenticated"
               @click="logout()">
               Log Out
             </button>
@@ -65,44 +60,33 @@
         </div>
         <!-- Container wrapper -->
       </nav>
-      <!-- Navbar -->
-    {{ message }}
-    <br>
     <slot/>
     <my-footer/>
   </div>
 </template>
 
 <script>
-// import AuthService from '../auth/AuthService'
 import axios from 'axios'
 import MyFooter from '../components/MyFooter'
+// import $ from 'jquery'
+import { CollapseTransition } from '@ivanv/vue-collapse-transition'
 
 const API_URL = 'http://localhost:8000'
+
 // const auth = new AuthService()
 export default {
-  name: 'LayoutGuest',
-  components: {MyFooter},
+  name: 'LayoutClient',
+  components: {MyFooter, CollapseTransition},
   data () {
-    this.handleAuthentication()
-    this.authenticated = false
-
-    this.$auth.authNotifier.on('authChange', authState => {
-      this.authenticated = authState.authenticated
-    })
-
     return {
-      authenticated: false,
-      message: 'a'
+      message: 'a',
+      isOpen: true
     }
   },
   methods: {
     // this method calls the AuthService login() method
     login () {
-      this.$auth.login()
-    },
-    handleAuthentication () {
-      this.$auth.handleAuthentication()
+        this.$auth.loginWithRedirect()
     },
     logout () {
       this.$auth.logout()
@@ -121,4 +105,8 @@ export default {
 
 <style scoped>
 
+
+.navbar {
+  position: sticky;
+}
 </style>

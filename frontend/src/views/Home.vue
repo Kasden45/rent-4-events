@@ -41,8 +41,13 @@ export default {
 
 <style scoped>
 
+html {
+  width: 100%;
+}
+
 #intro {
   height: 80vh;
+  width: 100%;
   background: url("../assets/event.jpg") no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -52,6 +57,7 @@ export default {
 
 #bg {
   height: 80vh;
+  width: 100%;
   background: linear-gradient(
   150deg,
       rgba(0, 0, 0, 0.0),

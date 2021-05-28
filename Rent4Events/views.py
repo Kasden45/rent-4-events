@@ -163,6 +163,10 @@ class OrderPositionViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
 
+class ImageViewSet(viewsets.ModelViewSet):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+    permission_classes = [permissions.AllowAny]
 
 
 def user_list(request):

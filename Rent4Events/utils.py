@@ -13,9 +13,10 @@ def jwt_get_username_from_payload_handler(payload):
 
 
 def jwt_decode_token(token):
-    print("decode")
     header = jwt.get_unverified_header(token)
+    print(header)
     jwks = requests.get('https://{}/.well-known/jwks.json'.format('ztw-kl.eu.auth0.com')).json()
+    print(jwks)
     public_key = None
     for jwk in jwks['keys']:
         if jwk['kid'] == header['kid']:
@@ -24,4 +25,5 @@ def jwt_decode_token(token):
         raise Exception('Public key not found.')
 
     issuer = 'https://{}/'.format('ztw-kl.eu.auth0.com')
+    print("DECODED", jwt.decode(token, public_key, audience='https://rent-4-events', issuer=issuer, algorithms=['RS256']))
     return jwt.decode(token, public_key, audience='https://rent-4-events', issuer=issuer, algorithms=['RS256'])

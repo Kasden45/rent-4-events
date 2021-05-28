@@ -1,15 +1,17 @@
 <template>
-  <layout-guest>
+  <layout-client>
     <router-view></router-view>
-  </layout-guest>
+  </layout-client>
 </template>
 
 <script>
 import LayoutGuest from '../layouts/LayoutGuest'
+import LayoutClient from '../layouts/LayoutClient'
 export default {
   name: 'MyMenu',
   components: {
-    LayoutGuest
+    LayoutGuest,
+    LayoutClient
   }
 }
 </script>
