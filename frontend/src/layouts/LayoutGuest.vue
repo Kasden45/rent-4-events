@@ -109,5 +109,7 @@ export default {
 </script>
 
 <style scoped>
-
+.nav-link:focus {
+    border-bottom: 1px solid var(--COLOR4);
+}
 </style>

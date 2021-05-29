@@ -2,7 +2,7 @@
   <div class="orders">
     <div class="row justify-content-end py-3 mw-100">
       <div class="col-3">
-          <router-link class="btn btn-primary btn-primary" to="/Zamowienia/Nowe/">NOWE ZAMÓWIENIE</router-link>
+          <router-link class="btn btn-2" to="/Zamowienia/Nowe/">NOWE ZAMÓWIENIE</router-link>
       </div>
     </div>
     <div class="row mw-100">

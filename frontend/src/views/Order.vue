@@ -1,24 +1,22 @@
 <template>
     <div>
-        <div class="row justify-content-end my-3">
-            <div class="col-3">
-                <router-link class="btn btn-primary btn-primary" to="/Zamowienia">Powrót do zamówień</router-link>
+        <div class="row justify-content-end my-3 px-3">
+            <div class="col-md-3 col-4">
+                <router-link class="btn btn-3" to="/Zamowienia">Powrót do zamówień</router-link>
             </div>
         </div>
-        <div class="row">
-            <div class="col-2">
+        <div class="row justify-content-center">
+            <div class="col-md-2 col-4">
                 <categories-checkbox :categories-source="categories"/>
             </div>
-            <div class="col-7">
+            <div class="col-md-7 col-7">
                 <div class="row align-content-center">
-                    <div class="col-4 px-5 py-3 products-gallery" v-for="prod in products" :key="prod.prodId">
-<!--                        <div class="col-3">?-->
-                            <product :product-source="prod"/>
-<!--                        </div>-->
+                    <div class="col-lg-4 col-md-6 col-12 px-5 py-3 products-gallery" v-for="prod in products" :key="prod.prodId">
+                        <product :product-source="prod"/>
                     </div>
                 </div>
             </div>
-            <div class="col-3">
+            <div class="col-md-3 col-10">
                 <div class="row">
                     <new-order :order-source="neworder"/>
                 </div>
@@ -63,7 +61,7 @@ export default {
       })
     },
     async getProducts () {
-      const url = `${API_URL}/products/?query={prodId, prodName, price, image}`
+      const url = `${API_URL}/products/?query={prodId, prodName, price, images}`
       console.log(this.$auth)
       const token = await this.$auth.getTokenSilently()
       // const token = this.$auth.getIdTokenClaims()
