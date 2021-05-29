@@ -6,9 +6,7 @@ from Rent4Events.models import *
 import django.contrib.auth.models as auth
 from django.views.decorators.csrf import csrf_exempt
 from django_restql.mixins import DynamicFieldsMixin
-
-
-
+from django.db import IntegrityError
 
 
 class GroupSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
@@ -32,7 +30,6 @@ class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
             username=validated_data['username'],
             password=validated_data['password'],
 
-
         )
 
         new_user.set_password(new_user.password)
@@ -55,6 +52,7 @@ class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         instance.save()
         return instance
 
+
 class ImageSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = Image
@@ -74,11 +72,27 @@ class ProductSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         model = Product
         fields = ['prodId', 'prodName', 'category', 'quantity', 'available', 'price', 'description', 'images']
         read_only_fields = ['images']
+
     def create(self, validated_data):
         """
         Create and return a new `Snippet` instance, given the validated data.
         """
-        return Product.objects.create(**validated_data)
+        # return Product.objects.create(**validated_data)constraint_available_lte_quantity
+        try:
+            return Product.objects.create(**validated_data)
+        except IntegrityError as e:
+            print(e.__str__())
+            if 'CHECK constraint' in e.__str__():
+                additional_info = ""
+                if 'constraint_available_lte_quantity' in e.__str__():
+                    additional_info = "'Available' can't be greater than 'Quantity'!"
+                elif 'quantity' in e.__str__():
+                    additional_info = "'Quantity' must be greater than or equal 0!"
+                elif 'available' in e.__str__():
+                    additional_info = "'Available' must be greater than or equal 0!"
+                elif 'constraint_price_greater_than_zero' in e.__str__():
+                    additional_info = "'Price' must be greater than or equal 0! "
+                raise serializers.ValidationError("{} - {}".format(e.__cause__, additional_info))
 
 
 class CategorySerializer(DynamicFieldsMixin, serializers.ModelSerializer):
@@ -104,7 +118,13 @@ class OrderPositionSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         """
         Create and return a new `Snippet` instance, given the validated data.
         """
-        return OrderPosition.objects.create(**validated_data)
+        try:
+            return OrderPosition.objects.create(**validated_data)
+        except IntegrityError as e:
+            print(e.__str__())
+            if 'UNIQUE constraint' in e.__str__():
+                print("UNIQUE!")
+                raise serializers.ValidationError(e.__cause__)
 
 
 class OrderSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
@@ -118,7 +138,21 @@ class OrderSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         """
         Create and return a new `Snippet` instance, given the validated data.
         """
-        return Order.objects.create(**validated_data)
+        _client = validated_data.get('client', Order.client)
+        _status = validated_data.get('status', Order.status)
+        if _status == "Robocze":
+            count = len(Order.objects.filter(models.Q(client=_client), models.Q(status="Robocze")))
+            if count >= 1:
+                raise serializers.ValidationError("This client already has order with status 'Robocze'!")
+        try:
+            return Order.objects.create(**validated_data)
+        except IntegrityError as e:
+            print(e.__str__())
+            if 'constraint_start_end' in e.__str__():
+                print("e.__cause__")
+                raise serializers.ValidationError("End date can't appear before start date!")
+            elif 'constraint_totalCost_greater_than_zero' in e.__str__():
+                raise serializers.ValidationError("Total cost must be greater than 0!")
 
 
 class ClientSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
@@ -168,5 +202,3 @@ class CourseSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         Create and return a new `Snippet` instance, given the validated data.
         """
         return Course.objects.create(**validated_data)
-
-
