@@ -36,6 +36,12 @@
               <li class="nav-item">
                 <router-link class="nav-link" to="/Zamowienia">Zamówienia</router-link>
               </li>
+                <li class="nav-item">
+                <router-link class="nav-link" to="/Kursy">Moje kursy</router-link>
+              </li>
+                <li class="nav-item">
+                <router-link class="nav-link" to="/Kursy/Aktualny">Aktualny kurs</router-link>
+              </li>
             </ul>
             <button
               class="btn btn-4 mx-2"
@@ -74,7 +80,7 @@ const API_URL = 'http://localhost:8000'
 
 // const auth = new AuthService()
 export default {
-  name: 'LayoutClient',
+  name: 'LayoutDriver',
   components: {MyFooter},
   data () {
     return {

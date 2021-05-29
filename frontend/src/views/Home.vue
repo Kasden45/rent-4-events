@@ -40,8 +40,6 @@ export default {
 
 <style scoped>
 
-
-
 #intro {
     color: #FFFFFF;
 }

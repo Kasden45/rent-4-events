@@ -37,7 +37,7 @@ export default {
       const token = await this.$auth.getTokenSilently()
       // const token = this.$auth.getIdTokenClaims()
       console.log(token)
-        console.log(this.$auth.user)
+      console.log(this.$auth.user)
       const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         console.log(JSON.stringify(response.data))
         this.orders = response.data['results']

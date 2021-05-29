@@ -36,6 +36,21 @@
               <li class="nav-item">
                 <router-link class="nav-link" to="/Zamowienia">Zamówienia</router-link>
               </li>
+                <li class="nav-item">
+                <router-link class="nav-link" to="/Kadra">Kadra</router-link>
+              </li>
+                <li class="nav-item">
+                <router-link class="nav-link" to="/Pojazdy">Pojazdy</router-link>
+              </li>
+                <li class="nav-item">
+                <router-link class="nav-link" to="/Kursy">Kursy</router-link>
+              </li>
+                <li class="nav-item">
+                <router-link class="nav-link" to="/Asortyment">Asortyment</router-link>
+              </li>
+                <li class="nav-item">
+                <router-link class="nav-link" to="/Raporty">Raporty</router-link>
+              </li>
             </ul>
             <button
               class="btn btn-4 mx-2"
@@ -68,13 +83,12 @@
 <script>
 import axios from 'axios'
 import MyFooter from '../components/MyFooter'
-// import $ from 'jquery'
 
 const API_URL = 'http://localhost:8000'
 
 // const auth = new AuthService()
 export default {
-  name: 'LayoutClient',
+  name: 'LayoutManager',
   components: {MyFooter},
   data () {
     return {
