@@ -93,7 +93,7 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 class ProductViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows products to be viewed or edited.
     """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -102,7 +102,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 class CategoryViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows categories to be viewed or edited.
     """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -111,7 +111,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 class ClientViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows clients to be viewed or edited.
     """
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
@@ -120,7 +120,7 @@ class ClientViewSet(viewsets.ModelViewSet):
 
 class DriverViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows drivers to be viewed or edited.
     """
     queryset = Driver.objects.all()
     serializer_class = DriverSerializer
@@ -138,7 +138,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
 class VehicleViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows vehicles to be viewed or edited.
     """
     queryset = Vehicle.objects.all()
     serializer_class = VehicleSerializer
@@ -147,7 +147,7 @@ class VehicleViewSet(viewsets.ModelViewSet):
 
 class CourseViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows courses to be viewed or edited.
     """
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
@@ -156,7 +156,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 class OrderPositionViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows orders to be viewed or edited.
     """
     queryset = OrderPosition.objects.all()
     serializer_class = OrderPositionSerializer
@@ -164,6 +164,9 @@ class OrderPositionViewSet(viewsets.ModelViewSet):
 
 
 class ImageViewSet(viewsets.ModelViewSet):
+    """
+        API endpoint that allows images to be viewed or edited.
+    """
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
     permission_classes = [permissions.AllowAny]
