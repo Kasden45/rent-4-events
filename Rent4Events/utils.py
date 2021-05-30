@@ -11,12 +11,12 @@ def jwt_get_username_from_payload_handler(payload):
     username = payload.get('sub').replace('|', '.')
     permissions = payload.get('permissions')
     user = authenticate(remote_user=username)
-    if not user.groups:
-        for permission in permissions:
-            my_group = Group.objects.get(name=permission)
-            user.groups.add(my_group)
-            user.save()
-    print('user', username)
+    if len(user.groups.all()) == 0:
+        # for permission in permissions:
+        my_group = Group.objects.get(name='Klient')
+        user.groups.add(my_group)
+        user.save()
+    print('user', user.username)
     print('new_user groups')
     for group in user.groups.all():
         print(str(group))
