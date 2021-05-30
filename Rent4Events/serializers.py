@@ -125,7 +125,8 @@ class OrderPositionSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
             if 'UNIQUE constraint' in e.__str__():
                 print("UNIQUE!")
                 raise serializers.ValidationError(e.__cause__)
-
+            else:
+                raise serializers.ValidationError(e.__cause__)
 
 class OrderSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     positions = OrderPositionSerializer(many=True, allow_null=True, required=False)

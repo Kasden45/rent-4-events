@@ -10,6 +10,7 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 
 from Rent4Events.models import Product, OrderPosition
 # from Rent4Events.serializers import UserSerializer, GroupSerializer, ProductSerializer
@@ -135,6 +136,20 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     permission_classes = [permissions.AllowAny]
 
+    def list(self, request, *args, **kwargs):
+        print("request user", request.user)
+        if request.user.is_staff:
+            queryset = Order.objects.all()
+        else:
+            queryset = Order.objects.filter(client__userId__username=request.user.username)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 class VehicleViewSet(viewsets.ModelViewSet):
     """
