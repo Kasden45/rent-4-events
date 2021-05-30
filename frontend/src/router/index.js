@@ -5,6 +5,7 @@ import Home from '../views/Home'
 import Offer from '../views/Offer'
 import Orders from '../views/Orders'
 import Order from '../views/Order'
+import Drivers from '../views/Drivers'
 import { authGuard } from '../auth/authGuard'
 Vue.use(Router)
 
@@ -30,6 +31,12 @@ export default new Router({
       path: '/Zamowienia/Nowe',
       name: 'Order',
       component: Order,
+      beforeEnter: authGuard
+    },
+    {
+      path: '/Kadra',
+      name: 'Drivers',
+      component: Drivers,
       beforeEnter: authGuard
     }
   ]
