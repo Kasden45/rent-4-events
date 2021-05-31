@@ -1,7 +1,7 @@
 <template>
-  <layout-client>
+  <layout-manager>
     <router-view></router-view>
-  </layout-client>
+  </layout-manager>
 </template>
 
 <script>

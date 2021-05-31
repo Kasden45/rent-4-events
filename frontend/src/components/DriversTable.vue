@@ -113,10 +113,10 @@ export default {
           return '<input class="form-control"/>'
         })
         $birthDate.html(function () {
-          return '<input class="form-control"/>'
+          return '<input class="form-control" type="date"/>'
         })
         $employmentDate.html(function () {
-          return '<input class="form-control"/>'
+          return '<input class="form-control" type="date"/>'
         })
         $salary.html(function () {
           return '<input class="form-control"/>'
@@ -156,12 +156,35 @@ export default {
         // enable buttons
         $('.btn-danger').prop('disabled', false)
         $('.btn-info').prop('disabled', false)
+        const driverData = [this.editedDriver, $driverIndex]
 
-        this.$emit('edit:driver', this.editedDriver)
+        this.$emit('edit:driver', {data: driverData,
+          done: () => {
+            this.error = false
+            this.success = true
+            this.submitting = false
 
-        this.error = false
-        this.success = true
-        this.submitting = false
+            $driver = this.driversSource[$driverIndex]
+
+            $firstName.html(function () {
+              return '<td>' + $driver.firstName + '</td>'
+            })
+            $lastName.html(function () {
+              return '<td>' + $driver.lastName + '</td>'
+            })
+            $birthDate.html(function () {
+              return '<td>' + $driver.birthDate + '</td>'
+            })
+            $employmentDate.html(function () {
+              return '<td>' + $driver.employmentDate + '</td>'
+            })
+            $salary.html(function () {
+              return '<td>' + $driver.salary + '</td>'
+            })
+            $phoneNumber.html(function () {
+              return '<td>' + $driver.phoneNumber + '</td>'
+            })
+          }})
       }
 
       this.changeButtons($grandParent)

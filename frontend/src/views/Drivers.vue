@@ -28,18 +28,35 @@ export default {
       const token = await this.$auth.getTokenSilently()
       const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.drivers = response.data['results']
+        // console.log(response.data['results'])
         return resp
       })
     },
-    async editDriver (driver) {
+    async editDriver (driverData) {
       try {
+        console.log(driverData)
+        const driver = driverData.data[0]
+        const index = driverData.data[1]
+        console.log(driverData.data[1])
         const url = `${API_URL}/drivers/${driver.userId}/`
         const token = await this.$auth.getTokenSilently()
-        return axios.put(url, driver, {headers: {Authorization: `Bearer ${token}`}})
+        await axios.put(url, driver, {headers: {Authorization: `Bearer ${token}`}})
+        await this.getDriverById(driver.userId, index, driverData)
       } catch (error) {
         console.log(error)
       }
-      location.reload()
+    },
+    async getDriverById (id, index, driverData) {
+      try {
+        const url = `${API_URL}/drivers/${id}/`
+        const token = await this.$auth.getTokenSilently()
+        await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+          this.drivers[index] = response.data
+          driverData.done()
+        })
+      } catch (error) {
+        console.log(error)
+      }
     }
   },
   mounted () {
