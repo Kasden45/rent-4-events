@@ -2,7 +2,7 @@
     <div id="drivers" class="container">
         <div class="row justify-content-center">
             <div class="col-11">
-                <drivers-table :drivers-source="drivers" @edit:driver="editDriver"/>
+                <drivers-table :drivers-source="drivers" @edit:driver="editDriver" @delete:driver="deleteDriver"/>
             </div>
         </div>
     </div>
@@ -28,7 +28,6 @@ export default {
       const token = await this.$auth.getTokenSilently()
       const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.drivers = response.data['results']
-        // console.log(response.data['results'])
         return resp
       })
     },
@@ -54,6 +53,16 @@ export default {
           this.drivers[index] = response.data
           driverData.done()
         })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async deleteDriver (id) {
+      try {
+        const url = `${API_URL}/drivers/${id}/`
+        const token = await this.$auth.getTokenSilently()
+        await axios.delete(url, {headers: {Authorization: `Bearer ${token}`}})
+        await this.getDrivers()
       } catch (error) {
         console.log(error)
       }

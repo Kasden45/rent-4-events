@@ -74,11 +74,10 @@ export default {
     },
 
     handleDelete (id) {
-      if (this.isEdit) {
-        // usuń/anuluj button
-        location.reload()
-      } else {
-        this.$emit('delete:driver', id)
+      if (!this.isEdit) {
+        if (confirm('Are you sure you want to delete this driver?')) {
+          this.$emit('delete:driver', id)
+        }
       }
     },
     handleEdit: function (event) {
