@@ -10,6 +10,7 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 
 from Rent4Events.models import Product, OrderPosition
 # from Rent4Events.serializers import UserSerializer, GroupSerializer, ProductSerializer
@@ -93,7 +94,7 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 class ProductViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows products to be viewed or edited.
     """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -102,7 +103,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 class CategoryViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows categories to be viewed or edited.
     """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -111,7 +112,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 class ClientViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows clients to be viewed or edited.
     """
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
@@ -120,7 +121,7 @@ class ClientViewSet(viewsets.ModelViewSet):
 
 class DriverViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows drivers to be viewed or edited.
     """
     queryset = Driver.objects.all()
     serializer_class = DriverSerializer
@@ -135,10 +136,24 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     permission_classes = [permissions.AllowAny]
 
+    def list(self, request, *args, **kwargs):
+        print("request user", request.user)
+        if request.user.is_staff:
+            queryset = Order.objects.all()
+        else:
+            queryset = Order.objects.filter(client__userId__username=request.user.username)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 class VehicleViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows vehicles to be viewed or edited.
     """
     queryset = Vehicle.objects.all()
     serializer_class = VehicleSerializer
@@ -147,7 +162,7 @@ class VehicleViewSet(viewsets.ModelViewSet):
 
 class CourseViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows courses to be viewed or edited.
     """
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
@@ -156,7 +171,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 class OrderPositionViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows groups to be viewed or edited.
+    API endpoint that allows orders to be viewed or edited.
     """
     queryset = OrderPosition.objects.all()
     serializer_class = OrderPositionSerializer
@@ -164,6 +179,9 @@ class OrderPositionViewSet(viewsets.ModelViewSet):
 
 
 class ImageViewSet(viewsets.ModelViewSet):
+    """
+        API endpoint that allows images to be viewed or edited.
+    """
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
     permission_classes = [permissions.AllowAny]

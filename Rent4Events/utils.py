@@ -6,9 +6,20 @@ import requests
 
 
 def jwt_get_username_from_payload_handler(payload):
+    from django.contrib.auth.models import Group
+    print(payload)
     username = payload.get('sub').replace('|', '.')
-    authenticate(remote_user=username)
-    print('user', username)
+    permissions = payload.get('permissions')
+    user = authenticate(remote_user=username)
+    if len(user.groups.all()) == 0:
+        # for permission in permissions:
+        my_group = Group.objects.get(name='Klient')
+        user.groups.add(my_group)
+        user.save()
+    print('user', user.username)
+    print('new_user groups')
+    for group in user.groups.all():
+        print(str(group))
     return username
 
 
