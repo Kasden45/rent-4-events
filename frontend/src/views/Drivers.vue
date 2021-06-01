@@ -2,6 +2,11 @@
     <div id="drivers" class="container">
         <div class="row justify-content-center">
             <div class="col-11">
+                <driver-form :users-source="users" @add:driver="addDriver"/>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-11">
                 <drivers-table :drivers-source="drivers" @edit:driver="editDriver" @delete:driver="deleteDriver"/>
             </div>
         </div>
@@ -10,19 +15,36 @@
 
 <script>
 import DriversTable from '../components/DriversTable'
+import DriverForm from '../components/DriverForm'
 import axios from 'axios'
 const API_URL = 'http://localhost:8000'
 export default {
   name: 'Drivers',
   components: {
-    DriversTable
+    DriversTable,
+    DriverForm
   },
   data () {
     return {
-      drivers: []
+      drivers: [],
+      users: []
     }
   },
   methods: {
+    async addDriver (driver) {
+      const url = `${API_URL}/drivers/`
+      const token = await this.$auth.getTokenSilently()
+      await axios.post(url, driver, {headers: {Authorization: `Bearer ${token}`}})
+      this.getDrivers()
+    },
+    async getUsers () {
+      const url = `${API_URL}/users/?query={id, username}`
+      const token = await this.$auth.getTokenSilently()
+      await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+        this.users = response.data['results']
+        console.log(response.data)
+      })
+    },
     async getDrivers () {
       const url = `${API_URL}/drivers/`
       const token = await this.$auth.getTokenSilently()
@@ -70,6 +92,7 @@ export default {
   },
   mounted () {
     this.getDrivers()
+    this.getUsers()
   }
 }
 </script>
