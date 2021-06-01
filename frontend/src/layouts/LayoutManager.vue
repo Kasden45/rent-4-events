@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-guest">
+<div class="layout-client">
 
         <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -33,18 +33,28 @@
               <li class="nav-item">
                 <router-link class="nav-link" to="/Oferta">Oferta</router-link>
               </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/Zamowienia">Zamówienia</router-link>
+              </li>
+                <li class="nav-item">
+                <router-link class="nav-link" to="/Kadra">Kadra</router-link>
+              </li>
+                <li class="nav-item">
+                <router-link class="nav-link" to="/Pojazdy">Pojazdy</router-link>
+              </li>
+                <li class="nav-item">
+                <router-link class="nav-link" to="/Kursy">Kursy</router-link>
+              </li>
+                <li class="nav-item">
+                <router-link class="nav-link" to="/Asortyment">Asortyment</router-link>
+              </li>
+                <li class="nav-item">
+                <router-link class="nav-link" to="/Raporty">Raporty</router-link>
+              </li>
             </ul>
-
-<!--            <div v-if="!$auth.loading">-->
-<!--              &lt;!&ndash; show login when not authenticated &ndash;&gt;-->
-<!--              <button v-if="!$auth.isAuthenticated" @click="login">Log in</button>-->
-<!--              &lt;!&ndash; show logout when authenticated &ndash;&gt;-->
-<!--              <button v-if="$auth.isAuthenticated" @click="logout">Log out</button>-->
-<!--            </div>-->
-
             <button
               class="btn btn-4 mx-2"
-              @click="privateMessage()">
+              id="idk">
               Call Private
             </button>
             <button
@@ -65,23 +75,20 @@
         </div>
         <!-- Container wrapper -->
       </nav>
-      <!-- Navbar -->
-    {{ message }}
-    <br>
     <slot/>
     <my-footer/>
   </div>
 </template>
 
 <script>
-// import AuthService from '../auth/AuthService'
 import axios from 'axios'
 import MyFooter from '../components/MyFooter'
 
 const API_URL = 'http://localhost:8000'
+
 // const auth = new AuthService()
 export default {
-  name: 'LayoutGuest',
+  name: 'LayoutManager',
   components: {MyFooter},
   data () {
     return {
@@ -109,6 +116,10 @@ export default {
 </script>
 
 <style scoped>
+.navbar {
+  position: sticky;
+}
+
 .nav-link:focus {
     border-bottom: 1px solid var(--COLOR4);
 }

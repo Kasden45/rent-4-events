@@ -1,7 +1,7 @@
 <template>
     <div class="product" :id="productSource.prodId">
         <div class="row">
-            <img :src="productSource.image" alt="prodImage" height="150" width="150">
+            <img :src="productSource.images[0].imageUrl" alt="prodImage" height="150" width="150">
         </div>
         <div class="row">
             <p>{{productSource.prodName}}</p>
@@ -16,7 +16,7 @@
 
         </div>
         <div class="row">
-            <button class="btn btn-primary"> DODAJ DO ZAMÓWIENIA</button>
+            <button class="btn btn-outline-2"> DODAJ DO ZAMÓWIENIA</button>
         </div>
     </div>
 </template>
@@ -31,7 +31,5 @@ export default {
 </script>
 
 <style scoped>
-.form-control {
-    ;
-}
+
 </style>

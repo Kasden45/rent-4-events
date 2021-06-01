@@ -69,14 +69,13 @@
 import axios from 'axios'
 import MyFooter from '../components/MyFooter'
 // import $ from 'jquery'
-import { CollapseTransition } from '@ivanv/vue-collapse-transition'
 
 const API_URL = 'http://localhost:8000'
 
 // const auth = new AuthService()
 export default {
   name: 'LayoutClient',
-  components: {MyFooter, CollapseTransition},
+  components: {MyFooter},
   data () {
     return {
       message: 'a'
@@ -85,7 +84,7 @@ export default {
   methods: {
     // this method calls the AuthService login() method
     login () {
-        this.$auth.loginWithRedirect()
+      this.$auth.loginWithRedirect()
     },
     logout () {
       this.$auth.logout()

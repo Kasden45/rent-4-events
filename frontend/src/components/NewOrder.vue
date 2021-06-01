@@ -1,12 +1,14 @@
 <template>
-    <div class="new-order">
-        <p>PODSUMOWANIE</p>
+    <div class="new-order px-3 py-3">
+        <h4>PODSUMOWANIE</h4>
         <div class="tab-content">
             <table class="table table-sm table-borderless ">
             <thead>
-                <tr>PRODUKT</tr>
-                <tr>SZT</tr>
-                <tr></tr>
+                <tr>
+                    <th>PRODUKT</th>
+                    <th>SZT</th>
+                    <th></th>
+                </tr>
             </thead>
             <tbody>
 <!--                <tr v-for="elem in orderSource" :key="elem.prodId">-->
@@ -17,10 +19,15 @@
 <!--                    </td>-->
 <!--                </tr>-->
                 <tr>
-                    <td>Piesek</td>
-                    <td>5</td>
+                    <td>Piesekkkkkkkkk njcnscn jd</td>
                     <td>
-                        <button class="btn btn-danger">X</button>
+                        <div class="col-6">
+                            <input class="form-control" type="number" value="1">
+                        </div>
+
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-danger">X</button>
                     </td>
                 </tr>
             <tr>
@@ -100,7 +107,7 @@
             <p>Termin wypożyczenia:</p>
             <p>{{orderSource.startDate}} - {{orderSource.endDate}}</p>
             <p>Koszt zamówienia: {{orderSource.totalCost}}</p>
-            <button class="btn btn-primary">Złóż zapytanie</button>
+            <button class="btn btn-3 float-end">Złóż zapytanie</button>
         </div>
     </div>
 </template>
@@ -116,18 +123,19 @@ export default {
 
 <style scoped>
 .new-order {
-    background-color: #267478;
-    height: 80vh;
-    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
-    border-bottom-left-radius: 15px;
-    border-top-left-radius: 15px;
-    /*opacity: 60%;*/
-
+    background-color: var(--COLOR2);
+    max-height: 90vh;
+    color: #FFFFFF;
+    opacity: 90%;
 }
 
 .tab-content {
     height: 50vh;
     overflow: auto;
+}
+
+.table {
+    color: #FFFFFF;
 }
 
 ::-webkit-scrollbar {
