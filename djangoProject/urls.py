@@ -44,5 +44,9 @@ urlpatterns = [
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('rent-rest/', include('Rent4Events.urls')),
-    url(r'^swagger/', schema_view)
+    url(r'^swagger/', schema_view),
+    path('order-positions/<int:order_id>/<int:product_id>', views.OrderPositionViewSet.as_view({'get': 'retrieve',
+                                                                                               'delete': 'destroy',
+                                                                                               'put': 'update'}))
+
 ]
