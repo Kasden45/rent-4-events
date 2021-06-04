@@ -8,6 +8,7 @@ from rest_framework.decorators import api_view, permission_classes
 import django.contrib.auth.models as auth
 from rest_framework import viewsets
 from rest_framework import permissions
+from rest_framework.generics import get_object_or_404
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -168,15 +169,24 @@ class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     permission_classes = [permissions.AllowAny]
 
+class MultipleFieldLookupMixin:
+    def get_object(self):
+        queryset = self.get_queryset()                          # Get the base queryset
+        queryset = self.filter_queryset(queryset)               # Apply any filter backends
+        multi_filter = {field: self.kwargs[field] for field in self.lookup_fields}
+        obj = get_object_or_404(queryset, **multi_filter)       # Lookup the object
+        self.check_object_permissions(self.request, obj)
+        return obj
 
-class OrderPositionViewSet(viewsets.ModelViewSet):
+
+class OrderPositionViewSet(MultipleFieldLookupMixin, viewsets.ModelViewSet):
     """
     API endpoint that allows orders to be viewed or edited.
     """
     queryset = OrderPosition.objects.all()
     serializer_class = OrderPositionSerializer
     permission_classes = [permissions.AllowAny]
-
+    lookup_fields = ['order_id', 'product_id']
 
 class ImageViewSet(viewsets.ModelViewSet):
     """

@@ -110,6 +110,7 @@ class CategorySerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 
 
 class OrderPositionSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
+    product = ProductSerializer(many=False, allow_null=True, required=False)
     class Meta:
         model = OrderPosition
         fields = ['order', 'product', 'quantity']
@@ -178,6 +179,7 @@ class DriverSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         """
         Create and return a new `Snippet` instance, given the validated data.
         """
+        read_only_fields = ['userId']
         return Driver.objects.create(**validated_data)
 
 
