@@ -75,10 +75,13 @@ export default {
           (item) => {
             if (item.status === 'Robocze') {
               this.newOrder = item
+                console.log(item)
             }
           }
         )
-        if (this.newOrder === {}) {
+          console.log('newOrder ' + JSON.stringify(this.newOrder))
+        if (JSON.stringify(this.newOrder) === '{}') {
+            console.log("STWORZ NOWY")
           this.addOrder()
         }
       })
@@ -86,16 +89,16 @@ export default {
     async addOrder () {
       const url = `${API_URL}/orders/`
       const token = await this.$auth.getTokenSilently()
-      const order = {
+      var order = {
         clientId: this.$auth.user, // ZMIENIC NA ID KLIENTA!!!!ONEONE11!!!
         startDate: new Date().toISOString().slice(0, 10),
         endDate: new Date().toISOString().slice(0, 10),
-        address: '',
+        address: 'Niezdefiniowany',
         totalCost: 0,
-        status: 'Robocze',
-        positions: []
+        status: 'Robocze'
       }
       await axios.post(url, order, {headers: {Authorization: `Bearer ${token}`}})
+        order.positions = []
       this.newOrder = order
     },
     getQuantityOfPosition (id) {

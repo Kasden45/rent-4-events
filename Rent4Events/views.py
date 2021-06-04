@@ -161,6 +161,17 @@ class OrderViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+    def create(self, request, *args, **kwargs):
+        if request.user.is_staff:
+            pass
+        else:
+            queryset = Order.objects.filter(client__userId__username=request.user.client)
+            request.data['client'] = request.user.id
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class VehicleViewSet(viewsets.ModelViewSet):
     """
@@ -193,7 +204,7 @@ class MultipleFieldLookupMixin:
 def calculate_order_total(order_id):
     total = decimal.Decimal('0.0')
     order = Order.objects.get(orderId=order_id)
-    date_diff = (order.endDate - order.startDate).days
+    date_diff = (order.endDate - order.startDate).days + 1
     for position in order.positions.all():
         total += decimal.Decimal(date_diff*position.quantity)*position.product.price
         print(total)
@@ -232,6 +243,13 @@ class OrderPositionViewSet(MultipleFieldLookupMixin, viewsets.ModelViewSet):
         self.perform_update(serializer)
         calculate_order_total(instance.order_id)
         return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        calculate_order_total(instance.order_id)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ImageViewSet(viewsets.ModelViewSet):
