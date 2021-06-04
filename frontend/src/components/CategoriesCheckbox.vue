@@ -6,9 +6,7 @@
         <div class="row" v-for="cat in categoriesSource" :key="cat.catId">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" :value="cat.catId" :id="cat.catId">
-              <label class="form-check-label" :for="cat.catId">
-                {{cat.catName}}
-              </label>
+              <label class="form-check-label" :for="cat.catId">{{cat.catName}}</label>
             </div>
         </div>
     </div>
@@ -26,5 +24,12 @@ export default {
 <style scoped>
 #categories {
     color: #000000;
+}
+.form-check-label {
+    margin: 0px;
+}
+
+.form-check {
+    margin: 10px 0px 10px 0px;
 }
 </style>

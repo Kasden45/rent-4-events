@@ -33,9 +33,10 @@ export default {
     border-color: var(--COLOR1);
 }
 
-.btn-outline-1 {
+.btn-1:hover, .btn-outline-1 {
     color: var(--COLOR1);
     border-color: var(--COLOR1);
+    background-color: #FFFFFF;
 }
 
 .btn-2, .btn-outline-2:hover {
@@ -44,9 +45,10 @@ export default {
     border-color: var(--COLOR2);
 }
 
-.btn-outline-2 {
+.btn-2:hover, .btn-outline-2 {
     color: var(--COLOR2);
     border-color: var(--COLOR2);
+    background-color: #FFFFFF;
 }
 
 .btn-3, .btn-outline-3:hover {
@@ -55,9 +57,10 @@ export default {
     border-color: var(--COLOR3);
 }
 
-.btn-outline-3{
+.btn-3:hover, .btn-outline-3{
     color: var(--COLOR3);
     border-color: var(--COLOR3);
+    background-color: #FFFFFF;
 }
 
 .btn-4, .btn-outline-4:hover {
@@ -66,9 +69,10 @@ export default {
     border-color: var(--COLOR4);
 }
 
-.btn-outline-4 {
+.btn-4:hover, .btn-outline-4 {
     color: var(--COLOR4);
     border-color: var(--COLOR4);
+    background-color: #FFFFFF;
 }
 
 .btn {

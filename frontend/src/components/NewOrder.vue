@@ -11,103 +11,44 @@
                 </tr>
             </thead>
             <tbody>
-<!--                <tr v-for="elem in orderSource" :key="elem.prodId">-->
-<!--                    <td>{{elem.product}}</td>-->
-<!--                    <td>{{elem.quantity}}</td>-->
-<!--                    <td>-->
-<!--                        <button class="btn btn-danger">X</button>-->
-<!--                    </td>-->
-<!--                </tr>-->
-                <tr>
-                    <td>Piesekkkkkkkkk njcnscn jd</td>
+                <tr v-for="elem in orderSource.positions" :key="elem.prodId">
+                    <td>{{elem.product}}</td> <!--DODAĆ PRODNAME!!!!!!!!!!!!!!!!!!!!!!! I WYLICZANIE KOSZTÓW ZAMÓWIENIA-->
                     <td>
                         <div class="col-6">
-                            <input class="form-control" type="number" value="1">
+                            <input class="form-control" type="number" :value="elem.quantity">
                         </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" @click="handleDelete(elem.product)">X</button>
+                    </td>
+                </tr>
+<!--                <tr>-->
+<!--                    <td>Piesekkkkkkkkk njcnscn jd</td>-->
+<!--                    <td>-->
+<!--                        <div class="col-6">-->
+<!--                            <input class="form-control" type="number" value="1">-->
+<!--                        </div>-->
 
-                    </td>
-                    <td>
-                        <button class="btn btn-sm btn-danger">X</button>
-                    </td>
-                </tr>
-            <tr>
-                    <td>Piesek</td>
-                    <td>5</td>
-                    <td>
-                        <button class="btn btn-danger">X</button>
-                    </td>
-                </tr>
-            <tr>
-                    <td>Piesek</td>
-                    <td>5</td>
-                    <td>
-                        <button class="btn btn-danger">X</button>
-                    </td>
-                </tr>
-            <tr>
-                    <td>Piesek</td>
-                    <td>5</td>
-                    <td>
-                        <button class="btn btn-danger">X</button>
-                    </td>
-                </tr>
-            <tr>
-                    <td>Piesek</td>
-                    <td>5</td>
-                    <td>
-                        <button class="btn btn-danger">X</button>
-                    </td>
-                </tr><tr>
-                    <td>Piesek</td>
-                    <td>5</td>
-                    <td>
-                        <button class="btn btn-danger">X</button>
-                    </td>
-                </tr><tr>
-                    <td>Piesek</td>
-                    <td>5</td>
-                    <td>
-                        <button class="btn btn-danger">X</button>
-                    </td>
-                </tr>
-            <tr>
-                    <td>Piesek</td>
-                    <td>5</td>
-                    <td>
-                        <button class="btn btn-danger">X</button>
-                    </td>
-                </tr>
-            <tr>
-                    <td>Piesek</td>
-                    <td>5</td>
-                    <td>
-                        <button class="btn btn-danger">X</button>
-                    </td>
-                </tr>
-            <tr>
-                    <td>Piesek</td>
-                    <td>5</td>
-                    <td>
-                        <button class="btn btn-danger">X</button>
-                    </td>
-                </tr>
-            <tr>
-                    <td>Piesek</td>
-                    <td>5</td>
-                    <td>
-                        <button class="btn btn-danger">X</button>
-                    </td>
-                </tr>
-
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                        <button class="btn btn-sm btn-danger">X</button>-->
+<!--                    </td>-->
+<!--                </tr>-->
             </tbody>
         </table>
         </div>
 
         <div>
-            <p>Termin wypożyczenia:</p>
-            <p>{{orderSource.startDate}} - {{orderSource.endDate}}</p>
-            <p>Koszt zamówienia: {{orderSource.totalCost}}</p>
-            <button class="btn btn-3 float-end">Złóż zapytanie</button>
+            <p>
+                <span> Termin wypożyczenia:</span>
+                <br/>
+                <span class="data">{{orderSource.startDate}} - {{orderSource.endDate}}</span>
+            </p>
+            <p>
+                <span>Koszt zamówienia: </span>
+                <span class="data">{{orderSource.totalCost}} zł</span>
+            </p>
+            <button class="btn btn-4 float-end">Złóż zapytanie</button>
         </div>
     </div>
 </template>
@@ -117,6 +58,11 @@ export default {
   name: 'NewOrder',
   props: {
     orderSource: Object
+  },
+  methods: {
+    handleDelete (id) {
+      this.$emit('delete:product', id)
+    }
   }
 }
 </script>
@@ -126,7 +72,12 @@ export default {
     background-color: var(--COLOR2);
     max-height: 90vh;
     color: #FFFFFF;
+    font-weight: 600;
     opacity: 90%;
+}
+
+.new-order h4 {
+    color: #FFFFFF;
 }
 
 .tab-content {
@@ -135,7 +86,16 @@ export default {
 }
 
 .table {
+    color: #E2DEDE;
+}
+
+th {
     color: #FFFFFF;
+}
+
+span.data {
+    color: var(--COLOR5);
+    font-weight: 400;
 }
 
 ::-webkit-scrollbar {
