@@ -2,7 +2,7 @@
     <div>
         <div class="row justify-content-end my-3 px-3">
             <div class="col-md-3 col-4">
-                <router-link class="btn btn-3" to="/Zamowienia">Powrót do zamówień</router-link>
+                <router-link class="btn btn-4" to="/Zamowienia">Powrót do zamówień</router-link>
             </div>
         </div>
         <div class="row justify-content-center">
@@ -18,7 +18,7 @@
             </div>
             <div class="col-md-3 col-10">
                 <div class="row">
-                    <new-order :order-source="newOrder" @delete:position="deletePosition"/>
+                    <new-order :order-source="newOrder" @delete:position="deletePosition" @edit:position="editPosition" @set:position="setPosition"/>
                 </div>
             </div>
         </div>
@@ -75,13 +75,13 @@ export default {
           (item) => {
             if (item.status === 'Robocze') {
               this.newOrder = item
-                console.log(item)
+              console.log(item)
             }
           }
         )
-          console.log('newOrder ' + JSON.stringify(this.newOrder))
+        console.log('newOrder ' + JSON.stringify(this.newOrder))
         if (JSON.stringify(this.newOrder) === '{}') {
-            console.log("STWORZ NOWY")
+          console.log('STWORZ NOWY')
           this.addOrder()
         }
       })
@@ -98,7 +98,7 @@ export default {
         status: 'Robocze'
       }
       await axios.post(url, order, {headers: {Authorization: `Bearer ${token}`}})
-        order.positions = []
+      order.positions = []
       this.newOrder = order
     },
     getQuantityOfPosition (id) {
@@ -136,6 +136,15 @@ export default {
       const currentQuantity = this.getQuantityOfPosition(id)
       const position = {
         quantity: currentQuantity + parseInt(quantity)
+      }
+      await axios.patch(url, position, {headers: {Authorization: `Bearer ${token}`}})
+      await this.getOrder()
+    },
+    async setPosition (id, quantity) {
+      const url = `${API_URL}/order-positions/${this.newOrder.orderId}/${id}`
+      const token = await this.$auth.getTokenSilently()
+      const position = {
+        quantity: parseInt(quantity)
       }
       await axios.patch(url, position, {headers: {Authorization: `Bearer ${token}`}})
       await this.getOrder()

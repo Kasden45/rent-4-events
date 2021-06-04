@@ -14,28 +14,18 @@
                 <tr v-for="elem in orderSource.positions" :key="elem.product.prodId">
                     <td>{{elem.product.prodName}}</td> <!--DODAĆ WYLICZANIE KOSZTÓW ZAMÓWIENIA-->
                     <td>
-                        <div class="col-6">
-                            <input class="form-control" type="number" :value="elem.quantity">
+                        <div>
+                            <button class="btn btn-sm btn-4 d-inline" @click="deleteOne(elem.product.prodId)">-</button>
+                            <input class="form-control w-50 d-inline size" :id="'write' + elem.product.prodId" type="number" :value="elem.quantity" @change="readQuantity(elem.product.prodId)">
+                            <button class="btn btn-sm btn-4 d-inline" @click="addOne(elem.product.prodId)">+</button>
                         </div>
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-danger" @click="handleDelete(elem.product.prodId)">
+                        <button class="btn btn-sm btn-3" @click="handleDelete(elem.product.prodId)">
                             <font-awesome-icon icon="trash"></font-awesome-icon>
                         </button>
                     </td>
                 </tr>
-<!--                <tr>-->
-<!--                    <td>Piesekkkkkkkkk njcnscn jd</td>-->
-<!--                    <td>-->
-<!--                        <div class="col-6">-->
-<!--                            <input class="form-control" type="number" value="1">-->
-<!--                        </div>-->
-
-<!--                    </td>-->
-<!--                    <td>-->
-<!--                        <button class="btn btn-sm btn-danger">X</button>-->
-<!--                    </td>-->
-<!--                </tr>-->
             </tbody>
         </table>
         </div>
@@ -56,6 +46,7 @@
 </template>
 
 <script>
+import $ from 'jquery'
 export default {
   name: 'NewOrder',
   props: {
@@ -64,6 +55,29 @@ export default {
   methods: {
     handleDelete (id) {
       this.$emit('delete:position', id)
+    },
+    addOne (id) {
+      this.$emit('edit:position', id, 1)
+    },
+    deleteOne (id) {
+      const $value = parseInt($('#write' + id).val())
+      if ($value > 1) {
+        this.$emit('edit:position', id, -1)
+      } else if ($value === 1) {
+        this.handleDelete(id)
+      }
+    },
+    readQuantity (id) {
+      const $input = $('#write' + id)
+      const $value = parseInt($input.val())
+      if ($value > 0) {
+        this.$emit('set:position', id, $value)
+      } else {
+        const $positionIndex = this.orderSource.positions.map(function (elem) {
+          return elem.product.prodId
+        }).indexOf(id)
+        $input.val(this.orderSource.positions[$positionIndex].quantity)
+      }
     }
   }
 }
@@ -75,7 +89,7 @@ export default {
     max-height: 90vh;
     color: #FFFFFF;
     font-weight: 600;
-    opacity: 90%;
+    /*opacity: 90%;*/
 }
 
 .new-order h4 {
@@ -120,5 +134,34 @@ span.data {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #555555;
+}
+
+.btn-sm {
+    width: 30px;
+    height: 30px;
+}
+
+.size {
+    height: 30px;
+    max-width: 70px;
+    margin: 0;
+    vertical-align: middle;
+    text-align: center;
+}
+
+td {
+    vertical-align: middle;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
 </style>
