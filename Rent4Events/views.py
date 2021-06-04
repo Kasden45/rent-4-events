@@ -233,11 +233,6 @@ class OrderPositionViewSet(MultipleFieldLookupMixin, viewsets.ModelViewSet):
         calculate_order_total(instance.order_id)
         return Response(serializer.data)
 
-    def retrieve(self, request, *args, **kwargs):
-        self.serializer_class = ShowOrderPositionSerializer
-
-        super(OrderPositionViewSet, self).retrieve(request, *args, **kwargs)
-
 
 class ImageViewSet(viewsets.ModelViewSet):
     """

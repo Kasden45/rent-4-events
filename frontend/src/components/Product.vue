@@ -32,7 +32,7 @@ export default {
     handleAddItem (id) {
       const $quantity = $('#prod' + id).val()
       console.log($quantity)
-      this.$emit('add:product', id, $quantity)
+      this.$emit('add:position', id, $quantity)
     }
 
   }

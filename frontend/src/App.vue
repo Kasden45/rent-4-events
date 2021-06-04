@@ -76,6 +76,6 @@ export default {
 }
 
 .btn {
-    border-radius: 0px;
+    border-radius: 0;
 }
 </style>

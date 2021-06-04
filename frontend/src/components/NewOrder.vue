@@ -11,15 +11,17 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="elem in orderSource.positions" :key="elem.prodId">
-                    <td>{{elem.product}}</td> <!--DODAĆ PRODNAME!!!!!!!!!!!!!!!!!!!!!!! I WYLICZANIE KOSZTÓW ZAMÓWIENIA-->
+                <tr v-for="elem in orderSource.positions" :key="elem.product.prodId">
+                    <td>{{elem.product.prodName}}</td> <!--DODAĆ WYLICZANIE KOSZTÓW ZAMÓWIENIA-->
                     <td>
                         <div class="col-6">
                             <input class="form-control" type="number" :value="elem.quantity">
                         </div>
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-danger" @click="handleDelete(elem.product)">X</button>
+                        <button class="btn btn-sm btn-danger" @click="handleDelete(elem.product.prodId)">
+                            <font-awesome-icon icon="trash"></font-awesome-icon>
+                        </button>
                     </td>
                 </tr>
 <!--                <tr>-->
@@ -61,7 +63,7 @@ export default {
   },
   methods: {
     handleDelete (id) {
-      this.$emit('delete:product', id)
+      this.$emit('delete:position', id)
     }
   }
 }

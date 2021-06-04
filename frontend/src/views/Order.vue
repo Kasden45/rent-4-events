@@ -12,13 +12,13 @@
             <div class="col-md-7 col-7">
                 <div class="row align-content-center">
                     <div class="col-lg-4 col-md-6 col-12 px-5 py-3 products-gallery" v-for="prod in products" :key="prod.prodId">
-                        <product :product-source="prod" @add:product="addProduct"/>
+                        <product :product-source="prod" @add:position="addProduct"/>
                     </div>
                 </div>
             </div>
             <div class="col-md-3 col-10">
                 <div class="row">
-                    <new-order :order-source="newOrder" @delete:product="deleteProduct"/>
+                    <new-order :order-source="newOrder" @delete:position="deletePosition"/>
                 </div>
             </div>
         </div>
@@ -51,12 +51,9 @@ export default {
       const url = `${API_URL}/categories/?query={catId, catName}`
       console.log(this.$auth)
       const token = await this.$auth.getTokenSilently()
-      // const token = this.$auth.getIdTokenClaims()
       console.log(token)
       const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
-        // console.log(JSON.stringify(response.data['results']))
         this.categories = response.data['results']
-        // console.log(this.categories)
         return resp
       })
     },
@@ -64,21 +61,17 @@ export default {
       const url = `${API_URL}/products/?query={prodId, prodName, price, images}`
       console.log(this.$auth)
       const token = await this.$auth.getTokenSilently()
-      // const token = this.$auth.getIdTokenClaims()
       console.log(token)
       const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
-        // console.log(JSON.stringify(response.data['results']))
         this.products = response.data['results']
-        // console.log(this.categories)
         return resp
       })
     },
     async getOrder () {
-      const url = `${API_URL}/orders/`
+      const url = `${API_URL}/orders/?query={*,positions{*,product{prodId,prodName}}}`
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
-        const orders = response.data['results']
-        orders.forEach(
+        response.data['results'].forEach(
           (item) => {
             if (item.status === 'Robocze') {
               this.newOrder = item
@@ -89,7 +82,6 @@ export default {
           this.addOrder()
         }
       })
-      console.log(this.newOrder)
     },
     async addOrder () {
       const url = `${API_URL}/orders/`
@@ -106,24 +98,17 @@ export default {
       await axios.post(url, order, {headers: {Authorization: `Bearer ${token}`}})
       this.newOrder = order
     },
-    getQuantityOfProduct (id) {
+    getQuantityOfPosition (id) {
       for (let i = 0; i < this.newOrder.positions.length; i++) {
-        if (this.newOrder.positions[i].product === id) {
+        if (this.newOrder.positions[i].product.prodId === id) {
           return this.newOrder.positions[i].quantity
-        }
-      }
-    },
-    getIndexOfProduct (id) {
-      for (let i = 0; i < this.newOrder.positions.length; i++) {
-        if (this.newOrder.positions[i].product === id) {
-          return i
         }
       }
     },
     addProduct (id, quantity) {
       var found = false
       for (let i = 0; i < this.newOrder.positions.length; i++) {
-        if (this.newOrder.positions[i].product === id) {
+        if (this.newOrder.positions[i].product.prodId === id) {
           found = true
           break
         }
@@ -134,32 +119,30 @@ export default {
       const url = `${API_URL}/order-positions/`
       const token = await this.$auth.getTokenSilently()
 
-      const product = {
+      const position = {
         order: this.newOrder.orderId,
         product: id,
         quantity: quantity
       }
-      await axios.post(url, product, {headers: {Authorization: `Bearer ${token}`}})
-      this.newOrder.positions = [...this.newOrder.positions, product]
+      await axios.post(url, position, {headers: {Authorization: `Bearer ${token}`}})
+      await this.getOrder()
     },
     async editPosition (id, quantity) {
-      const url = `${API_URL}/order-positions/${id}/`
+      const url = `${API_URL}/order-positions/${this.newOrder.orderId}/${id}`
       const token = await this.$auth.getTokenSilently()
-      const currentQuantity = this.getQuantityOfProduct(id)
-      const prodIndex = this.getIndexOfProduct(id)
-      const product = {
-        order: this.newOrder.orderId,
-        product: id,
-        quantity: currentQuantity + quantity
+      const currentQuantity = this.getQuantityOfPosition(id)
+      const position = {
+        quantity: currentQuantity + parseInt(quantity)
       }
-      await axios.put(url, product, {headers: {Authorization: `Bearer ${token}`}})
-      this.newOrder.positions[prodIndex] = currentQuantity + quantity
+      await axios.patch(url, position, {headers: {Authorization: `Bearer ${token}`}})
+      await this.getOrder()
     },
-    async deleteProduct (id) {
-      const url = `${API_URL}/order-positions/`
+    async deletePosition (id) {
+      console.log(id)
+      const url = `${API_URL}/order-positions/${this.newOrder.orderId}/${id}`
       const token = await this.$auth.getTokenSilently()
       await axios.delete(url, {headers: {Authorization: `Bearer ${token}`}})
-      // this.newOrder.positions = [...this.newOrder.positions, product] tu cos
+      await this.getOrder()
     },
     async getProductById (id) {
       const url = `${API_URL}/products/${id}`

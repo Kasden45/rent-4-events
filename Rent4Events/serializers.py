@@ -116,7 +116,7 @@ class OrderPositionSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 
 
 class ShowOrderPositionSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
-    product = ProductSerializer(many=False, allow_null=True, required=False, disable_dynamic_fields=True)
+    product = ProductSerializer(many=False, allow_null=True, required=False)
 
     class Meta:
         model = OrderPosition
@@ -137,7 +137,7 @@ class ShowOrderPositionSerializer(DynamicFieldsMixin, serializers.ModelSerialize
                 raise serializers.ValidationError(e.__cause__)
 
 class OrderSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
-    positions = OrderPositionSerializer(many=True, allow_null=True, required=False)
+    positions = ShowOrderPositionSerializer(many=True, allow_null=True, required=False)
 
     class Meta:
         model = Order
