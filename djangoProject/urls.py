@@ -30,7 +30,8 @@ router.register(r'products', views.ProductViewSet)
 router.register(r'orders', views.OrderViewSet)
 router.register(r'clients', views.ClientViewSet)
 router.register(r'drivers', views.DriverViewSet)
-router.register(r'order-positions', views.OrderPositionViewSet)
+router.register(r'order-positions',
+                views.OrderPositionViewSet)
 router.register(r'vehicles', views.VehicleViewSet)
 router.register(r'courses', views.CourseViewSet)
 router.register(r'images', views.ImageViewSet)
@@ -44,5 +45,9 @@ urlpatterns = [
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('rent-rest/', include('Rent4Events.urls')),
-    url(r'^swagger/', schema_view)
+    url(r'^swagger/', schema_view),
+    path('order-positions/<int:order_id>/<int:product_id>', views.OrderPositionViewSet.as_view({'get': 'retrieve',
+                                                                                                'delete': 'destroy',
+                                                                                                'patch': 'partial_update'}))
+
 ]

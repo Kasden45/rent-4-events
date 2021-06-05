@@ -114,6 +114,14 @@ class OrderPositionSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         model = OrderPosition
         fields = ['order', 'product', 'quantity']
 
+
+class ShowOrderPositionSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
+    product = ProductSerializer(many=False, allow_null=True, required=False)
+
+    class Meta:
+        model = OrderPosition
+        fields = ['order', 'product', 'quantity']
+
     def create(self, validated_data):
         """
         Create and return a new `Snippet` instance, given the validated data.
@@ -129,7 +137,7 @@ class OrderPositionSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
                 raise serializers.ValidationError(e.__cause__)
 
 class OrderSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
-    positions = OrderPositionSerializer(many=True, allow_null=True, required=False)
+    positions = ShowOrderPositionSerializer(many=True, allow_null=True, required=False)
 
     class Meta:
         model = Order
@@ -178,6 +186,7 @@ class DriverSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         """
         Create and return a new `Snippet` instance, given the validated data.
         """
+        read_only_fields = ['userId']
         return Driver.objects.create(**validated_data)
 
 

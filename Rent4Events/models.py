@@ -50,7 +50,7 @@ class Client(models.Model):
 class Order(models.Model):
     class Meta:
         constraints = [
-            models.CheckConstraint(check=models.Q(startDate__lt=models.F("endDate")), name='constraint_start_end'),
+            models.CheckConstraint(check=models.Q(startDate__lte=models.F("endDate")), name='constraint_start_end'),
             models.CheckConstraint(check=models.Q(totalCost__gte=0.0),
                                    name='constraint_totalCost_greater_than_zero'),
         ]

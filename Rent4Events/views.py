@@ -1,13 +1,20 @@
+import decimal
+
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
+from django_filters import filters, rest_framework
+from django_filters.rest_framework import DjangoFilterBackend
+from django_restql.mixins import QueryArgumentsMixin
 from rest_framework.decorators import api_view, permission_classes
 
 import django.contrib.auth.models as auth
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework import permissions
+from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.generics import get_object_or_404
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -20,6 +27,7 @@ import jwt
 
 from django.http import JsonResponse
 
+
 def get_token_auth_header(request):
     """Obtains the Access Token from the Authorization Header
     """
@@ -29,11 +37,13 @@ def get_token_auth_header(request):
     print(auth)
     return token
 
+
 def requires_scope(required_scope):
     """Determines if the required scope is present in the Access Token
     Args:
         required_scope (str): The scope required to access the resource
     """
+
     def require_scope(f):
         @wraps(f)
         def decorated(*args, **kwargs):
@@ -49,7 +59,9 @@ def requires_scope(required_scope):
             response = JsonResponse({'message': 'You don\'t have access to this resource'})
             response.status_code = 403
             return response
+
         return decorated
+
     return require_scope
 
 
@@ -67,12 +79,14 @@ def private(request):
 @api_view(['GET'])
 @requires_scope('read:messages')
 def private_scoped(request):
-    return JsonResponse({'message': 'Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this.'})
+    return JsonResponse({
+        'message': 'Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this.'})
 
 
 """
 TESTING
 """
+
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -92,13 +106,32 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
 
-class ProductViewSet(viewsets.ModelViewSet):
+class CustomSearchFilter(SearchFilter):
+    def get_search_fields(self, view, request):
+        if request.query_params.get('name_only') == "1":
+            return ['prodName']
+        return super(CustomSearchFilter, self).get_search_fields(view, request)
+
+
+class ProductViewSet(QueryArgumentsMixin, viewsets.ModelViewSet):
     """
     API endpoint that allows products to be viewed or edited.
     """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [permissions.AllowAny]
+    filter_backends = [OrderingFilter, DjangoFilterBackend, CustomSearchFilter]
+    ordering_fields = ['prodName', 'price']
+    search_fields = ['prodName', 'category__catName', 'description']
+
+    def get_queryset(self):
+        queryset = Product.objects.all()
+        try:
+            categories = eval(self.request.query_params.get('categories', []))
+            print(categories)
+            return queryset.filter(category__catId__in=categories)
+        except TypeError:
+            return queryset
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -151,6 +184,19 @@ class OrderViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+    def create(self, request, *args, **kwargs):
+        if request.user.is_staff:
+            pass
+        else:
+            queryset = Order.objects.filter(client__userId__username=request.user.client)
+            request.data['client'] = request.user.id
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
 class VehicleViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows vehicles to be viewed or edited.
@@ -169,13 +215,67 @@ class CourseViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
 
-class OrderPositionViewSet(viewsets.ModelViewSet):
+class MultipleFieldLookupMixin:
+    def get_object(self):
+        queryset = self.get_queryset()  # Get the base queryset
+        queryset = self.filter_queryset(queryset)  # Apply any filter backends
+        multi_filter = {field: self.kwargs[field] for field in self.lookup_fields}
+        obj = get_object_or_404(queryset, **multi_filter)  # Lookup the object
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+
+def calculate_order_total(order_id):
+    total = decimal.Decimal('0.0')
+    order = Order.objects.get(orderId=order_id)
+    date_diff = (order.endDate - order.startDate).days + 1
+    for position in order.positions.all():
+        total += decimal.Decimal(date_diff * position.quantity) * position.product.price
+        print(total)
+
+    order.totalCost = total
+    order.save()
+
+
+class OrderPositionViewSet(MultipleFieldLookupMixin, viewsets.ModelViewSet):
     """
     API endpoint that allows orders to be viewed or edited.
     """
     queryset = OrderPosition.objects.all()
-    serializer_class = OrderPositionSerializer
+    # serializer_class = OrderPositionSerializer
     permission_classes = [permissions.AllowAny]
+    lookup_fields = ['order_id', 'product_id']
+
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:
+            return ShowOrderPositionSerializer
+        else:
+            return OrderPositionSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        calculate_order_total(serializer.validated_data['order'].orderId)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        print(serializer)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        calculate_order_total(instance.order_id)
+        return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        calculate_order_total(instance.order_id)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ImageViewSet(viewsets.ModelViewSet):
@@ -247,7 +347,6 @@ def group_list(request):
             serializer.save()
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
-
 
 # @api_view(['GET'])
 # def public(request):

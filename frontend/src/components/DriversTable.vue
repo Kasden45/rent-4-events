@@ -83,7 +83,6 @@ export default {
     handleEdit: function (event) {
       this.isEdit = !this.isEdit
 
-      // get book
       var $driverId = parseInt(event.target.id)
       var $driverIndex = this.driversSource.map(function (driver) {
         return driver.userId
