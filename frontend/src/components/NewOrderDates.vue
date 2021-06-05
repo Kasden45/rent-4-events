@@ -14,7 +14,7 @@
 <script>
 import $ from 'jquery'
 export default {
-  name: 'NewOrderDatesFilterSort',
+  name: 'NewOrderDates', //FIX
   props: {
     orderSource: Object
   },
