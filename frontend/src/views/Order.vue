@@ -1,13 +1,16 @@
 <template>
     <div>
         <div class="row justify-content-end my-3 px-3">
-            <div class="col-md-3 col-4">
+            <div class="col-md-7 col-12">
+                <new-order-dates :order-source="newOrder" @edit:order="editOrder"/>
+            </div>
+            <div class="col-md-3 col-12 align-self-end py-2">
                 <router-link class="btn btn-4" to="/Zamowienia">Powrót do zamówień</router-link>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-md-2 col-4">
-                <categories-checkbox :categories-source="categories"/>
+                <new-order-filters :categories-source="categories" @filter:product="filterProducts"/>
             </div>
             <div class="col-md-7 col-7">
                 <div class="row align-content-center">
@@ -26,16 +29,18 @@
 </template>
 
 <script>
-import CategoriesCheckbox from '../components/CategoriesCheckbox'
+import NewOrderFilters from '../components/NewOrderFilters'
 import NewOrder from '../components/NewOrder'
 import Product from '../components/Product'
+import NewOrderDates from '../components/NewOrderDates'
 import axios from 'axios'
 const API_URL = 'http://localhost:8000'
 
 export default {
   name: 'Order',
   components: {
-    CategoriesCheckbox,
+    NewOrderDates,
+    NewOrderFilters,
     NewOrder,
     Product
   },
@@ -97,9 +102,15 @@ export default {
         totalCost: 0,
         status: 'Robocze'
       }
-      await axios.post(url, order, {headers: {Authorization: `Bearer ${token}`}})
-      order.positions = []
-      this.newOrder = order
+      await axios.post(url, order, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+        this.newOrder = response.data
+      })
+    },
+    async editOrder (order) {
+      const url = `${API_URL}/orders/${this.newOrder.orderId}/`
+      const token = await this.$auth.getTokenSilently()
+      await axios.put(url, order, {headers: {Authorization: `Bearer ${token}`}})
+      await this.getOrder()
     },
     getQuantityOfPosition (id) {
       for (let i = 0; i < this.newOrder.positions.length; i++) {
@@ -162,6 +173,19 @@ export default {
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         return response.data['results']
       })
+    },
+    async filterProducts (sorting, categories) {
+      var url = `${API_URL}/products/?query={prodId, prodName, price, images}`
+      if (sorting !== '') {
+        url += `&ordering=${sorting}`
+      }
+      if (categories.length > 0) {
+        url += `&categories=[${categories}]`
+      }
+      const token = await this.$auth.getTokenSilently()
+      await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+        this.products = response.data['results']
+      })
     }
 
   },
@@ -169,6 +193,7 @@ export default {
     this.getCategories()
     this.getProducts()
     this.getOrder()
+    console.log(this.newOrder)
   }
 }
 </script>
