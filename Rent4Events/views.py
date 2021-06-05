@@ -126,11 +126,12 @@ class ProductViewSet(QueryArgumentsMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Product.objects.all()
-        categories = eval(self.request.query_params.get('categories', []))
-        print(categories)
-        # for category in categories:
-        #     queryset = queryset.filter(category__catId__in=[category])
-        return queryset.filter(category__catId__in=categories)
+        try:
+            categories = eval(self.request.query_params.get('categories', []))
+            print(categories)
+            return queryset.filter(category__catId__in=categories)
+        except TypeError:
+            return queryset
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

@@ -1,29 +1,12 @@
 <template>
     <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <div class="col-sm-5 col-12">
             <label class="form-check-label" for="start-date">Data wypożyczenia:</label>
             <input class="form-control" type="date" id="start-date" :value="this.orderSource.startDate" @change="editOrder">
         </div>
-        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <div class="col-sm-5 col-12">
             <label class="form-check-label" for="end-date">Data zwrotu:</label>
             <input class="form-control" type="date" id="end-date" :value="this.orderSource.endDate" @change="editOrder">
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-            <label class="form-check-label" for="availability">Dostępność:</label>
-            <select class="form-control" id="availability">
-                <option>Dostępne</option>
-                <option>Niedostępne</option>
-                <option>Wszystkie</option>
-            </select>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-            <label class="form-check-label" for="sorting">Sortowanie:</label>
-            <select class="form-control" id="sorting">
-                <option>A-Z</option>
-                <option>Z-A</option>
-                <option>Cena rosnąco</option>
-                <option>Cena malejąco</option>
-            </select>
         </div>
     </div>
 </template>

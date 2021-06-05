@@ -2,7 +2,7 @@
     <div>
         <div class="row justify-content-end my-3 px-3">
             <div class="col-md-7 col-12">
-                <new-order-dates-filter-sort :order-source="newOrder" @edit:order="editOrder"/>
+                <new-order-dates :order-source="newOrder" @edit:order="editOrder"/>
             </div>
             <div class="col-md-3 col-12 align-self-end py-2">
                 <router-link class="btn btn-4" to="/Zamowienia">Powrót do zamówień</router-link>
@@ -10,7 +10,7 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-md-2 col-4">
-                <categories-checkbox :categories-source="categories"/>
+                <new-order-filters :categories-source="categories" @filter:product="filterProducts"/>
             </div>
             <div class="col-md-7 col-7">
                 <div class="row align-content-center">
@@ -29,18 +29,18 @@
 </template>
 
 <script>
-import CategoriesCheckbox from '../components/CategoriesCheckbox'
+import NewOrderFilters from '../components/NewOrderFilters'
 import NewOrder from '../components/NewOrder'
 import Product from '../components/Product'
-import NewOrderDatesFilterSort from '../components/NewOrderDatesFilterSort'
+import NewOrderDates from '../components/NewOrderDates'
 import axios from 'axios'
 const API_URL = 'http://localhost:8000'
 
 export default {
   name: 'Order',
   components: {
-    NewOrderDatesFilterSort,
-    CategoriesCheckbox,
+    NewOrderDates,
+    NewOrderFilters,
     NewOrder,
     Product
   },
@@ -172,6 +172,19 @@ export default {
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         return response.data['results']
+      })
+    },
+    async filterProducts (sorting, categories) {
+      var url = `${API_URL}/products/?query={prodId, prodName, price, images}`
+      if (sorting !== '') {
+        url += `&ordering=${sorting}`
+      }
+      if (categories.length > 0) {
+        url += `&categories=[${categories}]`
+      }
+      const token = await this.$auth.getTokenSilently()
+      await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+        this.products = response.data['results']
       })
     }
 
