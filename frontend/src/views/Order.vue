@@ -1,7 +1,10 @@
 <template>
     <div>
         <div class="row justify-content-end my-3 px-3">
-            <div class="col-md-3 col-4">
+            <div class="col-md-7 col-12">
+                <new-order-dates-filter-sort :order-source="newOrder" @edit:order="editOrder"/>
+            </div>
+            <div class="col-md-3 col-12 align-self-end py-2">
                 <router-link class="btn btn-4" to="/Zamowienia">Powrót do zamówień</router-link>
             </div>
         </div>
@@ -29,12 +32,14 @@
 import CategoriesCheckbox from '../components/CategoriesCheckbox'
 import NewOrder from '../components/NewOrder'
 import Product from '../components/Product'
+import NewOrderDatesFilterSort from '../components/NewOrderDatesFilterSort'
 import axios from 'axios'
 const API_URL = 'http://localhost:8000'
 
 export default {
   name: 'Order',
   components: {
+    NewOrderDatesFilterSort,
     CategoriesCheckbox,
     NewOrder,
     Product
@@ -90,16 +95,22 @@ export default {
       const url = `${API_URL}/orders/`
       const token = await this.$auth.getTokenSilently()
       var order = {
-        clientId: this.$auth.user, // ZMIENIC NA ID KLIENTA!!!!ONEONE11!!!
+        clientId: this.$auth.user,
         startDate: new Date().toISOString().slice(0, 10),
         endDate: new Date().toISOString().slice(0, 10),
         address: 'Niezdefiniowany',
         totalCost: 0,
         status: 'Robocze'
       }
-      await axios.post(url, order, {headers: {Authorization: `Bearer ${token}`}})
-      order.positions = []
-      this.newOrder = order
+      await axios.post(url, order, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+        this.newOrder = response.data
+      })
+    },
+    async editOrder (order) {
+      const url = `${API_URL}/orders/${this.newOrder.orderId}/`
+      const token = await this.$auth.getTokenSilently()
+      await axios.put(url, order, {headers: {Authorization: `Bearer ${token}`}})
+      await this.getOrder()
     },
     getQuantityOfPosition (id) {
       for (let i = 0; i < this.newOrder.positions.length; i++) {
@@ -169,6 +180,7 @@ export default {
     this.getCategories()
     this.getProducts()
     this.getOrder()
+    console.log(this.newOrder)
   }
 }
 </script>
