@@ -5,11 +5,15 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
+from django_filters import filters, rest_framework
+from django_filters.rest_framework import DjangoFilterBackend
+from django_restql.mixins import QueryArgumentsMixin
 from rest_framework.decorators import api_view, permission_classes
 
 import django.contrib.auth.models as auth
 from rest_framework import viewsets, status
 from rest_framework import permissions
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import get_object_or_404
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import AllowAny
@@ -76,7 +80,7 @@ def private(request):
 @requires_scope('read:messages')
 def private_scoped(request):
     return JsonResponse({
-                            'message': 'Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this.'})
+        'message': 'Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this.'})
 
 
 """
@@ -102,13 +106,31 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
 
-class ProductViewSet(viewsets.ModelViewSet):
+class CustomSearchFilter(SearchFilter):
+    def get_search_fields(self, view, request):
+        if request.query_params.get('name_only') == "1":
+            return ['prodName']
+        return super(CustomSearchFilter, self).get_search_fields(view, request)
+
+
+class ProductViewSet(QueryArgumentsMixin, viewsets.ModelViewSet):
     """
     API endpoint that allows products to be viewed or edited.
     """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [permissions.AllowAny]
+    filter_backends = [OrderingFilter, DjangoFilterBackend, CustomSearchFilter]
+    ordering_fields = ['prodName', 'price']
+    search_fields = ['prodName', 'category__catName', 'description']
+
+    def get_queryset(self):
+        queryset = Product.objects.all()
+        categories = eval(self.request.query_params.get('categories', []))
+        print(categories)
+        # for category in categories:
+        #     queryset = queryset.filter(category__catId__in=[category])
+        return queryset.filter(category__catId__in=categories)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -173,6 +195,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+
 class VehicleViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows vehicles to be viewed or edited.
@@ -206,11 +229,13 @@ def calculate_order_total(order_id):
     order = Order.objects.get(orderId=order_id)
     date_diff = (order.endDate - order.startDate).days + 1
     for position in order.positions.all():
-        total += decimal.Decimal(date_diff*position.quantity)*position.product.price
+        total += decimal.Decimal(date_diff * position.quantity) * position.product.price
         print(total)
 
     order.totalCost = total
     order.save()
+
+
 class OrderPositionViewSet(MultipleFieldLookupMixin, viewsets.ModelViewSet):
     """
     API endpoint that allows orders to be viewed or edited.

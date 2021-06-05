@@ -90,7 +90,7 @@ export default {
       const url = `${API_URL}/orders/`
       const token = await this.$auth.getTokenSilently()
       var order = {
-        clientId: this.$auth.user, // ZMIENIC NA ID KLIENTA!!!!ONEONE11!!!
+        clientId: this.$auth.user,
         startDate: new Date().toISOString().slice(0, 10),
         endDate: new Date().toISOString().slice(0, 10),
         address: 'Niezdefiniowany',
