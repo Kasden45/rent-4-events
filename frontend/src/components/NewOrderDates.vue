@@ -16,7 +16,7 @@
         </div>
         <div class="row justify-content-center justify-content-md-start">
             <div class="col-md-4 col-sm-5 col-10 align-self-center">
-                <input class="form-check-input" type="checkbox" :value="this.orderSource.isTransport" id="transport" @change="editOrder">
+                <input class="form-check-input" type="checkbox" v-model="editedOrder.isTransport" :value="this.orderSource.isTransport" id="transport" @change="editOrder">
                 <label class="form-check-label" for="transport">Transport</label>
             </div>
         </div>
@@ -46,30 +46,51 @@ export default {
   },
   methods: {
     editOrder () {
+      this.fillData()
       const $newStart = $('#start-date')
       const $newEnd = $('#end-date')
-      const $address = $('#address')
-      const $transport = $('#transport')
+      const $newAdress = $('#address')
 
       const $newStartVal = $newStart.val()
       const $newEndVal = $newEnd.val()
-      const $newAddressVal = $address.val()
-      const $newTransportVal = $transport.val()
+      const $newAddressVal = $newAdress.val()
+      console.log('edited', JSON.stringify(this.editedOrder))
+      console.log('source', JSON.stringify(this.orderSource))
 
       if ($newStartVal <= $newEndVal) {
         this.editedOrder.startDate = $newStartVal
         this.editedOrder.endDate = $newEndVal
         this.editedOrder.address = $newAddressVal
-        this.editedOrder.isTransport = $newTransportVal
+        console.log('napraw sie pls')
+
         this.$emit('edit:order', this.editedOrder)
       } else {
         $newStart.val(this.orderSource.startDate)
         $newEnd.val(this.orderSource.endDate)
-        $newAddressVal.val(this.orderSource.address)
-        $newTransportVal.val(this.orderSource.isTransport)
+        $newAdress.val(this.orderSource.address)
+      }
+    },
+    fillData () {
+      if (!this.editedOrder.client) {
+        this.editedOrder.client = this.orderSource.client
+        this.editedOrder.startDate = this.orderSource.startDate
+        this.editedOrder.endDate = this.orderSource.endDate
+        this.editedOrder.address = this.orderSource.address
+        this.editedOrder.isTransport = this.orderSource.isTransport
+        this.editedOrder.totalCost = this.orderSource.totalCost
+        this.editedOrder.status = this.orderSource.status
       }
     }
   }
+  // created () {
+  //   this.editedOrder.client = this.orderSource.client
+  //   this.editedOrder.startDate = this.orderSource.startDate
+  //   this.editedOrder.endDate = this.orderSource.endDate
+  //   this.editedOrder.address = this.orderSource.address
+  //   this.editedOrder.isTransport = this.orderSource.isTransport
+  //   this.editedOrder.totalCost = this.orderSource.totalCost
+  //   this.editedOrder.status = this.orderSource.status
+  // }
 }
 </script>
 
