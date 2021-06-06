@@ -1,10 +1,10 @@
 <template>
-    <div class="row">
-        <div class="col-sm-5 col-12">
+    <div class="row justify-content-center justify-content-md-start align-items-end">
+        <div class="col-md-4 col-sm-5 col-10">
             <label class="form-check-label" for="start-date">Data wypożyczenia:</label>
             <input class="form-control" type="date" id="start-date" :value="this.orderSource.startDate" @change="editOrder">
         </div>
-        <div class="col-sm-5 col-12">
+        <div class="col-md-4 col-sm-5 col-10">
             <label class="form-check-label" for="end-date">Data zwrotu:</label>
             <input class="form-control" type="date" id="end-date" :value="this.orderSource.endDate" @change="editOrder">
         </div>
@@ -14,7 +14,7 @@
 <script>
 import $ from 'jquery'
 export default {
-  name: 'NewOrderDatesFilterSort',
+  name: 'NewOrderDates',
   props: {
     orderSource: Object
   },
