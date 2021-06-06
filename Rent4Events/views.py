@@ -188,13 +188,22 @@ class OrderViewSet(viewsets.ModelViewSet):
         if request.user.is_staff:
             pass
         else:
-            queryset = Order.objects.filter(client__userId__username=request.user.client)
             request.data['client'] = request.user.id
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        print(serializer)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        calculate_order_total(instance.orderId)
+        return Response(serializer.data)
 
 
 class VehicleViewSet(viewsets.ModelViewSet):
