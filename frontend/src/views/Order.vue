@@ -4,15 +4,24 @@
             <div class="col-md-7 col-12">
                 <new-order-dates :order-source="newOrder" @edit:order="editOrder"/>
             </div>
-            <div class="col-md-3 col-12 align-self-end py-2">
-                <router-link class="btn btn-4" to="/Zamowienia">Powrót do zamówień</router-link>
+            <div class="col-md-3 col-11 align-self-end py-2">
+                <router-link class="btn btn-4 ml-auto" to="/Zamowienia">Powrót do zamówień</router-link>
+            </div>
+        </div>
+        <div class="row mb-3 px-3" v-if="activeSearchWord.length > 0 && activeSearchWord.trim()">
+            <div class="col-md-6 offset-md-2 offset-sm-5 search-info">
+                <span id="search-results">Wyniki wyszukiwania dla frazy: </span>
+                <span class="fst-italic">"{{this.activeSearchWord}}"</span>
+                <button class="btn btn-sm btn-outline-4 size" type="button" id="button-cancel" @click="deleteFilters">
+                    <font-awesome-icon icon="times-circle"></font-awesome-icon>
+                </button>
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-md-2 col-4">
-                <new-order-filters :categories-source="categories" @filter:product="filterProducts"/>
+            <div class="col-md-2 col-sm-4 col-10">
+                <new-order-filters :categories-source="categories" :delete-filters="cancel" ref="child" @filter:product="filterProducts" @search:product="searchProducts"/>
             </div>
-            <div class="col-md-7 col-7">
+            <div class="col-md-7 col-sm-7 col-10">
                 <div class="row align-content-center">
                     <div class="col-lg-4 col-md-6 col-12 px-5 py-3 products-gallery" v-for="prod in products" :key="prod.prodId">
                         <product :product-source="prod" @add:position="addProduct"/>
@@ -48,7 +57,8 @@ export default {
     return {
       categories: [],
       newOrder: {},
-      products: []
+      products: [],
+      activeSearchWord: ''
     }
   },
   methods: {
@@ -174,7 +184,7 @@ export default {
         return response.data['results']
       })
     },
-    async filterProducts (sorting, categories) {
+    async filterProducts (sorting, categories, searchWord, searchDescription) {
       var url = `${API_URL}/products/?query={prodId, prodName, price, images}`
       if (sorting !== '') {
         url += `&ordering=${sorting}`
@@ -182,10 +192,36 @@ export default {
       if (categories.length > 0) {
         url += `&categories=[${categories}]`
       }
+      searchWord = searchWord.replace('&', '')
+      if (searchWord.length > 0 && searchWord.trim() && !searchWord.includes('&')) {
+        url += `&search=${searchWord}`
+        if (searchDescription === false) {
+          url += `&name_only=1`
+        }
+      }
+      this.activeSearchWord = searchWord
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.products = response.data['results']
       })
+    },
+    async searchProducts (searchWord, searchDescription) {
+      searchWord = searchWord.replace('&', '')
+      var url = `${API_URL}/products/?query={prodId, prodName, price, images}`
+      if (searchWord.length > 0 && searchWord.trim()) {
+        url += `&search=${searchWord}`
+        if (searchDescription === false) {
+          url += `&name_only=1`
+        }
+      }
+      this.activeSearchWord = searchWord
+      const token = await this.$auth.getTokenSilently()
+      await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+        this.products = response.data['results']
+      })
+    },
+    deleteFilters () {
+      this.$refs.child.clearFilters()
     }
 
   },
@@ -199,5 +235,17 @@ export default {
 </script>
 
 <style scoped>
+#search-results {
+    font-weight: 600;
+}
 
+#button-cancel {
+    border: none;
+}
+
+#button-cancel:hover, #button-cancel:focus {
+    color: var(--COLOR4);
+    border-color: var(--COLOR4);
+    background-color: #FFFFFF;
+}
 </style>

@@ -30,7 +30,16 @@
         </table>
         </div>
 
-        <div>
+        <div class="mt-3">
+            <p>
+                <span> Adres eventu:</span>
+                <br/>
+                <span class="data">{{orderSource.address}}</span>
+            </p>
+            <p>
+                <span> Transport:</span>
+                <span class="data">ikonka</span>
+            </p>
             <p>
                 <span> Termin wypożyczenia:</span>
                 <br/>
