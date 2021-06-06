@@ -12,7 +12,7 @@
             </thead>
             <tbody>
                 <tr v-for="elem in orderSource.positions" :key="elem.product.prodId">
-                    <td>{{elem.product.prodName}}</td> <!--DODAĆ WYLICZANIE KOSZTÓW ZAMÓWIENIA-->
+                    <td>{{elem.product.prodName}}</td>
                     <td>
                         <div>
                             <button class="btn btn-sm btn-4 d-inline" @click="deleteOne(elem.product.prodId)">-</button>
