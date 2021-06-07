@@ -90,7 +90,9 @@ export default {
       }
     },
     sendOrder () {
-      this.$emit('send:order')
+      this.$emit('send:order', this.redirect)
+    },
+    redirect () {
       this.$router.push({ name: 'Orders' })
     }
   }

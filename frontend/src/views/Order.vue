@@ -24,7 +24,7 @@
             <div class="col-md-7 col-sm-7 col-10">
                 <div class="row align-content-center">
                     <div class="col-lg-4 col-md-6 col-12 px-5 py-3 products-gallery" v-for="prod in products" :key="prod.prodId">
-                        <product :product-source="prod" @add:position="addProduct"/>
+                        <product :product-source="prod" :order="true" @add:position="addProduct"/>
                     </div>
                 </div>
             </div>
@@ -217,13 +217,14 @@ export default {
     deleteFilters () {
       this.$refs.child.clearFilters()
     },
-    async sendOrder () {
+    async sendOrder (done) {
       const url = `${API_URL}/orders/${this.newOrder.orderId}/`
       const token = await this.$auth.getTokenSilently()
       const order = {
         status: 'Oczekujące'
       }
       await axios.patch(url, order, {headers: {Authorization: `Bearer ${token}`}})
+      done()
     }
   },
   mounted () {

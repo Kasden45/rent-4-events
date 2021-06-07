@@ -1,12 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import HelloWorld from '@/components/HelloWorld'
 import Home from '../views/Home'
 import Offer from '../views/Offer'
 import Orders from '../views/Orders'
 import Order from '../views/Order'
 import Drivers from '../views/Drivers'
+import OrderPreview from '../views/OrderPreview'
+import ProductPreview from '../views/ProductPreview'
+
 import { authGuard, auth } from '../auth/authGuard'
+
 Vue.use(Router)
 
 export default new Router({
@@ -38,6 +41,18 @@ export default new Router({
       path: '/Kadra',
       name: 'Drivers',
       component: Drivers,
+      beforeEnter: authGuard
+    },
+    {
+      path: '/Zamowienia/:orderId',
+      name: 'OrderPreview',
+      component: OrderPreview,
+      beforeEnter: authGuard
+    },
+    {
+      path: '/Produkt/:prodId',
+      name: 'ProductPreview',
+      component: ProductPreview,
       beforeEnter: authGuard
     }
   ]

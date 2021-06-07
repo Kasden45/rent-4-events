@@ -62,6 +62,7 @@ class Order(models.Model):
         ('W trakcie realizacji', 'W trakcie realizacji'),
         ('Zrealizowane', 'Zrealizowane'),
         ('Robocze', 'Robocze'),
+        ('Anulowane', 'Anulowane')
     )
     orderId = models.BigAutoField(primary_key=True)
     client = models.ForeignKey(
