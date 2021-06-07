@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import HelloWorld from '@/components/HelloWorld'
 import Home from '../views/Home'
 import Offer from '../views/Offer'
 import Orders from '../views/Orders'
@@ -8,7 +7,9 @@ import Order from '../views/Order'
 import Drivers from '../views/Drivers'
 import OrderPreview from '../views/OrderPreview'
 import ProductPreview from '../views/ProductPreview'
-import { authGuard } from '../auth/authGuard'
+
+import { authGuard, auth } from '../auth/authGuard'
+
 Vue.use(Router)
 
 export default new Router({
@@ -16,7 +17,8 @@ export default new Router({
     {
       path: '/',
       name: 'Home',
-      component: Home
+      component: Home,
+      beforeEnter: auth
     },
     {
       path: '/Oferta',

@@ -16,6 +16,8 @@ def jwt_get_username_from_payload_handler(payload):
         my_group = Group.objects.get(name='Klient')
         user.groups.add(my_group)
         user.save()
+    elif user.groups.filter(name='Klient'):
+        print('Is a client', user.groups.all())
     print('user', user.username)
     print('new_user groups')
     for group in user.groups.all():
