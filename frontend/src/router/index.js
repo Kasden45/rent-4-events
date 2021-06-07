@@ -6,7 +6,7 @@ import Offer from '../views/Offer'
 import Orders from '../views/Orders'
 import Order from '../views/Order'
 import Drivers from '../views/Drivers'
-import { authGuard } from '../auth/authGuard'
+import { authGuard, auth } from '../auth/authGuard'
 Vue.use(Router)
 
 export default new Router({
@@ -14,7 +14,8 @@ export default new Router({
     {
       path: '/',
       name: 'Home',
-      component: Home
+      component: Home,
+      beforeEnter: auth
     },
     {
       path: '/Oferta',
