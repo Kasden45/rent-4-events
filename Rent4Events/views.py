@@ -1,5 +1,7 @@
 import decimal
+import random
 
+from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
@@ -8,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django_filters import filters, rest_framework
 from django_filters.rest_framework import DjangoFilterBackend
 from django_restql.mixins import QueryArgumentsMixin
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, action
 
 import django.contrib.auth.models as auth
 from rest_framework import viewsets, status
@@ -133,6 +135,21 @@ class ProductViewSet(QueryArgumentsMixin, viewsets.ModelViewSet):
         except TypeError:
             return queryset
 
+    @action(methods=['get'], detail=True,
+            url_path='similar', url_name='similar')
+    def find_similar(self, request, pk=None):
+        instance = self.get_object()
+        # queryset = random.sample(Product.objects.filter(category_id=instance.category.catId), how_much)
+        queryset = Product.objects.filter(~Q(prodId=instance.prodId), category_id=instance.category.catId).order_by(
+            '?')[:5]
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     """
@@ -161,6 +178,7 @@ class ClientViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class DriverViewSet(viewsets.ModelViewSet):
     """
