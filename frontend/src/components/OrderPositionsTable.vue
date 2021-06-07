@@ -10,7 +10,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="elem in orderSource.positions" :key="elem.product.prodId">
+                <tr v-for="elem in orderSource.positions" :key="elem.product.prodId" @click="productPreview(elem.product.prodId)">
                     <td>{{elem.product.prodName}}</td>
                     <td>{{elem.product.quantity}}</td>
                     <td>{{elem.product.price}} zł</td>
@@ -26,6 +26,11 @@ export default {
   name: 'OrderPositionsTable',
   props: {
     orderSource: Object
+  },
+  methods: {
+    productPreview (id) {
+      this.$router.push({ name: 'ProductPreview', params: { prodId: id } })
+    }
   }
 }
 </script>

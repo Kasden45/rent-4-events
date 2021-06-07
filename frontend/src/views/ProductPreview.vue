@@ -1,6 +1,6 @@
 <template>
     <div id="product-preview">
-        <p>Produkt: {{$route.params.prodId}}</p>
+        <p>Produkt: {{$route.redirectedFrom}}</p>
         <div class="row justify-content-center">
             <div class="col-11">
                 <div class="row">
@@ -9,14 +9,14 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-5 offset-md-1">
+                    <div class="col-md-5 col-10 offset-1">
                         <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-indicators">
                                 <button v-for="index in this.product.images.length" :key="index" :id="index-1" type="button" data-bs-target="#carouselExampleIndicators" :data-bs-slide-to="index-1" class="btn-swipe active" aria-current="true"></button>
                             </div>
                             <div class="carousel-inner">
                                 <div v-for="image in this.product.images" :key="image.imageId" class="carousel-item active">
-                                    <img :src="image.imageUrl" class="d-block img-prod mx-auto" alt="...">
+                                    <img :src="image.imageUrl" class="d-block img-fluid img-prod mx-auto" alt="...">
                                 </div>
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -41,6 +41,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <p class="similar">Może Cię zainteresować:</p>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        <product :product-source="product" :order="false"/>
+                    </div>
+                </div>
 
             </div>
 
@@ -49,49 +57,50 @@
 </template>
 
 <script>
+import Product from '../components/Product'
 import axios from 'axios'
 import $ from 'jquery'
 const API_URL = 'http://localhost:8000'
 export default {
   name: 'ProductPreview',
+  components: {
+    Product
+  },
   data () {
     return {
-      product: {}
+      product: {},
+      similarProducts: {}
     }
   },
   methods: {
     async getProduct () {
       const url = `${API_URL}/products/${this.$route.params.prodId}/`
       const token = await this.$auth.getTokenSilently()
-      const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
-        console.log(response.data)
+      await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.product = response.data
-        // console.log('000', this.product.images[0].imageUrl)
       })
-      return resp
+    },
+    async getSimilarProducts () {
+      const url = `${API_URL}/products/${this.$route.params.prodId}/?query={prodId, prodName, price, images}/`
+      const token = await this.$auth.getTokenSilently()
+      await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+        this.similarProducts = response.data
+      })
     },
     removeClasses () {
       const img0 = this.product.images[0].imageUrl
       $('.carousel-item').each(function () {
-        // console.log('src', $(this).children().attr('src'))
-        // console.log('0', img0)
         if ($(this).children().attr('src') !== img0) {
-          // console.log($(this).prop('classList').value)
           $(this).prop('classList').remove('active')
-          // console.log($(this).prop('classList').value)
         }
       })
 
       $('.btn-swipe').each(function () {
-        // console.log('src', $(this).children().attr('src'))
-        // console.log('id', $(this).attr('id'))
         if (parseInt($(this).attr('id')) !== 0) {
-          // console.log('jestwem tu')
           $(this).prop('classList').remove('active')
           $(this).data('aria-current', false)
         }
       })
-      // this.removePrevNext()
     },
     removePrevNext () {
       if (this.product.images.length === 1) {
@@ -101,7 +110,7 @@ export default {
       }
     },
     goBack () {
-      this.$router.push({ name: 'Order' })
+      this.$router.go(-1)
     }
   },
   mounted () {
@@ -109,6 +118,7 @@ export default {
       this.removeClasses()
       this.removePrevNext()
     })
+    this.getSimilarProducts()
   }
 }
 </script>
@@ -123,7 +133,7 @@ export default {
 }
 
 .img-prod {
-  height: 25rem;
+    max-height: 20rem;
     width: auto;
 }
 
@@ -136,5 +146,10 @@ export default {
     font-size: 150%;
     font-weight: 500;
 }
+
+ .similar {
+     font-size: 125%;
+     font-weight: 500;
+ }
 
 </style>
