@@ -12,7 +12,7 @@
             </thead>
             <tbody>
                 <tr v-for="elem in orderSource.positions" :key="elem.product.prodId">
-                    <td>{{elem.product.prodName}}</td> <!--DODAĆ WYLICZANIE KOSZTÓW ZAMÓWIENIA-->
+                    <td>{{elem.product.prodName}}</td>
                     <td>
                         <div>
                             <button class="btn btn-sm btn-4 d-inline" @click="deleteOne(elem.product.prodId)">-</button>
@@ -30,7 +30,17 @@
         </table>
         </div>
 
-        <div>
+        <div class="mt-3">
+            <p>
+                <span> Adres eventu:</span>
+                <br/>
+                <span class="data">{{orderSource.address}}</span>
+            </p>
+            <p>
+                <span> Transport:</span>
+                <font-awesome-icon v-if="orderSource.isTransport" icon="check"></font-awesome-icon>
+                <font-awesome-icon v-if="!orderSource.isTransport" icon="times"></font-awesome-icon>
+            </p>
             <p>
                 <span> Termin wypożyczenia:</span>
                 <br/>
@@ -40,7 +50,7 @@
                 <span>Koszt zamówienia: </span>
                 <span class="data">{{orderSource.totalCost}} zł</span>
             </p>
-            <button class="btn btn-4 float-end">Złóż zapytanie</button>
+            <button class="btn btn-4 float-end" @click="sendOrder">Złóż zapytanie</button>
         </div>
     </div>
 </template>
@@ -78,6 +88,12 @@ export default {
         }).indexOf(id)
         $input.val(this.orderSource.positions[$positionIndex].quantity)
       }
+    },
+    sendOrder () {
+      this.$emit('send:order', this.redirect)
+    },
+    redirect () {
+      this.$router.push({ name: 'Orders' })
     }
   }
 }

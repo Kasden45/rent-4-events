@@ -62,6 +62,7 @@ class Order(models.Model):
         ('W trakcie realizacji', 'W trakcie realizacji'),
         ('Zrealizowane', 'Zrealizowane'),
         ('Robocze', 'Robocze'),
+        ('Anulowane', 'Anulowane')
     )
     orderId = models.BigAutoField(primary_key=True)
     client = models.ForeignKey(
@@ -73,6 +74,7 @@ class Order(models.Model):
     startDate = models.DateField()
     endDate = models.DateField()
     address = models.CharField(max_length=80)
+    isTransport = models.BooleanField(default=False)
     totalCost = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
 

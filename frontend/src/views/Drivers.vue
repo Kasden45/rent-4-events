@@ -42,7 +42,7 @@ export default {
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.users = response.data['results']
-        console.log(response.data)
+        console.log(this.$auth.getIdTokenClaims())
       })
     },
     async getDrivers () {
