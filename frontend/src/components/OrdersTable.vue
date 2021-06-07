@@ -16,7 +16,7 @@
               <td>{{order.startDate}}</td>
               <td>{{order.endDate}}</td>
               <td>{{order.address}}</td>
-              <td>{{order.totalCost}}</td>
+              <td>{{order.totalCost}} zł</td>
               <td>{{order.status}}</td>
             </tr>
           </tbody>

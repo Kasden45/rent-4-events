@@ -7,6 +7,7 @@ import Orders from '../views/Orders'
 import Order from '../views/Order'
 import Drivers from '../views/Drivers'
 import OrderPreview from '../views/OrderPreview'
+import ProductPreview from '../views/ProductPreview'
 import { authGuard } from '../auth/authGuard'
 Vue.use(Router)
 
@@ -44,6 +45,12 @@ export default new Router({
       path: '/Zamowienia/:orderId',
       name: 'OrderPreview',
       component: OrderPreview,
+      beforeEnter: authGuard
+    },
+    {
+      path: '/Produkt/:prodId',
+      name: 'ProductPreview',
+      component: ProductPreview,
       beforeEnter: authGuard
     }
   ]

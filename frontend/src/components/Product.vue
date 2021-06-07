@@ -1,7 +1,7 @@
 <template>
     <div class="product" :id="productSource.prodId">
         <div class="row">
-            <img :src="productSource.images[0].imageUrl" alt="prodImage" height="150" width="150">
+            <img class="mx-auto" :src="productSource.images[0].imageUrl" alt="prodImage" @click="productPreview(productSource.prodId)">
         </div>
         <div class="row">
             <p>{{productSource.prodName}}</p>
@@ -33,6 +33,9 @@ export default {
       const $quantity = $('#prod' + id).val()
       console.log($quantity)
       this.$emit('add:position', id, $quantity)
+    },
+    productPreview (id) {
+      this.$router.push({ name: 'ProductPreview', params: { prodId: id } })
     }
 
   }
@@ -40,5 +43,8 @@ export default {
 </script>
 
 <style scoped>
-
+img {
+    height: 10rem;
+    width: auto;
+}
 </style>
