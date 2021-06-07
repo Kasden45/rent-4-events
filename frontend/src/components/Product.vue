@@ -11,7 +11,7 @@
                 <p>{{productSource.price}} zł/dzień</p>
             </div>
             <div class="col-5">
-                <input class="form-control" type="number" value="1" :id="'prod' + productSource.prodId">
+                <input class="form-control" type="number" value="1" min="1" :id="'prod' + productSource.prodId">
             </div>
 
         </div>
