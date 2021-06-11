@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="row justify-content-end my-3 px-3">
+        <div class="row justify-content-end my-3 px-3 mw-100">
             <div class="col-md-7 col-12">
                 <new-order-dates v-if="newOrder" :order-source="newOrder" @edit:order="editOrder"/>
             </div>
@@ -8,7 +8,7 @@
                 <router-link class="btn btn-4 ml-auto" to="/Zamowienia">Powrót do zamówień</router-link>
             </div>
         </div>
-        <div class="row mb-3 px-3" v-if="activeSearchWord.length > 0 && activeSearchWord.trim()">
+        <div class="row mb-3 px-3 mw-100" v-if="activeSearchWord.length > 0 && activeSearchWord.trim()">
             <div class="col-md-6 offset-md-2 offset-sm-5 search-info">
                 <span id="search-results">Wyniki wyszukiwania dla frazy: </span>
                 <span class="fst-italic">"{{this.activeSearchWord}}"</span>
@@ -17,7 +17,7 @@
                 </button>
             </div>
         </div>
-        <div class="row justify-content-center">
+        <div class="row justify-content-center mw-100">
             <div class="col-md-2 col-sm-4 col-10">
                 <new-order-filters :categories-source="categories" :delete-filters="cancel" ref="child" @filter:product="filterProducts" @search:product="searchProducts"/>
             </div>
@@ -28,12 +28,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-10">
+            <div class="col-md-3 col-10 ">
                 <div class="row">
                     <new-order :order-source="newOrder" @delete:position="deletePosition" @edit:position="editPosition" @set:position="setPosition" @send:order="sendOrder"/>
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 
@@ -83,7 +84,7 @@ export default {
       })
     },
     async getOrder () {
-      const url = `${API_URL}/orders/?query={*,positions{*,product{prodId,prodName}}}`
+      const url = `${API_URL}/orders/?query={*,positions{*,product{prodId,prodName, quantity, price}}}`
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         response.data['results'].forEach(

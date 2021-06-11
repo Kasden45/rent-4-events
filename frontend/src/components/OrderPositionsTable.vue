@@ -12,9 +12,9 @@
             <tbody>
                 <tr v-for="elem in orderSource.positions" :key="elem.product.prodId" @click="productPreview(elem.product.prodId)">
                     <td>{{elem.product.prodName}}</td>
-                    <td>{{elem.product.quantity}}</td>
+                    <td>{{elem.quantity}}</td>
                     <td>{{elem.product.price}} zł</td>
-                    <td>{{(elem.product.quantity * elem.product.price).toFixed(2)}} zł</td>
+                    <td>{{(elem.quantity * elem.product.price).toFixed(2)}} zł</td>
                 </tr>
             </tbody>
         </table>
