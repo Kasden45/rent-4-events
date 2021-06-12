@@ -54,7 +54,8 @@
             </ul>
             <button
               class="btn btn-4 mx-2"
-              id="idk">
+              id="idk"
+              @click="getActive()">
               Call Private
             </button>
             <button
@@ -83,8 +84,8 @@
 <script>
 import axios from 'axios'
 import MyFooter from '../components/MyFooter'
-
-const API_URL = 'http://localhost:8000'
+import { api_url, auth_roles } from '../../auth_config.json'
+// const API_URL = 'http://localhost:8000'
 
 // const auth = new AuthService()
 export default {
@@ -92,7 +93,9 @@ export default {
   components: {MyFooter},
   data () {
     return {
-      message: 'a'
+      message: 'a',
+        roles: auth_roles,
+        user_token: this.$auth.getTokenSilently()
     }
   },
   methods: {
@@ -104,13 +107,25 @@ export default {
       this.$auth.logout()
     },
     privateMessage () {
-      const url = `${API_URL}/rent-rest/api/private-scoped`
+      const url = `${api_url}/api/private-scoped`
       // const url = `${API_URL}/users/?query={email, username}`
-      return axios.get(url, {headers: {Authorization: `Bearer ${this.$auth.getTokenSilently()}`}}).then((response) => {
+
+      return axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         console.log(response.data)
         this.message = JSON.stringify(response.data)
       })
-    }
+    },
+      async getActive() {
+          const url = `${api_url}/users/?query={id,username,groups}`
+          // const url = `${API_URL}/users/?query={email, username}`
+          const token = await this.$auth.getTokenSilently()
+          var active_role = await this.getActiveRole(token)
+          // return axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+          //     this.message = JSON.stringify(response.data.results[0])
+          //     console.log("groups: " + this.message)
+          // })
+          console.log("Active role: " + active_role)
+      }
   }
 }
 </script>

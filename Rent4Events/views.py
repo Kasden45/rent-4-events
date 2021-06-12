@@ -11,7 +11,7 @@ from django_filters import filters, rest_framework
 from django_filters.rest_framework import DjangoFilterBackend
 from django_restql.mixins import QueryArgumentsMixin
 from rest_framework.decorators import api_view, permission_classes, action
-
+from django.contrib.auth import models as m
 import django.contrib.auth.models as auth
 from rest_framework import viewsets, status
 from rest_framework import permissions
@@ -98,6 +98,19 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
 
+    def list(self, request, *args, **kwargs):
+        if request.user.is_staff:
+            queryset = m.User.objects.all()
+        else:
+            queryset = m.User.objects.filter(id=request.user.id)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 
 class GroupViewSet(viewsets.ModelViewSet):
     """
@@ -106,6 +119,11 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = auth.Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [permissions.AllowAny]
+
+    @action(methods=['get'], detail=True,
+            url_path='user_group', url_name='user_group')
+    def user_group(self, request):
+        instance = self.get_object()
 
 
 class CustomSearchFilter(SearchFilter):
@@ -187,6 +205,23 @@ class DriverViewSet(viewsets.ModelViewSet):
     queryset = Driver.objects.all()
     serializer_class = DriverSerializer
     permission_classes = [permissions.AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        group_driver = Group.objects.get(name='Kierowca')
+        user = m.User.objects.get(id=request.data['userId'])
+        # if request.user.is_staff:
+        groups = user.groups
+        for group in groups.all():
+            user.groups.remove(group)
+        user.groups.add(group_driver)
+        user.save()
+        # elif request.user.groups.filter(name='Klient'):
+        #     request.data['userId'] = request.user.id
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class OrderViewSet(viewsets.ModelViewSet):
