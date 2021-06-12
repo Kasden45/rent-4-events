@@ -27,15 +27,14 @@ export const authGuard = (to, from, next) => {
 }
 
 export const auth = (to, from, next) => {
-    const authService = getInstance()
+  const authService = getInstance()
 
   const fn = () => {
     // If the user is authenticated, continue with the route
     if (authService.isAuthenticated) {
       return next()
-    }
-    else {
-        return next()
+    } else {
+      return next()
     }
   }
 
@@ -50,6 +49,4 @@ export const auth = (to, from, next) => {
       return fn()
     }
   })
-
 }
-

@@ -1,15 +1,16 @@
 <template>
+
   <layout-manager v-if="this.active === 'Admin'" >
-    <router-view></router-view>
+    <router-view :key="$route.fullPath"></router-view>
   </layout-manager>
     <layout-guest v-else-if="this.active === 'Gość'">
-    <router-view></router-view>
+    <router-view :key="$route.fullPath"></router-view>
   </layout-guest>
     <layout-driver v-else-if="this.active === 'Kierowca'">
-    <router-view></router-view>
+    <router-view :key="$route.fullPath"></router-view>
   </layout-driver>
     <layout-client v-else-if="this.active === 'Klient'">
-    <router-view></router-view>
+    <router-view :key="$route.fullPath"></router-view>
   </layout-client>
 </template>
 

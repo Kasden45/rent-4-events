@@ -65,17 +65,16 @@ export default {
           }
           else {
               console.log('not authenticated!')
-          }
-
       }
-    },
-    mounted () {
-      this.createClient()
     }
-    // mounted () {
-    //   // window.history.replaceState({}, document.title, "/");
-    //     this.createClient()
-    // }
+  },
+  mounted () {
+    this.createClient()
+  }
+  // mounted () {
+  //   // window.history.replaceState({}, document.title, "/");
+  //     this.createClient()
+  // }
 }
 </script>
 

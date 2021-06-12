@@ -1,7 +1,6 @@
 <template>
     <div id="product-preview">
-        <p>Produkt: {{$route.redirectedFrom}}</p>
-        <div class="row justify-content-center">
+        <div class="row justify-content-center mt-3">
             <div class="col-11">
                 <div class="row">
                     <div class="col-3">
@@ -45,8 +44,8 @@
                     <p class="similar">Może Cię zainteresować:</p>
                 </div>
                 <div class="row">
-                    <div class="col-2">
-                        <product :product-source="product" :order="false"/>
+                    <div class="col-2" v-for="prod in similarProducts" :key="prod.prodId">
+                        <product :product-source="prod" :order="false"/>
                     </div>
                 </div>
 
@@ -69,7 +68,7 @@ export default {
   data () {
     return {
       product: {},
-      similarProducts: {}
+      similarProducts: []
     }
   },
   methods: {
@@ -81,10 +80,10 @@ export default {
       })
     },
     async getSimilarProducts () {
-      const url = `${api_url}/products/${this.$route.params.prodId}/?query={prodId, prodName, price, images}/`
+      const url = `${api_url}/products/${this.$route.params.prodId}/similar/?query={prodId, prodName, price, images}`
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
-        this.similarProducts = response.data
+        this.similarProducts = response.data['results']
       })
     },
     removeClasses () {
