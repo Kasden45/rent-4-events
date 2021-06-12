@@ -19,16 +19,19 @@
                                 </div>
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <font-awesome-icon class="position-absolute" icon="chevron-left" color="#000000" size="2x"/>
+                                <font-awesome-icon class="position-absolute" icon="chevron-left" color="#EEEEEE" size="2x"/>
                                 <span class="visually-hidden">Previous</span>
                             </button>
                             <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <font-awesome-icon class="position-absolute" icon="chevron-right" color="#000000" size="2x"/>
+                                <font-awesome-icon class="position-absolute" icon="chevron-right" color="#EEEEEE" size="2x"/>
+<!--                                <span class="carousel-control-next-icon" aria-hidden="true"></span>-->
                                 <span class="visually-hidden">Next</span>
                             </button>
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-md-4 col-10 offset-1">
                         <div class="row">
                             <p class="prod-title">{{this.product.prodName}}</p>
                         </div>
@@ -40,11 +43,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <p class="similar">Może Cię zainteresować:</p>
-                </div>
-                <div class="row">
-                    <div class="col-2" v-for="prod in similarProducts" :key="prod.prodId">
+                <div class="row justify-content-center">
+                    <p class="similar ms-2">Może Cię zainteresować:</p>
+                    <div class="col-md-2 col-10 mx-auto" v-for="prod in similarProducts" :key="prod.prodId">
                         <product :product-source="prod" :order="false"/>
                     </div>
                 </div>

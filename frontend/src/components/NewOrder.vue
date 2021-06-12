@@ -64,8 +64,8 @@
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header mx-3">
-                        <h5 class="modal-title" id="exampleModalLabel">Podsumowanie</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title" id="exampleModalLabel">Upewnij się, że dane są poprawne</h5>
+                        <font-awesome-icon icon="times" data-bs-dismiss="modal" aria-label="Close" color="#212529" size="lg"/>
                     </div>
                     <div class="modal-body mx-3">
                         <div class="row">
@@ -104,17 +104,17 @@
                                 <thead>
                                     <tr>
                                         <th>Produkt</th>
-                                        <th>Liczba sztuk</th>
-                                        <th>Cena za sztukę</th>
-                                        <th>Cena razem</th>
+                                        <th class="text-end">Liczba sztuk</th>
+                                        <th class="text-end">Cena za sztukę</th>
+                                        <th class="text-end">Cena razem</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="elem in orderSource.positions" :key="elem.product.prodId">
                                         <td>{{elem.product.prodName}}</td>
-                                        <td>{{elem.quantity}}</td>
-                                        <td>{{elem.product.price}} zł</td>
-                                        <td>{{(elem.quantity * elem.product.price).toFixed(2)}} zł</td>
+                                        <td class="text-end">{{elem.quantity}}</td>
+                                        <td class="text-end">{{elem.product.price}} zł</td>
+                                        <td class="text-end">{{(elem.quantity * elem.product.price).toFixed(2)}} zł</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -279,7 +279,7 @@ input[type=number] {
     font-weight: 400;
 }
 
-.btn-close:hover {
-    box-shadow: none;
+.modal-title {
+    font-weight: 600;
 }
 </style>
