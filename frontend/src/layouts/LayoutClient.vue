@@ -70,7 +70,7 @@ import axios from 'axios'
 import MyFooter from '../components/MyFooter'
 // import $ from 'jquery'
 
-const API_URL = 'http://localhost:8000'
+import { api_url, active_user } from '../../auth_config.json'
 
 // const auth = new AuthService()
 export default {
@@ -90,13 +90,13 @@ export default {
       this.$auth.logout()
     },
     privateMessage () {
-      const url = `${API_URL}/rent-rest/api/private-scoped`
+      const url = `${api_url}/rent-rest/api/private-scoped`
       // const url = `${API_URL}/users/?query={email, username}`
       return axios.get(url, {headers: {Authorization: `Bearer ${this.$auth.getTokenSilently()}`}}).then((response) => {
         console.log(response.data)
-        this.message = JSON.stringify(response.data)
+        this.message = JSON.stringify(JSON.stringify(response.data))
       })
-    }
+    },
   }
 }
 </script>

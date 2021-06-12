@@ -19,7 +19,7 @@
 <script>
 import OrdersTable from '../components/OrdersTable'
 import axios from 'axios'
-const API_URL = 'http://localhost:8000'
+import { api_url } from '../../auth_config.json'
 export default {
   name: 'Orders',
   components: {
@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     async getOrders () {
-      const url = `${API_URL}/orders/`
+      const url = `${api_url}/orders/`
       console.log(this.$auth.getIdTokenClaims())
       const token = await this.$auth.getTokenSilently()
       // const token = this.$auth.getIdTokenClaims()

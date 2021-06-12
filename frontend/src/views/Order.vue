@@ -43,7 +43,7 @@ import NewOrder from '../components/NewOrder'
 import Product from '../components/Product'
 import NewOrderDates from '../components/NewOrderDates'
 import axios from 'axios'
-const API_URL = 'http://localhost:8000'
+import { api_url } from '../../auth_config.json'
 
 export default {
   name: 'Order',
@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     async getCategories () {
-      const url = `${API_URL}/categories/?query={catId, catName}`
+      const url = `${api_url}/categories/?query={catId, catName}`
       console.log(this.$auth)
       const token = await this.$auth.getTokenSilently()
       console.log(token)
@@ -73,7 +73,7 @@ export default {
       })
     },
     async getProducts () {
-      const url = `${API_URL}/products/?query={prodId, prodName, price, images}`
+      const url = `${api_url}/products/?query={prodId, prodName, price, images}`
       console.log(this.$auth)
       const token = await this.$auth.getTokenSilently()
       console.log(token)
@@ -83,7 +83,7 @@ export default {
       })
     },
     async getOrder () {
-      const url = `${API_URL}/orders/?query={*,positions{*,product{prodId,prodName}}}`
+      const url = `${api_url}/orders/?query={*,positions{*,product{prodId,prodName}}}`
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         response.data['results'].forEach(
@@ -102,7 +102,7 @@ export default {
       })
     },
     async addOrder () {
-      const url = `${API_URL}/orders/`
+      const url = `${api_url}/orders/`
       const token = await this.$auth.getTokenSilently()
       var order = {
         clientId: this.$auth.user,
@@ -118,7 +118,7 @@ export default {
     },
     async editOrder (order) {
       console.log('ORDER', JSON.stringify(order))
-      const url = `${API_URL}/orders/${this.newOrder.orderId}/`
+      const url = `${api_url}/orders/${this.newOrder.orderId}/`
       const token = await this.$auth.getTokenSilently()
       await axios.put(url, order, {headers: {Authorization: `Bearer ${token}`}})
       await this.getOrder()
@@ -142,7 +142,7 @@ export default {
       found ? this.editPosition(id, quantity) : this.addPosition(id, quantity)
     },
     async addPosition (id, quantity) {
-      const url = `${API_URL}/order-positions/`
+      const url = `${api_url}/order-positions/`
       const token = await this.$auth.getTokenSilently()
 
       const position = {
@@ -154,7 +154,7 @@ export default {
       await this.getOrder()
     },
     async editPosition (id, quantity) {
-      const url = `${API_URL}/order-positions/${this.newOrder.orderId}/${id}`
+      const url = `${api_url}/order-positions/${this.newOrder.orderId}/${id}`
       const token = await this.$auth.getTokenSilently()
       const currentQuantity = this.getQuantityOfPosition(id)
       const position = {
@@ -164,7 +164,7 @@ export default {
       await this.getOrder()
     },
     async setPosition (id, quantity) {
-      const url = `${API_URL}/order-positions/${this.newOrder.orderId}/${id}`
+      const url = `${api_url}/order-positions/${this.newOrder.orderId}/${id}`
       const token = await this.$auth.getTokenSilently()
       const position = {
         quantity: parseInt(quantity)
@@ -173,13 +173,13 @@ export default {
       await this.getOrder()
     },
     async deletePosition (id) {
-      const url = `${API_URL}/order-positions/${this.newOrder.orderId}/${id}`
+      const url = `${api_url}/order-positions/${this.newOrder.orderId}/${id}`
       const token = await this.$auth.getTokenSilently()
       await axios.delete(url, {headers: {Authorization: `Bearer ${token}`}})
       await this.getOrder()
     },
     async filterProducts (sorting, categories, searchWord, searchDescription) {
-      var url = `${API_URL}/products/?query={prodId, prodName, price, images}`
+      var url = `${api_url}/products/?query={prodId, prodName, price, images}`
       if (sorting !== '') {
         url += `&ordering=${sorting}`
       }
@@ -201,7 +201,7 @@ export default {
     },
     async searchProducts (searchWord, searchDescription) {
       searchWord = searchWord.replace('&', '')
-      var url = `${API_URL}/products/?query={prodId, prodName, price, images}`
+      var url = `${api_url}/products/?query={prodId, prodName, price, images}`
       if (searchWord.length > 0 && searchWord.trim()) {
         url += `&search=${searchWord}`
         if (searchDescription === false) {
@@ -218,7 +218,7 @@ export default {
       this.$refs.child.clearFilters()
     },
     async sendOrder (done) {
-      const url = `${API_URL}/orders/${this.newOrder.orderId}/`
+      const url = `${api_url}/orders/${this.newOrder.orderId}/`
       const token = await this.$auth.getTokenSilently()
       const order = {
         status: 'Oczekujące'

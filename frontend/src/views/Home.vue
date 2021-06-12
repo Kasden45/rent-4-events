@@ -34,13 +34,13 @@
 <script>
 import { domain, api_key } from "../../auth_config.json";
 import axios from "axios"
-const API_URL = 'http://localhost:8000'
+import { api_url } from '../../auth_config.json'
 
 export default {
   name: 'Home',
     methods: {
       async createClient() {
-        const url = `${API_URL}/clients/`
+        const url = `${api_url}/clients/`
           if (this.$auth.isAuthenticated)
           {
               const token = await this.$auth.getTokenSilently()

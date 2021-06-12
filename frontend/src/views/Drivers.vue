@@ -17,7 +17,7 @@
 import DriversTable from '../components/DriversTable'
 import DriverForm from '../components/DriverForm'
 import axios from 'axios'
-const API_URL = 'http://localhost:8000'
+import { api_url } from '../../auth_config.json'
 export default {
   name: 'Drivers',
   components: {
@@ -32,13 +32,13 @@ export default {
   },
   methods: {
     async addDriver (driver) {
-      const url = `${API_URL}/drivers/`
+      const url = `${api_url}/drivers/`
       const token = await this.$auth.getTokenSilently()
       await axios.post(url, driver, {headers: {Authorization: `Bearer ${token}`}})
       this.getDrivers()
     },
     async getUsers () {
-      const url = `${API_URL}/users/?query={id, username}`
+      const url = `${api_url}/users/?query={id, username}`
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.users = response.data['results']
@@ -46,7 +46,7 @@ export default {
       })
     },
     async getDrivers () {
-      const url = `${API_URL}/drivers/`
+      const url = `${api_url}/drivers/`
       const token = await this.$auth.getTokenSilently()
       const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.drivers = response.data['results']
@@ -59,7 +59,7 @@ export default {
         const driver = driverData.data[0]
         const index = driverData.data[1]
         console.log(driverData.data[1])
-        const url = `${API_URL}/drivers/${driver.userId}/`
+        const url = `${api_url}/drivers/${driver.userId}/`
         const token = await this.$auth.getTokenSilently()
         await axios.put(url, driver, {headers: {Authorization: `Bearer ${token}`}})
         await this.getDriverById(driver.userId, index, driverData)
@@ -69,7 +69,7 @@ export default {
     },
     async getDriverById (id, index, driverData) {
       try {
-        const url = `${API_URL}/drivers/${id}/`
+        const url = `${api_url}/drivers/${id}/`
         const token = await this.$auth.getTokenSilently()
         await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
           this.drivers[index] = response.data
@@ -81,7 +81,7 @@ export default {
     },
     async deleteDriver (id) {
       try {
-        const url = `${API_URL}/drivers/${id}/`
+        const url = `${api_url}/drivers/${id}/`
         const token = await this.$auth.getTokenSilently()
         await axios.delete(url, {headers: {Authorization: `Bearer ${token}`}})
         await this.getDrivers()

@@ -23,9 +23,9 @@ schema_view = get_swagger_view(title='Pastebin API')
 
 urlpatterns = [
     url(r'^swagger/', schema_view),
-    path('users/', views.user_list),
-    path('users/<int:pk>/', views.user_detail),
-    path('groups/', views.group_list),
+    # path('users/', views.user_list),
+    # path('users/<int:pk>/', views.user_detail),
+    # path('groups/', views.group_list),
     path('api/public', views.public),
     path('api/private', views.private),
     path('api/private-scoped', views.private_scoped),
