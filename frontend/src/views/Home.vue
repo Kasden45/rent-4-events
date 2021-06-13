@@ -32,39 +32,38 @@
 </template>
 
 <script>
-import { domain, api_key } from "../../auth_config.json";
-import axios from "axios"
-import { api_url } from '../../auth_config.json'
+import { domain, apiKey, apiUrl } from '../../auth_config.json'
+import axios from 'axios'
 
 export default {
   name: 'Home',
-    methods: {
-      async createClient() {
-        const url = `${api_url}/clients/`
-          if (this.$auth.isAuthenticated)
-          {
-              const token = await this.$auth.getTokenSilently()
-            const idToken = await this.$auth.getIdTokenClaims()
-              const meta = this.$auth.user
-              console.log(JSON.stringify(meta))
-            console.log('imie: ' + idToken.given_name + ' nazwisko: ' + idToken.family_name)
-              const clientInfo = {
-                firstName: idToken.given_name,
-                lastName: idToken.family_name
-                // phoneNumber:
-              }
-              axios.get(`https://${domain}/api/v2/users/${meta.sub}`, {headers: {Authorization: `Bearer ${api_key}`}}).then((response) => {
-                  if (response.data.user_metadata !== undefined)
-                  {
-                     console.log(JSON.stringify(response.data.user_metadata.phone_number))
-                  clientInfo.phoneNumber = response.data.user_metadata.phone_number
-                  }
-
-                  axios.post(url, clientInfo, {headers: {Authorization: `Bearer ${token}`}})
-              })
+  props: {
+    activeUser: String
+  },
+  methods: {
+    async createClient () {
+      const url = `${apiUrl}/clients/`
+      if (this.$auth.isAuthenticated) {
+        const token = await this.$auth.getTokenSilently()
+        const idToken = await this.$auth.getIdTokenClaims()
+        const meta = this.$auth.user
+        console.log(JSON.stringify(meta))
+        console.log('imie: ' + idToken.given_name + ' nazwisko: ' + idToken.family_name)
+        const clientInfo = {
+          firstName: idToken.given_name,
+          lastName: idToken.family_name
+          // phoneNumber:
+        }
+        axios.get(`https://${domain}/api/v2/users/${meta.sub}`, {headers: {Authorization: `Bearer ${apiKey}`}}).then((response) => {
+          if (response.data.user_metadata !== undefined) {
+            console.log(JSON.stringify(response.data.user_metadata.phone_number))
+            clientInfo.phoneNumber = response.data.user_metadata.phone_number
           }
-          else {
-              console.log('not authenticated!')
+
+          axios.post(url, clientInfo, {headers: {Authorization: `Bearer ${token}`}})
+        })
+      } else {
+        console.log('not authenticated!')
       }
     }
   },

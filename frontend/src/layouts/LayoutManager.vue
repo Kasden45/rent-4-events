@@ -1,5 +1,5 @@
 <template>
-<div class="layout-client">
+<div class="layout-manager">
 
         <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -82,9 +82,8 @@
 </template>
 
 <script>
-import axios from 'axios'
 import MyFooter from '../components/MyFooter'
-import { api_url, auth_roles } from '../../auth_config.json'
+import authRoles from '../../auth_config.json'
 // const API_URL = 'http://localhost:8000'
 
 // const auth = new AuthService()
@@ -94,8 +93,8 @@ export default {
   data () {
     return {
       message: 'a',
-        roles: auth_roles,
-        user_token: this.$auth.getTokenSilently()
+      roles: authRoles,
+      user_token: this.$auth.getTokenSilently()
     }
   },
   methods: {
@@ -106,26 +105,26 @@ export default {
     logout () {
       this.$auth.logout()
     },
-    privateMessage () {
-      const url = `${api_url}/api/private-scoped`
+    // privateMessage () {
+    //   const url = `${apiUrl}/api/private-scoped`
+    //   // const url = `${API_URL}/users/?query={email, username}`
+    //
+    //   return axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+    //     console.log(response.data)
+    //     this.message = JSON.stringify(response.data)
+    //   })
+    // },
+    async getActive () {
+      // const url = `${apiUrl}/users/?query={id,username,groups}`
       // const url = `${API_URL}/users/?query={email, username}`
-
-      return axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
-        console.log(response.data)
-        this.message = JSON.stringify(response.data)
-      })
-    },
-      async getActive() {
-          const url = `${api_url}/users/?query={id,username,groups}`
-          // const url = `${API_URL}/users/?query={email, username}`
-          const token = await this.$auth.getTokenSilently()
-          var active_role = await this.getActiveRole(token)
-          // return axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
-          //     this.message = JSON.stringify(response.data.results[0])
-          //     console.log("groups: " + this.message)
-          // })
-          console.log("Active role: " + active_role)
-      }
+      const token = await this.$auth.getTokenSilently()
+      var activeRole = await this.getActiveRole(token)
+      // return axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+      //     this.message = JSON.stringify(response.data.results[0])
+      //     console.log("groups: " + this.message)
+      // })
+      console.log('Active role: ' + activeRole)
+    }
   }
 }
 </script>

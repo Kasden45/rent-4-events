@@ -49,8 +49,16 @@ class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         """
         instance.email = validated_data.get('email', instance.email)
         instance.password = validated_data.get('password', instance.password)
+        groups = instance.groups
+        for group in groups.all():
+            instance.groups.remove(group)
+        for group in validated_data['groups']:
+            my_group = Group.objects.get(name=group)
+            instance.groups.add(my_group)
+            instance.save()
         instance.save()
         return instance
+
 
 
 class ImageSerializer(DynamicFieldsMixin, serializers.ModelSerializer):

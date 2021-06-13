@@ -25,9 +25,12 @@
 import OrderPositionsTable from '../components/OrderPositionsTable'
 import OrderPreviewDetails from '../components/OrderPreviewDetails'
 import axios from 'axios'
-import { api_url } from '../../auth_config.json'
+import { apiUrl } from '../../auth_config.json'
 export default {
   name: 'OrderPreview',
+  props: {
+    activeUser: String
+  },
   components: {
     OrderPositionsTable,
     OrderPreviewDetails
@@ -39,7 +42,7 @@ export default {
   },
   methods: {
     async getOrder () {
-      const url = `${api_url}/orders/${this.$route.params.orderId}/?query={*,positions{*,product{prodId,prodName, quantity, price}}}`
+      const url = `${apiUrl}/orders/${this.$route.params.orderId}/?query={*,positions{*,product{prodId,prodName, quantity, price}}}`
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         console.log(response.data)
@@ -50,7 +53,7 @@ export default {
       this.$router.push({ name: 'Orders' })
     },
     async cancelOrder () {
-      const url = `${api_url}/orders/${this.$route.params.orderId}/`
+      const url = `${apiUrl}/orders/${this.$route.params.orderId}/`
       const token = await this.$auth.getTokenSilently()
       const order = {
         status: 'Anulowane'

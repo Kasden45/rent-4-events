@@ -17,6 +17,9 @@
 import Menu from '../components/MyMenu'
 export default {
   name: 'Offer',
+  props: {
+    activeUser: String
+  },
   components: {
     Menu
   }

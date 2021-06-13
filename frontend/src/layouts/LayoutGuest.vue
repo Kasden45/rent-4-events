@@ -78,7 +78,7 @@
 import axios from 'axios'
 import MyFooter from '../components/MyFooter'
 
-import { api_url } from '../../auth_config.json'
+import { apiUrl } from '../../auth_config.json'
 // const auth = new AuthService()
 export default {
   name: 'LayoutGuest',
@@ -97,16 +97,16 @@ export default {
       this.$auth.logout()
     },
     privateMessage () {
-      const url = `${api_url}/rent-rest/api/private-scoped`
+      const url = `${apiUrl}/rent-rest/api/private-scoped`
       // const url = `${API_URL}/users/?query={email, username}`
       return axios.get(url, {headers: {Authorization: `Bearer ${this.$auth.getTokenSilently()}`}}).then((response) => {
         console.log(response.data)
         this.message = JSON.stringify(response.data)
       })
     },
-      mounted() {
-          this.$emit('edit:order', this.editedOrder)
-      }
+    mounted () {
+      this.$emit('edit:order', this.editedOrder)
+    }
   }
 }
 </script>

@@ -60,9 +60,12 @@
 import Product from '../components/Product'
 import axios from 'axios'
 import $ from 'jquery'
-import { api_url } from '../../auth_config.json'
+import { apiUrl } from '../../auth_config.json'
 export default {
   name: 'ProductPreview',
+  props: {
+    activeUser: String
+  },
   components: {
     Product
   },
@@ -74,14 +77,14 @@ export default {
   },
   methods: {
     async getProduct () {
-      const url = `${api_url}/products/${this.$route.params.prodId}/`
+      const url = `${apiUrl}/products/${this.$route.params.prodId}/`
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.product = response.data
       })
     },
     async getSimilarProducts () {
-      const url = `${api_url}/products/${this.$route.params.prodId}/similar/?query={prodId, prodName, price, images}`
+      const url = `${apiUrl}/products/${this.$route.params.prodId}/similar/?query={prodId, prodName, price, images}`
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.similarProducts = response.data['results']

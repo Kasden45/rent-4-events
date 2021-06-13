@@ -4,11 +4,11 @@ import Vue from 'vue'
 import './plugins/fontawesome'
 import App from './App'
 import router from './router'
-import {domain, clientId, audience, api_key, api_url, groups} from '../auth_config.json'
+import {domain, clientId, audience, apiUrl, groups} from '../auth_config.json'
 import { Auth0Plugin } from './auth'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
-import axios from "axios";
+import axios from 'axios'
 // import $ from 'jquery'
 
 Vue.use(Auth0Plugin, {
@@ -27,42 +27,31 @@ Vue.use(Auth0Plugin, {
 Vue.config.productionTip = false
 Vue.mixin({
   methods: {
-    getUsersWithRole: function (role_id) {
-      axios.get(`https://${domain}/api/v2/roles/${role_id}/users`, {headers: {Authorization: `Bearer ${api_key}`}}).then((response) => {
-        console.log("Users with role" + JSON.stringify(response.data))
+    getUsersDjangoRoles: async function (token) {
+      const url = `${apiUrl}/users/?query={id, username, groups}`
+      console.log('Url i token: ' + url + ' ' + JSON.stringify(token))
+      const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+        // return response.data['results'].find(elem => elem.id === ).groups
+        return response.data['results'][0].groups
       })
-      },
-      getUsersRole: function (user_id) {
-        //
-        axios.get(`https://${domain}/api/v2/roles/${role_id}/users`, {headers: {Authorization: `Bearer ${api_key}`}}).then((response) => {
-        console.log("Users with role" + JSON.stringify(response.data))
-      })
-      },
-      getUsersDjangoRoles: async function (token) {
-        const url = `${api_url}/users/?query={id, username, groups}`
-          console.log("Url i token: " + url + " " + JSON.stringify(token))
-          const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
-
-              return response.data['results'][0].groups
-          })
-          console.log("response get roles: " + JSON.stringify(resp))
-          return resp
-      },
-      getActiveRole: async function (token) {
-        const roles_array = await this.getUsersDjangoRoles(token)
-          console.log("array" + roles_array)
-        if (roles_array.includes(groups.Admin) || roles_array == groups.Admin) {
-            return "Admin"
-        }
-        else if (roles_array.includes(groups.Kierowca) || roles_array == groups.Kierowca) {
-            return "Kierowca"
-        }
-        else if (roles_array.includes(groups.Klient) || roles_array == groups.Klient) {
-            return "Klient"
-        }
-        else return "Gość"
-      }
+      console.log('response get roles: ' + JSON.stringify(resp))
+      return resp
     },
+    getActiveRole: async function (token) {
+      const rolesArray = await this.getUsersDjangoRoles(token)
+      console.log('array' + rolesArray)
+      // eslint-disable-next-line eqeqeq
+      if (rolesArray.includes(groups.Admin) || rolesArray == groups.Admin) {
+        return 'Admin'
+        // eslint-disable-next-line eqeqeq
+      } else if (rolesArray.includes(groups.Kierowca) || rolesArray == groups.Kierowca) {
+        return 'Kierowca'
+        // eslint-disable-next-line eqeqeq
+      } else if (rolesArray.includes(groups.Klient) || rolesArray == groups.Klient) {
+        return 'Klient'
+      } else return 'Gość'
+    }
+  }
 })
 // eslint-disable-next-line no-new
 new Vue({
