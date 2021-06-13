@@ -59,6 +59,7 @@ class Order(models.Model):
         ('Odrzucone', 'Odrzucone'),
         ('Oczekujące', 'Oczekujące'),
         ('Do realizacji', 'Do realizacji'),
+        ('W trakcie negocjacji', 'W trakcie negocjacji'),
         ('W trakcie realizacji', 'W trakcie realizacji'),
         ('Zrealizowane', 'Zrealizowane'),
         ('Robocze', 'Robocze'),
