@@ -3,18 +3,18 @@
         <div class="row">
             <div class="col-11">
                 <div class="row justify-content-between mt-3">
-                    <div class="col-3">
+                    <div class="col-4">
                         <button class="btn btn-4" @click="goBack">POWRÓT DO ZAMÓWIEŃ</button>
                     </div>
-                    <div class="col-3 text-end" v-if="order.status === 'Oczekujące'">
+                    <div class="col-3 text-end" v-if="order.status === 'Oczekujące' && activeUser === 'Klient'">
                         <button class="btn btn-4" @click="cancelOrder">ANULUJ ZAMÓWIENIE</button>
                     </div>
                 </div>
                 <div class="row justify-content-center my-3">
-                    <order-preview-details :order-source="order"/>
+                    <order-preview-details :order-source="order" :active-user="$props.activeUser"/>
                 </div>
                 <div class="row justify-content-center">
-                    <order-positions-table :order-source="order"/>
+                    <order-positions-table :order-source="order" :active-user="$props.activeUser"/>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     async getOrder () {
-      const url = `${apiUrl}/orders/${this.$route.params.orderId}/?query={*,positions{*,product{prodId,prodName, quantity, price}}}`
+      const url = `${apiUrl}/orders/${this.$route.params.orderId}/?query={*,positions{*,product{prodId,prodName, quantity, available, price}}}`
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         console.log(response.data)

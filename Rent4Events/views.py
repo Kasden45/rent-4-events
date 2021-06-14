@@ -99,10 +99,19 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     def list(self, request, *args, **kwargs):
-        if request.user.is_staff:
-            queryset = m.User.objects.all()
-        else:
-            queryset = m.User.objects.filter(id=request.user.id)
+        queryset = m.User.objects.all()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @action(methods=['get'], detail=False,
+            url_path='user_info', url_name='user_info')
+    def user_info(self, request, *args, **kwargs):
+        queryset = m.User.objects.filter(id=request.user.id)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)

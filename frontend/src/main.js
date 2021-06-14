@@ -28,10 +28,9 @@ Vue.config.productionTip = false
 Vue.mixin({
   methods: {
     getUsersDjangoRoles: async function (token) {
-      const url = `${apiUrl}/users/?query={id, username, groups}`
+      const url = `${apiUrl}/users/user_info/?query={id, username, groups}`
       console.log('Url i token: ' + url + ' ' + JSON.stringify(token))
       const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
-        // return response.data['results'].find(elem => elem.id === ).groups
         return response.data['results'][0].groups
       })
       console.log('response get roles: ' + JSON.stringify(resp))

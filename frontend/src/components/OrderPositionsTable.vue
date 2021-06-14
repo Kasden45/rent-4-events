@@ -5,6 +5,7 @@
                 <tr>
                     <th>Produkt</th>
                     <th class="text-end">Liczba sztuk</th>
+                    <th class="text-end" v-if="activeUser === 'Admin'">Dostępne</th>
                     <th class="text-end">Cena za sztukę</th>
                     <th class="text-end">Cena razem</th>
                 </tr>
@@ -13,6 +14,7 @@
                 <tr v-for="elem in orderSource.positions" :key="elem.product.prodId" @click="productPreview(elem.product.prodId)">
                     <td>{{elem.product.prodName}}</td>
                     <td class="text-end">{{elem.quantity}}</td>
+                    <td class="text-end" v-if="activeUser === 'Admin'">{{elem.product.available}}</td>
                     <td class="text-end">{{elem.product.price}} zł</td>
                     <td class="text-end">{{(elem.quantity * elem.product.price).toFixed(2)}} zł</td>
                 </tr>
@@ -25,7 +27,8 @@
 export default {
   name: 'OrderPositionsTable',
   props: {
-    orderSource: Object
+    orderSource: Object,
+    activeUser: String
   },
   methods: {
     productPreview (id) {
