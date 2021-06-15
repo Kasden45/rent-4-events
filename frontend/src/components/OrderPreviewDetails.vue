@@ -2,11 +2,11 @@
     <div id="order-preview-details">
         <div class="row">
             <div class="col-md-4 col-sm-6 col-12">
-                <span class="fw-bolder">Data od:</span>
+                <span class="fw-bolder">Początek wypożyczenia:</span>
                 <span>{{this.orderSource.startDate}}</span>
             </div>
             <div class="col-md-4 col-sm-6 col-12">
-                <span class="fw-bolder">Data do:</span>
+                <span class="fw-bolder">Koniec wypożyczenia:</span>
                 <span>{{this.orderSource.endDate}}</span>
             </div>
             <div class="col-md-4 col-sm-6 col-12">
@@ -71,7 +71,8 @@ export default {
       const token = await this.$auth.getTokenSilently()
       const order = {
         status: status,
-        comment: comment
+        comment: comment,
+        isEdited: false
       }
       await axios.patch(url, order, {headers: {Authorization: `Bearer ${token}`}})
       await this.$router.push({name: 'Orders'})

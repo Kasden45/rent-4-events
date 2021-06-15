@@ -4,6 +4,7 @@ import Home from '../views/Home'
 import Offer from '../views/Offer'
 import Orders from '../views/Orders'
 import Order from '../views/Order'
+// import OrderEdit from '../views/OrderEdit'
 import Drivers from '../views/Drivers'
 import OrderPreview from '../views/OrderPreview'
 import ProductPreview from '../views/ProductPreview'
@@ -47,6 +48,12 @@ export default new Router({
       path: '/Zamowienia/:orderId',
       name: 'OrderPreview',
       component: OrderPreview,
+      beforeEnter: authGuard
+    },
+    {
+      path: '/Zamowienia/:orderId/Edycja',
+      name: 'OrderEdit',
+      component: Order,
       beforeEnter: authGuard
     },
     {

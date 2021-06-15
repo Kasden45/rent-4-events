@@ -6,7 +6,8 @@
                     <div class="col-4">
                         <button class="btn btn-4" @click="goBack">POWRÓT DO ZAMÓWIEŃ</button>
                     </div>
-                    <div class="col-3 text-end" v-if="order.status === 'Oczekujące' && activeUser === 'Klient'">
+                    <div class="col-5 offset-2 text-end" v-if="activeUser === 'Klient' && order.status === 'Oczekujące' || order.status === 'W trakcie negocjacji'">
+                        <button class="btn btn-4" @click="editOrder">EDYTUJ</button>
                         <button class="btn btn-4" @click="cancelOrder">ANULUJ ZAMÓWIENIE</button>
                     </div>
                 </div>
@@ -47,6 +48,7 @@ export default {
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         console.log(response.data)
         this.order = response.data
+        console.log('xxx', JSON.stringify(this.order))
       })
     },
     goBack () {
@@ -60,6 +62,10 @@ export default {
       }
       await axios.patch(url, order, {headers: {Authorization: `Bearer ${token}`}})
       this.goBack()
+    },
+    async editOrder () {
+      console.log(this.order.orderId)
+      await this.$router.push({name: 'OrderEdit', params: {orderId: this.order.orderId}})
     }
   },
   mounted () {

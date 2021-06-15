@@ -16,7 +16,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="elem in orderSource.positions" :key="elem.product.prodId">
+                        <tr v-for="elem in this.orderSource.positions" :key="elem.product.prodId">
                             <td>{{elem.product.prodName}}</td>
                             <td>
                                 <div>
@@ -56,16 +56,19 @@
                         <span>Koszt zamówienia: </span>
                         <span class="data">{{orderSource.totalCost}} zł</span>
                     </p>
-                    <button class="btn btn-4 float-end"  data-bs-toggle="modal" data-bs-target="#exampleModal">PRZEJDŹ DALEJ</button>
+                    <button class="btn btn-4 float-end" v-if="orderSource.status === 'W trakcie negocjacji' || orderSource.status === 'Oczekujące'" data-bs-toggle="modal" data-bs-target="#exampleModal">AKTUALIZUJ</button>
+                    <button class="btn btn-4 float-end" v-else data-bs-toggle="modal" data-bs-target="#exampleModal">PRZEJDŹ DALEJ</button>
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header mx-3">
                         <h5 class="modal-title" id="exampleModalLabel">Upewnij się, że dane są poprawne</h5>
-                        <font-awesome-icon icon="times" data-bs-dismiss="modal" aria-label="Close" color="#212529" size="lg"/>
+                        <button  class="btn btn-sm btn-4" data-bs-dismiss="modal" aria-label="Close">
+                          <font-awesome-icon id="btn-close" icon="times" size="lg"/>
+                        </button>
                     </div>
                     <div class="modal-body mx-3">
                         <div class="row">
@@ -117,6 +120,7 @@
                                         <td class="text-end">{{(elem.quantity * elem.product.price).toFixed(2)}} zł</td>
                                     </tr>
                                 </tbody>
+
                             </table>
                         </div>
                     </div>
@@ -132,10 +136,13 @@
 
 <script>
 import $ from 'jquery'
+// import { Modal } from 'bootstrap'
 export default {
   name: 'NewOrder',
   props: {
-    orderSource: Object
+    orderSource: Object,
+    activeUser: String,
+    edit: Boolean
   },
   methods: {
     handleDelete (id) {
@@ -165,9 +172,10 @@ export default {
       }
     },
     sendOrder () {
-      $('#exampleModal .btn-close').click()
-      // $('body').removeClass('modal-open')
-      // $('.modal-backdrop').remove()
+      $('#exampleModal button').click()
+      // const myModal = new Modal(document.getElementById('exampleModal'))
+      // myModal.hide()
+      // $('#exampleModal').remove()
       this.$emit('send:order', this.redirect)
     },
     redirect () {

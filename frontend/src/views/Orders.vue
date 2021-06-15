@@ -1,8 +1,8 @@
 <template>
     <div>
-<!--        <div class="orders" v-if="activeUser === 'Klient'">-->
-        <div class="orders">
-            <div class="row justify-content-end py-3 mw-100" v-if="activeUser === 'Klient'">
+        <div class="orders" v-if="activeUser === 'Klient'">
+<!--        <div class="orders">-->
+            <div class="row justify-content-end py-3 mw-100">
                 <div class="col-3">
                     <router-link class="btn btn-2" to="/Zamowienia/Nowe/">NOWE ZAMÓWIENIE</router-link>
                 </div>
@@ -10,19 +10,24 @@
             <div class="row mw-100">
                 <div class="col align-content-center px-5">
                     <h1>Zamówienia</h1>
-                    <orders-table :orders-source="orders"/>
+                    <orders-table :orders-source="orders" :active-user="activeUser"/>
                 </div>
             </div>
         </div>
-<!--        <div v-else-if="activeUser === 'Admin'">-->
-<!--            <p>Elko kierowniku</p>-->
-<!--        </div>-->
+        <div v-else-if="activeUser === 'Admin'">
+            <div class="row mw-100 mt-5">
+                <div class="col align-content-center px-5">
+                    <h1>Zamówienia</h1>
+                    <orders-table :orders-source="orders" :active-user="activeUser"/>
+                </div>
+            </div>
+        </div>
 <!--        <div v-else-if="activeUser === 'Kierowca'">-->
 <!--            <p>Elko kierowco</p>-->
 <!--        </div>-->
-<!--        <div v-else>-->
-<!--            <no-access/>-->
-<!--        </div>-->
+        <div v-else>
+            <no-access/>
+        </div>
     </div>
 
 </template>

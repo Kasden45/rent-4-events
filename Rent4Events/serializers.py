@@ -149,7 +149,7 @@ class OrderSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['orderId', 'client', 'startDate', 'endDate', 'address', 'isTransport', 'totalCost', 'status', 'creationDate', 'comment', 'positions']
+        fields = ['orderId', 'client', 'startDate', 'endDate', 'address', 'isTransport', 'isEdited', 'totalCost', 'status', 'creationDate', 'comment', 'positions']
 
     def create(self, validated_data):
         """

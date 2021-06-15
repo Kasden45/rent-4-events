@@ -270,7 +270,18 @@ class OrderViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
+        try:
+            poss = request.data['positions']
+            instance.positions.all().delete()
+            for position in poss:
+                prod = Product.objects.get(prodId=position["product"])
+                order = Order.objects.get(orderId=instance.orderId)
+                OrderPosition.objects.create(**{'order' : order, 'product' : prod, 'quantity' : position['quantity']})
+            request.data.pop('positions')
+        except KeyError:
+            pass
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
+
         print(serializer)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
