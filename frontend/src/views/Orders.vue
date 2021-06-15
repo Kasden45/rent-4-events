@@ -1,29 +1,50 @@
 <template>
-  <div class="orders">
-    <div class="row justify-content-end py-3 mw-100">
-      <div class="col-3">
-          <router-link class="btn btn-2" to="/Zamowienia/Nowe/">NOWE ZAMÓWIENIE</router-link>
-      </div>
+    <div>
+        <div class="orders" v-if="activeUser === 'Klient'">
+<!--        <div class="orders">-->
+            <div class="row justify-content-end py-3 mw-100">
+                <div class="col-3">
+                    <router-link class="btn btn-2" to="/Zamowienia/Nowe/">NOWE ZAMÓWIENIE</router-link>
+                </div>
+            </div>
+            <div class="row mw-100">
+                <div class="col align-content-center px-5">
+                    <h1>Zamówienia</h1>
+                    <orders-table :orders-source="orders" :active-user="activeUser"/>
+                </div>
+            </div>
+        </div>
+        <div v-else-if="activeUser === 'Admin'">
+            <div class="row mw-100 mt-5">
+                <div class="col align-content-center px-5">
+                    <h1>Zamówienia</h1>
+                    <orders-table :orders-source="orders" :active-user="activeUser"/>
+                </div>
+            </div>
+        </div>
+<!--        <div v-else-if="activeUser === 'Kierowca'">-->
+<!--            <p>Elko kierowco</p>-->
+<!--        </div>-->
+        <div v-else>
+            <no-access/>
+        </div>
     </div>
-    <div class="row mw-100">
-      <div class="col align-content-center px-5">
 
-        <h1>Zamówienia</h1>
-        <orders-table :orders-source="orders"/>
-
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
 import OrdersTable from '../components/OrdersTable'
 import axios from 'axios'
-import { api_url } from '../../auth_config.json'
+import { apiUrl } from '../../auth_config.json'
+import NoAccess from '../components/NoAccess'
 export default {
   name: 'Orders',
+  props: {
+    activeUser: String
+  },
   components: {
-    OrdersTable
+    OrdersTable,
+    NoAccess
   },
   data () {
     return {
@@ -32,7 +53,7 @@ export default {
   },
   methods: {
     async getOrders () {
-      const url = `${api_url}/orders/`
+      const url = `${apiUrl}/orders/`
       console.log(this.$auth.getIdTokenClaims())
       const token = await this.$auth.getTokenSilently()
       // const token = this.$auth.getIdTokenClaims()

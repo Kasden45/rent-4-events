@@ -12,7 +12,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="order in ordersSource" :key="order.orderId"  @click="openPreview(order.orderId)">
+            <tr v-for="order in ordersSource" :key="order.orderId" v-bind:style=" order.isEdited ? 'background-color: #D88C88;' : ''"  @click="openPreview(order.orderId)">
               <td>{{order.startDate}}</td>
               <td>{{order.endDate}}</td>
               <td>{{order.address}}</td>
@@ -26,10 +26,12 @@
 </template>
 
 <script>
+// import $ from 'jquery'
 export default {
   name: 'OrdersTable',
   props: {
-    ordersSource: Array
+    ordersSource: Array,
+    activeUser: String
   },
   methods: {
     openPreview (id) {

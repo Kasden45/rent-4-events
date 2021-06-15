@@ -29,7 +29,8 @@ import $ from 'jquery'
 export default {
   name: 'NewOrderDates',
   props: {
-    orderSource: Object
+    orderSource: Object,
+    edit: Boolean
   },
   data () {
     return {
@@ -61,7 +62,6 @@ export default {
         this.editedOrder.startDate = $newStartVal
         this.editedOrder.endDate = $newEndVal
         this.editedOrder.address = $newAddressVal
-        console.log('napraw sie pls')
 
         this.$emit('edit:order', this.editedOrder)
       } else {
@@ -82,15 +82,6 @@ export default {
       }
     }
   }
-  // created () {
-  //   this.editedOrder.client = this.orderSource.client
-  //   this.editedOrder.startDate = this.orderSource.startDate
-  //   this.editedOrder.endDate = this.orderSource.endDate
-  //   this.editedOrder.address = this.orderSource.address
-  //   this.editedOrder.isTransport = this.orderSource.isTransport
-  //   this.editedOrder.totalCost = this.orderSource.totalCost
-  //   this.editedOrder.status = this.orderSource.status
-  // }
 }
 </script>
 

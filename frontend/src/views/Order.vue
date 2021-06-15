@@ -2,7 +2,7 @@
     <div>
         <div class="row justify-content-end my-3 px-3 mw-100">
             <div class="col-md-7 col-12">
-                <new-order-dates v-if="newOrder" :order-source="newOrder" @edit:order="editOrder"/>
+                <new-order-dates v-if="newOrder" :order-source="newOrder" :edit="false" @edit:order="editOrder"/>
             </div>
             <div class="col-md-3 col-11 align-self-end py-2">
                 <router-link class="btn btn-4 ml-auto" to="/Zamowienia">Powrót do zamówień</router-link>
@@ -30,7 +30,8 @@
             </div>
             <div class="col-md-3 col-10 ">
                 <div class="row">
-                    <new-order :order-source="newOrder" @delete:position="deletePosition" @edit:position="editPosition" @set:position="setPosition" @send:order="sendOrder"/>
+                    <new-order v-if="this.$route.params.orderId" :order-source="newOrder" :active-user="activeUser" :edit="true" @delete:position="deletePosition" @edit:position="editPosition" @set:position="setPosition" @send:order="sendOrder"/>
+                    <new-order v-else :order-source="newOrder" :active-user="activeUser" :edit="false" @delete:position="deletePosition" @edit:position="editPosition" @set:position="setPosition" @send:order="sendOrder"/>
                 </div>
             </div>
         </div>
@@ -44,10 +45,13 @@ import NewOrder from '../components/NewOrder'
 import Product from '../components/Product'
 import NewOrderDates from '../components/NewOrderDates'
 import axios from 'axios'
-import { api_url } from '../../auth_config.json'
+import { apiUrl } from '../../auth_config.json'
 
 export default {
   name: 'Order',
+  props: {
+    activeUser: String
+  },
   components: {
     NewOrderDates,
     NewOrderFilters,
@@ -64,7 +68,7 @@ export default {
   },
   methods: {
     async getCategories () {
-      const url = `${api_url}/categories/?query={catId, catName}`
+      const url = `${apiUrl}/categories/?query={catId, catName}`
       console.log(this.$auth)
       const token = await this.$auth.getTokenSilently()
       console.log(token)
@@ -74,7 +78,7 @@ export default {
       })
     },
     async getProducts () {
-      const url = `${api_url}/products/?query={prodId, prodName, price, images}`
+      const url = `${apiUrl}/products/?query={prodId, prodName, price, images}`
       console.log(this.$auth)
       const token = await this.$auth.getTokenSilently()
       console.log(token)
@@ -83,8 +87,55 @@ export default {
         return resp
       })
     },
+    async getOrderCopied () {
+      const url = `${apiUrl}/orders/${this.newOrder.orderId}/?query={*,positions{*,product{prodId,prodName, quantity, price}}}`
+      const token = await this.$auth.getTokenSilently()
+      await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+        this.newOrder = response.data
+      })
+    },
+    async getOrderCopy () {
+      const url = `${apiUrl}/orders/${this.$route.params.orderId}/?query={*,positions{*,product{prodId,prodName, quantity, price}}}`
+      const token = await this.$auth.getTokenSilently()
+      await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response1) => {
+        this.newOrder.orderId = response1.data.orderId
+        this.newOrder.client = response1.data.client
+        this.newOrder.startDate = response1.data.startDate
+        this.newOrder.endDate = response1.data.endDate
+        this.newOrder.address = response1.data.address
+        this.newOrder.isTransport = response1.data.isTransport
+        this.newOrder.isEdited = response1.data.isEdited
+        this.newOrder.totalCost = response1.data.totalCost
+        this.newOrder.status = response1.data.status
+        this.newOrder.creationDate = response1.data.creationDate
+        this.newOrder.comment = response1.data.comment
+        this.addOrderCopy().then(() => {
+          response1.data.positions.forEach((pos) => {
+            const newPos = {
+              order: this.newOrder.orderId,
+              product: pos.product.prodId,
+              quantity: pos.quantity
+            }
+            this.addPositionCopy(newPos)
+          })
+        })
+      })
+    },
+    async addOrderCopy () {
+      const url = `${apiUrl}/orders/`
+      const token = await this.$auth.getTokenSilently()
+      await axios.post(url, this.newOrder, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+        this.newOrder = response.data
+      })
+    },
+    async addPositionCopy (position) {
+      const url = `${apiUrl}/order-positions/`
+      const token = await this.$auth.getTokenSilently()
+      await axios.post(url, position, {headers: {Authorization: `Bearer ${token}`}})
+      await this.getOrderCopied()
+    },
     async getOrder () {
-      const url = `${api_url}/orders/?query={*,positions{*,product{prodId,prodName, quantity, price}}}`
+      const url = `${apiUrl}/orders/?query={*,positions{*,product{prodId,prodName, quantity, price}}}`
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         response.data['results'].forEach(
@@ -103,15 +154,19 @@ export default {
       })
     },
     async addOrder () {
-      const url = `${api_url}/orders/`
+      const url = `${apiUrl}/orders/`
       const token = await this.$auth.getTokenSilently()
       var order = {
         clientId: this.$auth.user,
         startDate: new Date().toISOString().slice(0, 10),
         endDate: new Date().toISOString().slice(0, 10),
         address: 'Niezdefiniowany',
+        isTransport: false,
+        isEdited: false,
         totalCost: 0,
-        status: 'Robocze'
+        status: 'Robocze',
+        creationDate: new Date().toISOString().slice(0, 10),
+        comment: ''
       }
       await axios.post(url, order, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.newOrder = response.data
@@ -119,10 +174,14 @@ export default {
     },
     async editOrder (order) {
       console.log('ORDER', JSON.stringify(order))
-      const url = `${api_url}/orders/${this.newOrder.orderId}/`
+      const url = `${apiUrl}/orders/${this.newOrder.orderId}/`
       const token = await this.$auth.getTokenSilently()
       await axios.put(url, order, {headers: {Authorization: `Bearer ${token}`}})
-      await this.getOrder()
+      if (this.$route.params.orderId) {
+        await this.getOrderCopied()
+      } else {
+        await this.getOrder()
+      }
       console.log('NEW ORDER', this.newOrder)
     },
     getQuantityOfPosition (id) {
@@ -143,7 +202,7 @@ export default {
       found ? this.editPosition(id, quantity) : this.addPosition(id, quantity)
     },
     async addPosition (id, quantity) {
-      const url = `${api_url}/order-positions/`
+      const url = `${apiUrl}/order-positions/`
       const token = await this.$auth.getTokenSilently()
 
       const position = {
@@ -152,35 +211,51 @@ export default {
         quantity: quantity
       }
       await axios.post(url, position, {headers: {Authorization: `Bearer ${token}`}})
-      await this.getOrder()
+      if (this.$route.params.orderId) {
+        await this.getOrderCopied()
+      } else {
+        await this.getOrder()
+      }
     },
     async editPosition (id, quantity) {
-      const url = `${api_url}/order-positions/${this.newOrder.orderId}/${id}`
+      const url = `${apiUrl}/order-positions/${this.newOrder.orderId}/${id}`
       const token = await this.$auth.getTokenSilently()
       const currentQuantity = this.getQuantityOfPosition(id)
       const position = {
         quantity: currentQuantity + parseInt(quantity)
       }
       await axios.patch(url, position, {headers: {Authorization: `Bearer ${token}`}})
-      await this.getOrder()
+      if (this.$route.params.orderId) {
+        await this.getOrderCopied()
+      } else {
+        await this.getOrder()
+      }
     },
     async setPosition (id, quantity) {
-      const url = `${api_url}/order-positions/${this.newOrder.orderId}/${id}`
+      const url = `${apiUrl}/order-positions/${this.newOrder.orderId}/${id}`
       const token = await this.$auth.getTokenSilently()
       const position = {
         quantity: parseInt(quantity)
       }
       await axios.patch(url, position, {headers: {Authorization: `Bearer ${token}`}})
-      await this.getOrder()
+      if (this.$route.params.orderId) {
+        await this.getOrderCopied()
+      } else {
+        await this.getOrder()
+      }
     },
     async deletePosition (id) {
-      const url = `${api_url}/order-positions/${this.newOrder.orderId}/${id}`
+      const url = `${apiUrl}/order-positions/${this.newOrder.orderId}/${id}`
       const token = await this.$auth.getTokenSilently()
       await axios.delete(url, {headers: {Authorization: `Bearer ${token}`}})
-      await this.getOrder()
+      if (this.$route.params.orderId) {
+        await this.getOrderCopied()
+      } else {
+        await this.getOrder()
+      }
     },
     async filterProducts (sorting, categories, searchWord, searchDescription) {
-      var url = `${api_url}/products/?query={prodId, prodName, price, images}`
+      var url = `${apiUrl}/products/?query={prodId, prodName, price, images}`
       if (sorting !== '') {
         url += `&ordering=${sorting}`
       }
@@ -202,7 +277,7 @@ export default {
     },
     async searchProducts (searchWord, searchDescription) {
       searchWord = searchWord.replace('&', '')
-      var url = `${api_url}/products/?query={prodId, prodName, price, images}`
+      var url = `${apiUrl}/products/?query={prodId, prodName, price, images}`
       if (searchWord.length > 0 && searchWord.trim()) {
         url += `&search=${searchWord}`
         if (searchDescription === false) {
@@ -219,19 +294,61 @@ export default {
       this.$refs.child.clearFilters()
     },
     async sendOrder (done) {
-      const url = `${api_url}/orders/${this.newOrder.orderId}/`
       const token = await this.$auth.getTokenSilently()
-      const order = {
-        status: 'Oczekujące'
+      var order = {}
+      if (this.$route.params.orderId) {
+        const url = `${apiUrl}/orders/${this.$route.params.orderId}/`
+        order = {
+          client: this.newOrder.client,
+          startDate: this.newOrder.startDate,
+          endDate: this.newOrder.endDate,
+          address: this.newOrder.address,
+          isTransport: this.newOrder.isTransport,
+          isEdited: true,
+          totalCost: this.newOrder.totalCost,
+          status: this.newOrder.status,
+          creationDate: this.newOrder.creationDate,
+          comment: this.newOrder.comment,
+          positions: []
+        }
+        this.newOrder.positions.forEach((pos) => {
+          const posToChange = {
+            product: pos.product.prodId,
+            quantity: pos.quantity
+          }
+          order.positions.push(posToChange)
+        })
+        await axios.put(url, order, {headers: {Authorization: `Bearer ${token}`}}).then(() => {
+          this.deleteOrder()
+        })
+      } else {
+        const url = `${apiUrl}/orders/${this.newOrder.orderId}/`
+        order = {
+          status: 'Oczekujące'
+        }
+        await axios.patch(url, order, {headers: {Authorization: `Bearer ${token}`}})
       }
-      await axios.patch(url, order, {headers: {Authorization: `Bearer ${token}`}})
       done()
+    },
+    async deleteOrder () {
+      const url = `${apiUrl}/orders/${this.newOrder.orderId}/`
+      const token = await this.$auth.getTokenSilently()
+      await axios.delete(url, {headers: {Authorization: `Bearer ${token}`}})
+    }
+  },
+  beforeDestroy () {
+    if (this.newOrder.status !== 'Robocze') {
+      this.deleteOrder()
     }
   },
   mounted () {
     this.getCategories()
     this.getProducts()
-    this.getOrder()
+    if (this.$route.params.orderId) {
+      this.getOrderCopy()
+    } else {
+      this.getOrder()
+    }
     console.log(this.newOrder)
   }
 }
