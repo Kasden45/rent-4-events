@@ -6,13 +6,13 @@
                     <div class="col-4">
                         <button class="btn btn-4" @click="goBack">POWRÓT DO ZAMÓWIEŃ</button>
                     </div>
-                    <div class="col-5 offset-2 text-end" v-if="activeUser === 'Klient' && order.status === 'Oczekujące' || order.status === 'W trakcie negocjacji'">
+                    <div class="col-5 offset-2 text-end" v-if="activeUser === 'Klient' && (order.status === 'Oczekujące' || order.status === 'W trakcie negocjacji')">
                         <button class="btn btn-4" @click="editOrder">EDYTUJ</button>
                         <button class="btn btn-4" @click="cancelOrder">ANULUJ ZAMÓWIENIE</button>
                     </div>
                 </div>
                 <div class="row justify-content-center my-3">
-                    <order-preview-details :order-source="order" :active-user="$props.activeUser"/>
+                    <order-preview-details v-if="order" :order-source="order" :active-user="$props.activeUser"/>
                 </div>
                 <div class="row justify-content-center">
                     <order-positions-table :order-source="order" :active-user="$props.activeUser"/>
