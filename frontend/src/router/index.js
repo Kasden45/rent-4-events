@@ -11,6 +11,7 @@ import ProductPreview from '../views/ProductPreview'
 
 import { authGuard, auth } from '../auth/authGuard'
 import Vehicles from "../views/Vehicles";
+import Courses from "../views/Courses";
 
 Vue.use(Router)
 
@@ -49,6 +50,12 @@ export default new Router({
       path: '/Pojazdy',
       name: 'Vehicles',
       component: Vehicles,
+      beforeEnter: authGuard
+    },
+    {
+      path: '/Kursy',
+      name: 'Courses',
+      component: Courses,
       beforeEnter: authGuard
     },
     {

@@ -213,7 +213,8 @@ class VehicleSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 class CourseSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['order', 'driver', 'vehicle', 'courseDate', 'type', 'status']
+        fields = ['courseId','order', 'driver', 'vehicle', 'courseDate', 'type', 'status']
+        read_only_fields = ['courseId']
 
     def create(self, validated_data):
         """
