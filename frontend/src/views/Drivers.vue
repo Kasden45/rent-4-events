@@ -7,7 +7,7 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-11">
-                <drivers-table :drivers-source="drivers" @edit:driver="editDriver" @delete:driver="deleteDriver"/>
+                <drivers-table :drivers-source="drivers" :key="drivers" @edit:driver="editDriver" @get:drivers="getDrivers" @delete:driver="deleteDriver"/>
             </div>
         </div>
     </div>

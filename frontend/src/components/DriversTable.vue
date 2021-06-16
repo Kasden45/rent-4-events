@@ -79,6 +79,10 @@ export default {
           this.$emit('delete:driver', id)
         }
       }
+      else {
+          console.log("Anuluj");
+            this.$emit('get:drivers')
+      }
     },
     handleEdit: function (event) {
       this.isEdit = !this.isEdit
@@ -165,22 +169,22 @@ export default {
             $driver = this.driversSource[$driverIndex]
 
             $firstName.html(function () {
-              return '<td>' + $driver.firstName + '</td>'
+              return $driver.firstName
             })
             $lastName.html(function () {
-              return '<td>' + $driver.lastName + '</td>'
+              return $driver.lastName
             })
             $birthDate.html(function () {
-              return '<td>' + $driver.birthDate + '</td>'
+              return $driver.birthDate
             })
             $employmentDate.html(function () {
-              return '<td>' + $driver.employmentDate + '</td>'
+              return $driver.employmentDate
             })
             $salary.html(function () {
-              return '<td>' + $driver.salary + '</td>'
+              return $driver.salary
             })
             $phoneNumber.html(function () {
-              return '<td>' + $driver.phoneNumber + '</td>'
+              return $driver.phoneNumber
             })
           }})
       }
