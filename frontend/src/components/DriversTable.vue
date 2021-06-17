@@ -78,10 +78,9 @@ export default {
         if (confirm('Are you sure you want to delete this driver?')) {
           this.$emit('delete:driver', id)
         }
-      }
-      else {
-          console.log("Anuluj");
-            this.$emit('get:drivers')
+      } else {
+        console.log('Anuluj')
+        this.$emit('get:drivers')
       }
     },
     handleEdit: function (event) {

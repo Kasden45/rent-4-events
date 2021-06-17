@@ -169,7 +169,7 @@ export default {
       }
       await axios.post(url, order, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.newOrder = response.data
-      }).then(() => {this.getOrder()})
+      }).then(() => { this.getOrder() })
     },
     async editOrder (order) {
       console.log('ORDER', JSON.stringify(order))
