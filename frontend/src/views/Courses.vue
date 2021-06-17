@@ -2,7 +2,7 @@
     <div id="courses" class="container">
         <div class="row justify-content-center">
             <div class="col-11">
-                <courses-table :courses-source="courses" :key="courses" @edit:course="editCourse" @get:courses="getCourses" @delete:course="deleteCourse"/>
+                <courses-table :courses-source="courses" :orders-source="orders" :vehicles-source="vehicles" :drivers-source="drivers" :key="courses" @edit:course="editCourse" @get:courses="getCourses"  @delete:course="deleteCourse"/>
             </div>
         </div>
     </div>
@@ -18,11 +18,14 @@ export default {
     activeUser: String
   },
   components: {
-    CoursesTable,
+    CoursesTable
   },
   data () {
     return {
       courses: [],
+      orders: [],
+      drivers: [],
+      vehicles: []
     }
   },
   methods: {
@@ -32,19 +35,39 @@ export default {
       await axios.post(url, course, {headers: {Authorization: `Bearer ${token}`}})
       this.getCourses()
     },
-    async getUsers () {
-      const url = `${apiUrl}/users/?query={id, username}`
+    async getOrders () {
+      const url = `${apiUrl}/orders/`
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
-        this.users = response.data['results']
+        this.orders = response.data['results']
         console.log(this.$auth.getIdTokenClaims())
       })
     },
     async getCourses () {
-      const url = `${apiUrl}/courses/`
+      const url = `${apiUrl}/courses/?query={*,order{orderId,startDate,endDate,address,isTransport,status,comment},driver{userId,firstName,lastName,phoneNumber},%20vehicle{vehicleId,brand,model,licensePlate}}`
       const token = await this.$auth.getTokenSilently()
       const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.courses = response.data['results']
+
+        console.log(JSON.stringify(response.data['results']))
+        return resp
+      })
+    },
+    async getVehicles () {
+      const url = `${apiUrl}/vehicles/`
+      const token = await this.$auth.getTokenSilently()
+      const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+        this.vehicles = response.data['results']
+
+        console.log(JSON.stringify(response.data['results']))
+        return resp
+      })
+    },
+    async getDrivers () {
+      const url = `${apiUrl}/drivers/`
+      const token = await this.$auth.getTokenSilently()
+      const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+        this.drivers = response.data['results']
 
         console.log(JSON.stringify(response.data['results']))
         return resp
@@ -63,6 +86,7 @@ export default {
       } catch (error) {
         console.log(error)
       }
+      this.getCourses()
     },
     async getCourseById (id, index, courseData) {
       try {
@@ -89,7 +113,9 @@ export default {
   },
   mounted () {
     this.getCourses()
-    // this.getUsers()
+    this.getOrders()
+    this.getDrivers()
+    this.getVehicles()
   }
 }
 </script>

@@ -12,7 +12,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="order in ordersSource" :key="order.orderId" v-bind:style=" order.isEdited ? 'background-color: #D88C88;' : ''"  @click="openPreview(order.orderId)">
+            <tr v-for="order in filters" :key="order.orderId" v-bind:style=" order.isEdited ? 'background-color: #D88C88;' : ''"  @click="openPreview(order.orderId)">
               <td>{{order.startDate}}</td>
               <td>{{order.endDate}}</td>
               <td>{{order.address}}</td>
@@ -36,6 +36,11 @@ export default {
   methods: {
     openPreview (id) {
       this.$router.push({ name: 'OrderPreview', params: { orderId: id } })
+    }
+  },
+  computed: {
+    filters () {
+      return this.ordersSource.filter(item => item.status !== 'Robocze')
     }
   }
 }

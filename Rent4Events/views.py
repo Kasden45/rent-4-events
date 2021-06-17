@@ -246,7 +246,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         if request.user.is_staff:
             queryset = Order.objects.filter(~Q(status="Robocze"))
         else:
-            queryset = Order.objects.filter(~Q(status="Robocze"), client__userId__username=request.user.username)
+            queryset = Order.objects.filter(client__userId__username=request.user.username)
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -303,8 +303,14 @@ class CourseViewSet(viewsets.ModelViewSet):
     API endpoint that allows courses to be viewed or edited.
     """
     queryset = Course.objects.all()
-    serializer_class = CourseSerializer
+    # serializer_class = CourseSerializer
     permission_classes = [permissions.AllowAny]
+
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:
+            return ShowCourseSerializer
+        else:
+            return CourseSerializer
 
     def list(self, request, *args, **kwargs):
         print("request user driver/admin", request.user)
