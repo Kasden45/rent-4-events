@@ -10,6 +10,7 @@ import OrderPreview from '../views/OrderPreview'
 import ProductPreview from '../views/ProductPreview'
 
 import { authGuard, auth } from '../auth/authGuard'
+import CurrentCourse from '../views/CurrentCourse'
 
 Vue.use(Router)
 
@@ -60,6 +61,12 @@ export default new Router({
       path: '/Produkt/:prodId',
       name: 'ProductPreview',
       component: ProductPreview,
+      beforeEnter: authGuard
+    },
+    {
+      path: '/AktualnyKurs',
+      name: 'CurrentCourse',
+      component: CurrentCourse,
       beforeEnter: authGuard
     }
   ]
