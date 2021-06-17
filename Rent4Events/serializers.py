@@ -144,9 +144,22 @@ class ShowOrderPositionSerializer(DynamicFieldsMixin, serializers.ModelSerialize
             else:
                 raise serializers.ValidationError(e.__cause__)
 
+
+class ClientSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
+    # client_user = UserSerializer(many=False)
+    class Meta:
+        model = Client
+        fields = ['userId', 'firstName', 'lastName', 'phoneNumber']
+
+    def create(self, validated_data):
+        """
+        Create and return a new `Snippet` instance, given the validated data.
+        """
+        return Client.objects.create(**validated_data)
+
+
 class OrderSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     positions = ShowOrderPositionSerializer(many=True, allow_null=True, required=False)
-
     class Meta:
         model = Order
         fields = ['orderId', 'client', 'startDate', 'endDate', 'address', 'isTransport', 'isEdited', 'totalCost', 'status', 'creationDate', 'comment', 'positions']
@@ -172,17 +185,13 @@ class OrderSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
                 raise serializers.ValidationError("Total cost must be greater than 0!")
 
 
-class ClientSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
-    # client_user = UserSerializer(many=False)
-    class Meta:
-        model = Client
-        fields = ['userId', 'firstName', 'lastName', 'phoneNumber']
+class ShowOrderSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
+    positions = ShowOrderPositionSerializer(many=True, allow_null=True, required=False)
+    client = ClientSerializer(many=False, allow_null=True, required=False)
 
-    def create(self, validated_data):
-        """
-        Create and return a new `Snippet` instance, given the validated data.
-        """
-        return Client.objects.create(**validated_data)
+    class Meta:
+        model = Order
+        fields = ['orderId', 'client', 'startDate', 'endDate', 'address', 'isTransport', 'isEdited', 'totalCost', 'status', 'creationDate', 'comment', 'positions']
 
 
 class DriverSerializer(DynamicFieldsMixin, serializers.ModelSerializer):

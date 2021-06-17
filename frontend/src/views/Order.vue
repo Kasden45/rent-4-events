@@ -2,7 +2,7 @@
     <div>
         <div class="row justify-content-end my-3 px-3 mw-100">
             <div class="col-md-7 col-12">
-                <new-order-dates v-if="newOrder" :order-source="newOrder" :edit="false" @edit:order="editOrder"/>
+                <new-order-dates :key="newOrder" :order-source="newOrder" :edit="false" @edit:order="editOrder"/>
             </div>
             <div class="col-md-3 col-11 align-self-end py-2">
                 <router-link class="btn btn-4 ml-auto" to="/Zamowienia">Powrót do zamówień</router-link>
@@ -30,8 +30,8 @@
             </div>
             <div class="col-md-3 col-10 ">
                 <div class="row">
-                    <new-order v-if="this.$route.params.orderId" :order-source="newOrder" :active-user="activeUser" :edit="true" @delete:position="deletePosition" @edit:position="editPosition" @set:position="setPosition" @send:order="sendOrder"/>
-                    <new-order v-else :order-source="newOrder" :active-user="activeUser" :edit="false" @delete:position="deletePosition" @edit:position="editPosition" @set:position="setPosition" @send:order="sendOrder"/>
+                    <new-order v-if="this.$route.params.orderId" :key="newOrder" :order-source="newOrder" :active-user="activeUser" :edit="true" @delete:position="deletePosition" @edit:position="editPosition" @set:position="setPosition" @send:order="sendOrder"/>
+                    <new-order v-else :order-source="newOrder" :key="newOrder" :active-user="activeUser" :edit="false" @delete:position="deletePosition" @edit:position="editPosition" @set:position="setPosition" @send:order="sendOrder"/>
                 </div>
             </div>
         </div>
@@ -142,7 +142,7 @@ export default {
           (item) => {
             if (item.status === 'Robocze') {
               this.newOrder = item
-              console.log(item)
+              console.log('Znalazłem robocze' + JSON.stringify(item))
             }
           }
         )
@@ -157,7 +157,6 @@ export default {
       const url = `${apiUrl}/orders/`
       const token = await this.$auth.getTokenSilently()
       var order = {
-        clientId: this.$auth.user,
         startDate: new Date().toISOString().slice(0, 10),
         endDate: new Date().toISOString().slice(0, 10),
         address: 'Niezdefiniowany',
@@ -170,7 +169,7 @@ export default {
       }
       await axios.post(url, order, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.newOrder = response.data
-      })
+      }).then(() => {this.getOrder()})
     },
     async editOrder (order) {
       console.log('ORDER', JSON.stringify(order))
@@ -299,7 +298,7 @@ export default {
       if (this.$route.params.orderId) {
         const url = `${apiUrl}/orders/${this.$route.params.orderId}/`
         order = {
-          client: this.newOrder.client,
+          client: this.newOrder.client.userId,
           startDate: this.newOrder.startDate,
           endDate: this.newOrder.endDate,
           address: this.newOrder.address,
@@ -349,7 +348,7 @@ export default {
     } else {
       this.getOrder()
     }
-    console.log(this.newOrder)
+    console.log('New order: ' + this.newOrder)
   }
 }
 </script>

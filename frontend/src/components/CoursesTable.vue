@@ -14,7 +14,7 @@
             </thead>
             <tbody>
                 <tr v-for="course in coursesSource" :key="course.courseId" :id="'id_'+course.courseId">
-                    <td v-if="!isEdit" :id="course.courseId + ' ' + course.order.orderId">{{course.order.address}}</td>
+                    <td v-if="!isEdit || editedId !== course.courseId" :id="course.courseId + ' ' + course.order.orderId">{{course.order.address}}</td>
                     <td v-else>
                         <select
                         v-model="editedCourse.orderId"
@@ -27,7 +27,7 @@
                             <option v-for="order in ordersSource" :key="order.orderId" :value="order.orderId">{{order.orderId + ' - ' + order.address}}</option>
                         </select>
                     </td>
-                    <td v-if="!isEdit" :value="course.courseId + ' ' + course.driver.userId">{{course.driver.firstName + ' ' + course.driver.lastName}}</td>
+                    <td v-if="!isEdit || editedId !== course.courseId" :value="course.courseId + ' ' + course.driver.userId">{{course.driver.firstName + ' ' + course.driver.lastName}}</td>
                     <td v-else>
                         <select
                          v-model="editedCourse.driverId"
@@ -40,7 +40,7 @@
                             <option v-for="driver in driversSource" :key="driver.userId" :value="driver.userId">{{driver.firstName + " " + driver.lastName}}</option>
                         </select>
                     </td>
-                    <td v-if="!isEdit">{{course.vehicle.brand + ' ' + course.vehicle.model + ' ' + course.vehicle.licensePlate}}</td>
+                    <td v-if="!isEdit || editedId !== course.courseId">{{course.vehicle.brand + ' ' + course.vehicle.model + ' ' + course.vehicle.licensePlate}}</td>
                     <td v-else>
                         <select v-model="editedCourse.vehicleId"
                             type="text"
@@ -92,7 +92,8 @@ export default {
         courseDate: '',
         type: '',
         status: ''
-      }
+      },
+      editedId: ''
     }
   },
   methods: {
@@ -130,7 +131,7 @@ export default {
 
       console.log('cou2' + parseInt(event.target))
       var $courseId = parseInt(event.target.id)
-
+      this.editedId = $courseId
       console.log('cou' + $courseId)
       var $courseIndex = this.coursesSource.map(function (course) {
         return course.courseId
