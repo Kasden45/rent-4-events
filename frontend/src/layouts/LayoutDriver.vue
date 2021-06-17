@@ -40,7 +40,7 @@
                 <router-link class="nav-link" to="/Kursy">Moje kursy</router-link>
               </li>
                 <li class="nav-item">
-                <router-link class="nav-link" to="/Kursy/Aktualny">Aktualny kurs</router-link>
+                <router-link class="nav-link" to="/AktualnyKurs">Aktualny kurs</router-link>
               </li>
             </ul>
             <button
