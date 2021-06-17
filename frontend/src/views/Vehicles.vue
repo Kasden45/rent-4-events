@@ -1,44 +1,43 @@
 <template>
-    <div id="drivers" class="container">
+    <div id="vehicles" class="container">
         <div class="row justify-content-center">
             <div class="col-11">
-                <driver-form :users-source="users" @add:driver="addDriver"/>
+                <vehicle-form @add:vehicle="addVehicle"/>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-11">
-                <drivers-table :drivers-source="drivers" :key="drivers" @edit:driver="editDriver" @get:drivers="getDrivers" @delete:driver="deleteDriver"/>
+                <vehicles-table :vehicles-source="vehicles" :key="vehicles" @edit:vehicle="editVehicle" @get:vehicles="getVehicles" @delete:vehicle="deleteVehicle"/>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import DriversTable from '../components/DriversTable'
-import DriverForm from '../components/DriverForm'
+import VehiclesTable from '../components/VehiclesTable'
+import VehicleForm from '../components/VehicleForm'
 import axios from 'axios'
 import { apiUrl } from '../../auth_config.json'
 export default {
-  name: 'Drivers',
+  name: 'Vehicles',
   props: {
     activeUser: String
   },
   components: {
-    DriversTable,
-    DriverForm
+    VehiclesTable,
+    VehicleForm
   },
   data () {
     return {
-      drivers: [],
-      users: []
+      vehicles: [],
     }
   },
   methods: {
-    async addDriver (driver) {
-      const url = `${apiUrl}/drivers/`
+    async addVehicle (vehicle) {
+      const url = `${apiUrl}/vehicles/`
       const token = await this.$auth.getTokenSilently()
-      await axios.post(url, driver, {headers: {Authorization: `Bearer ${token}`}})
-      this.getDrivers()
+      await axios.post(url, vehicle, {headers: {Authorization: `Bearer ${token}`}})
+      this.getVehicles()
     },
     async getUsers () {
       const url = `${apiUrl}/users/?query={id, username}`
@@ -48,54 +47,54 @@ export default {
         console.log(this.$auth.getIdTokenClaims())
       })
     },
-    async getDrivers () {
-      const url = `${apiUrl}/drivers/`
+    async getVehicles () {
+      const url = `${apiUrl}/vehicles/`
       const token = await this.$auth.getTokenSilently()
       const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
-        this.drivers = response.data['results']
+        this.vehicles = response.data['results']
         return resp
       })
     },
-    async editDriver (driverData) {
+    async editVehicle (vehicleData) {
       try {
-        console.log(driverData)
-        const driver = driverData.data[0]
-        const index = driverData.data[1]
-        console.log(driverData.data[1])
-        const url = `${apiUrl}/drivers/${driver.userId}/`
+        console.log(vehicleData)
+        const vehicle = vehicleData.data[0]
+        const index = vehicleData.data[1]
+        console.log(vehicleData.data[1])
+        const url = `${apiUrl}/vehicles/${vehicle.vehicleId}/`
         const token = await this.$auth.getTokenSilently()
-        await axios.put(url, driver, {headers: {Authorization: `Bearer ${token}`}})
-        await this.getDriverById(driver.userId, index, driverData)
+        await axios.put(url, vehicle, {headers: {Authorization: `Bearer ${token}`}})
+        await this.getVehicleById(vehicle.vehicleId, index, vehicleData)
       } catch (error) {
         console.log(error)
       }
     },
-    async getDriverById (id, index, driverData) {
+    async getVehicleById (id, index, vehicleData) {
       try {
-        const url = `${apiUrl}/drivers/${id}/`
+        const url = `${apiUrl}/vehicles/${id}/`
         const token = await this.$auth.getTokenSilently()
         await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
-          this.drivers[index] = response.data
-          driverData.done()
+          this.vehicles[index] = response.data
+          vehicleData.done()
         })
       } catch (error) {
         console.log(error)
       }
     },
-    async deleteDriver (id) {
+    async deleteVehicle (id) {
       try {
-        const url = `${apiUrl}/drivers/${id}/`
+        const url = `${apiUrl}/vehicles/${id}/`
         const token = await this.$auth.getTokenSilently()
         await axios.delete(url, {headers: {Authorization: `Bearer ${token}`}})
-        await this.getDrivers()
+        await this.getVehicles()
       } catch (error) {
         console.log(error)
       }
     }
   },
   mounted () {
-    this.getDrivers()
-    this.getUsers()
+    this.getVehicles()
+    // this.getUsers()
   }
 }
 </script>

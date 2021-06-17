@@ -238,13 +238,19 @@ class OrderViewSet(viewsets.ModelViewSet):
     API endpoint that allows orders to be viewed or edited.
     """
     queryset = Order.objects.all()
-    serializer_class = OrderSerializer
+    # serializer_class = OrderSerializer
     permission_classes = [permissions.AllowAny]
+
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:
+            return ShowOrderSerializer
+        else:
+            return OrderSerializer
 
     def list(self, request, *args, **kwargs):
         print("request user", request.user)
         if request.user.is_staff:
-            queryset = Order.objects.all()
+            queryset = Order.objects.filter(~Q(status="Robocze"))
         else:
             queryset = Order.objects.filter(client__userId__username=request.user.username)
 
@@ -276,7 +282,7 @@ class OrderViewSet(viewsets.ModelViewSet):
             for position in poss:
                 prod = Product.objects.get(prodId=position["product"])
                 order = Order.objects.get(orderId=instance.orderId)
-                OrderPosition.objects.create(**{'order' : order, 'product' : prod, 'quantity' : position['quantity']})
+                OrderPosition.objects.create(**{'order': order, 'product': prod, 'quantity': position['quantity']})
             request.data.pop('positions')
         except KeyError:
             pass
@@ -303,8 +309,29 @@ class CourseViewSet(viewsets.ModelViewSet):
     API endpoint that allows courses to be viewed or edited.
     """
     queryset = Course.objects.all()
-    serializer_class = CourseSerializer
+    # serializer_class = CourseSerializer
     permission_classes = [permissions.AllowAny]
+
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:
+            return ShowCourseSerializer
+        else:
+            return CourseSerializer
+
+    def list(self, request, *args, **kwargs):
+        print("request user driver/admin", request.user)
+        if request.user.is_staff:
+            queryset = Course.objects.all()
+        else:
+            queryset = Course.objects.filter(driver__userId__username=request.user.username)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class MultipleFieldLookupMixin:
@@ -377,74 +404,3 @@ class ImageViewSet(viewsets.ModelViewSet):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
     permission_classes = [permissions.AllowAny]
-
-
-def user_list(request):
-    """
-    List all code snippets, or create a new snippet.
-    """
-    if request.method == 'GET':
-        snippets = User.objects.all()
-        serializer = UserSerializer(snippets, many=True)
-        return JsonResponse(serializer.data, safe=False)
-
-    elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = UserSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
-
-
-def user_detail(request, pk):
-    """
-    Retrieve, update or delete a code snippet.
-    """
-    try:
-        snippet = User.objects.get(pk=pk)
-    except User.DoesNotExist:
-        return HttpResponse(status=404)
-
-    if request.method == 'GET':
-        serializer = UserSerializer(snippet)
-        return JsonResponse(serializer.data)
-
-    elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = UserSerializer(snippet, data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
-
-    elif request.method == 'DELETE':
-        snippet.delete()
-        return HttpResponse(status=204)
-
-
-def group_list(request):
-    """
-    List all code snippets, or create a new snippet.
-    """
-    if request.method == 'GET':
-        snippets = Group.objects.all()
-        serializer = GroupSerializer(snippets, many=True)
-        return JsonResponse(serializer.data, safe=False)
-
-    elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = GroupSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
-
-# @api_view(['GET'])
-# def public(request):
-#     return HttpResponse("You don't need to be authenticated to see this")
-#
-#
-# @api_view(['GET'])
-# def private(request):
-#     return HttpResponse("You should not see this message if not authenticated!")

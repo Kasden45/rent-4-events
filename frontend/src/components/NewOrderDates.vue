@@ -35,7 +35,7 @@ export default {
   data () {
     return {
       editedOrder: {
-        client: this.orderSource.client,
+        client: this.orderSource.client.userId,
         startDate: this.orderSource.startDate,
         endDate: this.orderSource.endDate,
         address: this.orderSource.address,
@@ -57,12 +57,14 @@ export default {
       const $newAddressVal = $newAdress.val()
       console.log('edited', JSON.stringify(this.editedOrder))
       console.log('source', JSON.stringify(this.orderSource))
+      console.log('start', $newStartVal,'end', $newEndVal)
 
       if ($newStartVal <= $newEndVal) {
         this.editedOrder.startDate = $newStartVal
         this.editedOrder.endDate = $newEndVal
         this.editedOrder.address = $newAddressVal
-
+        this.editedOrder.client = this.orderSource.client.userId
+          console.log('cli' + this.editedOrder.client + ' vs ' + this.orderSource.client.userId)
         this.$emit('edit:order', this.editedOrder)
       } else {
         $newStart.val(this.orderSource.startDate)
@@ -72,7 +74,7 @@ export default {
     },
     fillData () {
       if (!this.editedOrder.client) {
-        this.editedOrder.client = this.orderSource.client
+        this.editedOrder.client = this.orderSource.client.userId
         this.editedOrder.startDate = this.orderSource.startDate
         this.editedOrder.endDate = this.orderSource.endDate
         this.editedOrder.address = this.orderSource.address
@@ -81,7 +83,10 @@ export default {
         this.editedOrder.status = this.orderSource.status
       }
     }
-  }
+  },
+    mounted() {
+      console.log('Mounted:' + JSON.stringify(this.orderSource))
+    }
 }
 </script>
 

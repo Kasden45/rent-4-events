@@ -10,7 +10,10 @@ import OrderPreview from '../views/OrderPreview'
 import ProductPreview from '../views/ProductPreview'
 
 import { authGuard, auth } from '../auth/authGuard'
+import Vehicles from "../views/Vehicles"
+import Courses from "../views/Courses"
 import CurrentCourse from '../views/CurrentCourse'
+
 
 Vue.use(Router)
 
@@ -43,6 +46,18 @@ export default new Router({
       path: '/Kadra',
       name: 'Drivers',
       component: Drivers,
+      beforeEnter: authGuard
+    },
+    {
+      path: '/Pojazdy',
+      name: 'Vehicles',
+      component: Vehicles,
+      beforeEnter: authGuard
+    },
+    {
+      path: '/Kursy',
+      name: 'Courses',
+      component: Courses,
       beforeEnter: authGuard
     },
     {
