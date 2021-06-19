@@ -13,6 +13,7 @@ import { authGuard, auth } from '../auth/authGuard'
 import Vehicles from '../views/Vehicles'
 import Courses from '../views/Courses'
 import Products from '../views/Products'
+import CurrentCourse from '../views/CurrentCourse'
 
 Vue.use(Router)
 
@@ -82,6 +83,12 @@ export default new Router({
       path: '/Asortyment',
       name: 'Products',
       component: Products,
+      beforeEnter: authGuard
+    },
+    {
+      path: '/AktualnyKurs',
+      name: 'CurrentCourse',
+      component: CurrentCourse,
       beforeEnter: authGuard
     }
   ]
