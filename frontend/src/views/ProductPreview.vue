@@ -15,7 +15,7 @@
                             </div>
                             <div class="carousel-inner">
                                 <div v-for="image in this.product.images" :key="image.imageId" class="carousel-item active">
-                                    <img :src="image.imageUrl" class="d-block img-fluid img-prod mx-auto" alt="...">
+                                    <img :src="image.imageField" class="d-block img-fluid img-prod mx-auto" alt="...">
                                 </div>
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">

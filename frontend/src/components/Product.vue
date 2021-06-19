@@ -1,7 +1,7 @@
 <template>
     <div class="product" :id="productSource.prodId">
         <div class="row">
-            <img class="mx-auto" :src="productSource.images[0].imageUrl" alt="prodImage" @click="productPreview(productSource.prodId)">
+            <img class="mx-auto" :src="productSource.images[0].imageField" alt="prodImage" @click="productPreview(productSource.prodId)">
         </div>
         <div class="row">
             <p>{{productSource.prodName}}</p>

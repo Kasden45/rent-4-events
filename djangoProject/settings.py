@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 import json
 from six.moves.urllib import request
@@ -30,6 +30,8 @@ SECRET_KEY = 'django-insecure-p1a%cev1kwtsmer9#1h!8@rmv!(=^%clhkhs)h1ku8vo%-e$hs
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
@@ -146,6 +148,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+
+MEDIA_URL = '/uploads/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
