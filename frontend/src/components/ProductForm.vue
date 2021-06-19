@@ -132,11 +132,11 @@ export default {
   },
   data () {
     return {
-        file: '',
-    allowableTypes: ['jpg', 'jpeg', 'png', 'gif'],
-    maximumSize: 5000000,
-    selectedImage: null,
-    image: null,
+      file: '',
+      allowableTypes: ['jpg', 'jpeg', 'png', 'gif'],
+      maximumSize: 5000000,
+      selectedImage: null,
+      image: null,
       submitting: false,
       error: false,
       success: false,
@@ -147,45 +147,50 @@ export default {
         quantity: '',
         available: '',
         price: '',
-        description: '',
-        images: ''
+        description: ''
       },
-        selectedImages: [],
-        options:{
-      url: 'https://httpbin.org/post',
-      type: "POST",
-      processData: false,
-      contentType: false
-    },
+      selectedImages: [],
+      options: {
+        url: 'https://httpbin.org/post',
+        type: 'POST',
+        processData: false,
+        contentType: false
+      },
       statuses: ['Sprawny', 'W warsztacie', 'Niesprawny']
     }
   },
   methods: {
     handleSubmit () {
-        console.log('idk')
+      console.log('idk')
       // console.log('pre emit', JSON.stringify($('#image_file').files[0]))
       this.submitting = true
       this.clearStatus()
-        // return;
+      // return;
       if (this.invalidName || this.invalidCategory || this.invalidQuantity || this.invalidAvailable || this.invalidPrice || this.invalidDescription || this.invalidImages) {
         console.log('shit')
-          this.error = true
+        this.error = true
         return
       }
 
-        const formData = new FormData()
-        const formData2 = new FormData()
-        formData.append('prodName', this.product.prodName )
-        formData.append('category', this.product.category)
-        formData.append('quantity', this.product.quantity)
-        formData.append('available', this.product.available)
-        formData.append('price', this.product.price)
-        formData.append('description', this.product.description)
-        formData2.append('imageName', this.selectedImage.name)
-        formData2.append('imageUrl', 'irrelevant')
-        // formData2.append('product', 4)
-        formData2.append('imageField', this.$refs.myFile.files[0])
-      this.$emit('add:product', formData, formData2)
+      // const formData = new FormData()
+      // const formData2 = new FormData()
+      // formData.append('prodName', this.product.prodName )
+      // formData.append('category', this.product.category)
+      // formData.append('quantity', this.product.quantity)
+      // formData.append('available', this.product.available)
+      // formData.append('price', this.product.price)
+      // formData.append('description', this.product.description)
+
+      const allFiles = []
+      // eslint-disable-next-line no-undef
+      Array.from(this.$refs.myFile.files).forEach(f => {
+        allFiles.push({
+          'imageName': f.name,
+          'imageUrl': 'irrelevant',
+          'imageField': f
+        })
+      })
+      this.$emit('add:product', this.product, allFiles)
 
       this.product = {
         prodId: '',
@@ -194,8 +199,7 @@ export default {
         quantity: '',
         available: '',
         price: '',
-        description: '',
-        images: ''
+        description: ''
       }
 
       this.error = false
@@ -206,46 +210,47 @@ export default {
       this.success = false
       this.error = false
     },
-     validate(image) {
-      if (!this.allowableTypes.includes(image.name.split(".").pop().toLowerCase())) {
-        alert(`Sorry you can only upload ${this.allowableTypes.join("|").toUpperCase()} files.`)
+    validate (image) {
+      if (!this.allowableTypes.includes(image.name.split('.').pop().toLowerCase())) {
+        alert(`Sorry you can only upload ${this.allowableTypes.join('|').toUpperCase()} files.`)
         return false
       }
 
-      if (image.size > this.maximumSize){
-        alert("Sorry File size exceeding from 5 Mb")
+      if (image.size > this.maximumSize) {
+        alert('Sorry File size exceeding from 5 Mb')
         return false
       }
 
       return true
     },
-    onImageError(err){
+    onImageError (err) {
       console.log(err, 'do something with error')
     },
-    changeImage($event) {
-        // console.log('Imageaaaa')
+    changeImage ($event) {
+      // console.log('Imageaaaa')
       this.selectedImage = $event.target.files[0]
-        // console.log('Imagessssss', $event.target.files)
-        Array.from($event.target.files).forEach(f => {this.selectedImages.push(URL.createObjectURL(f))})
+      // console.log('Imagessssss', $event.target.files)
+      this.selectedImages = []
+      Array.from($event.target.files).forEach(f => { this.selectedImages.push(URL.createObjectURL(f)) })
 
-      //validate the image
-      if (!this.validate(this.selectedImage))
-        return
+      // validate the image
+      if (!this.validate(this.selectedImage)) { return }
       // create a form
-      const form = new FormData();
-      form.append('file', this.selectedImage);
+      const form = new FormData()
+      form.append('file', this.selectedImage)
       // submit the image
       $.ajax(Object.assign({}, this.options, {data: form}))
         .then(this.createImage)
-        .catch(this.onImageError);
+        .catch(this.onImageError)
     },
-    createImage() {
+    createImage () {
+      // eslint-disable-next-line no-unused-vars
       const image = new Image()
       const reader = new FileReader()
       reader.onload = (e) => {
         this.image = e.target.result
-          console.log('xd',e.target.result)
-      };
+        console.log('xd', e.target.result)
+      }
       reader.readAsDataURL(this.selectedImage)
     }
   },
@@ -254,7 +259,7 @@ export default {
       return this.product.prodName === ''
     },
     invalidCategory () {
-        console.log(this.product.category)
+      console.log(this.product.category)
       return false
     },
     invalidQuantity () {
@@ -294,4 +299,3 @@ option {
 }
 
 </style>
-

@@ -10,9 +10,9 @@ import OrderPreview from '../views/OrderPreview'
 import ProductPreview from '../views/ProductPreview'
 
 import { authGuard, auth } from '../auth/authGuard'
-import Vehicles from "../views/Vehicles"
-import Courses from "../views/Courses"
-import Products from "../views/Products";
+import Vehicles from '../views/Vehicles'
+import Courses from '../views/Courses'
+import Products from '../views/Products'
 
 Vue.use(Router)
 

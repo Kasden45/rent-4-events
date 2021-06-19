@@ -34,15 +34,22 @@ export default {
     }
   },
   methods: {
-    async addProduct (product, image) {
+    async addProduct (product, images) {
       const url = `${apiUrl}/products/`
       const url2 = `${apiUrl}/images/`
       const token = await this.$auth.getTokenSilently()
-      await axios.post(url, product, {headers: {Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data'}}).then((response) => {
-          image.append('product', response['data'].prodId)
-          axios.post(url2, image, {headers: {Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data'}})})
-
+      await axios.post(url, product, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+        images.forEach(im => {
+          const formData = new FormData()
+          formData.append('imageName', im.imageName)
+          formData.append('imageUrl', im.imageUrl)
+          formData.append('product', response['data'].prodId)
+          formData.append('imageField', im.imageField)
+          axios.post(url2, formData, {headers: {Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data'}})
+        })
+      }).then(() => {
         this.getProducts()
+      })
     },
     async getCategories () {
       const url = `${apiUrl}/categories/?query={catId, catName}`

@@ -14,7 +14,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="product in productsSource" :key="product.prodId">
+                <tr v-for="product in productsSource" :key="product.prodId" @click="openPreview(product.prodId)">
                     <td>{{product.prodName}}</td>
                     <td>{{product.category}}</td>
                     <td>{{product.quantity}}</td>
@@ -62,6 +62,9 @@ export default {
     }
   },
   methods: {
+    openPreview (id) {
+      this.$router.push({ name: 'ProductPreview', params: { prodId: id } })
+    },
     changeButtons (row) {
       var $btn1 = row.children().eq(7).children().eq(0)
       var $btn2 = row.children().eq(7).children().eq(1)
@@ -86,10 +89,9 @@ export default {
         if (confirm('Czy na pewno chcesz usunąć ten produkt?')) {
           this.$emit('delete:product', id)
         }
-      }
-      else {
-          console.log("Anuluj");
-            this.$emit('get:products')
+      } else {
+        console.log('Anuluj')
+        this.$emit('get:products')
       }
     },
     handleEdit: function (event) {
@@ -159,7 +161,7 @@ export default {
           licensePlate: $available.children().val(),
           carServiceTo: $price.children().val(),
           type: $description.children().val(),
-          status: $images.children().val(),
+          status: $images.children().val()
         }
 
         // if (this.invalidBrand || this.invalidModel || this.invalidYear || this.invalidLicensePlate || this.invalidCarServiceTo || this.invalidType || this.invalidStatus) {
