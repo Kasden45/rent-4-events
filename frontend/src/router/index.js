@@ -12,6 +12,7 @@ import ProductPreview from '../views/ProductPreview'
 import { authGuard, auth } from '../auth/authGuard'
 import Vehicles from '../views/Vehicles'
 import Courses from '../views/Courses'
+import Products from '../views/Products'
 import CurrentCourse from '../views/CurrentCourse'
 
 Vue.use(Router)
@@ -27,7 +28,8 @@ export default new Router({
     {
       path: '/Oferta',
       name: 'Offer',
-      component: Offer
+      component: Offer,
+      beforeEnter: auth
     },
     {
       path: '/Zamowienia',
@@ -75,6 +77,12 @@ export default new Router({
       path: '/Produkt/:prodId',
       name: 'ProductPreview',
       component: ProductPreview,
+      beforeEnter: authGuard
+    },
+    {
+      path: '/Asortyment',
+      name: 'Products',
+      component: Products,
       beforeEnter: authGuard
     },
     {

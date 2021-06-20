@@ -11,11 +11,11 @@
                     <div class="col-md-5 col-10 offset-1">
                         <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-indicators">
-                                <button v-for="index in this.product.images.length" :key="index" :id="index-1" type="button" data-bs-target="#carouselExampleIndicators" :data-bs-slide-to="index-1" class="btn-swipe active" aria-current="true"></button>
+                                <button v-for="index in product.images.length" :key="index" :id="index-1" type="button" data-bs-target="#carouselExampleIndicators" :data-bs-slide-to="index-1" class="btn-swipe active" aria-current="true"></button>
                             </div>
                             <div class="carousel-inner">
-                                <div v-for="image in this.product.images" :key="image.imageId" class="carousel-item active">
-                                    <img :src="image.imageUrl" class="d-block img-fluid img-prod mx-auto" alt="...">
+                                <div v-for="image in product.images" :key="image.imageId" class="carousel-item active">
+                                    <img :src="image.imageField" class="d-block img-fluid img-prod mx-auto" alt="...">
                                 </div>
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -46,7 +46,7 @@
                 <div class="row justify-content-center">
                     <p class="similar ms-2">Może Cię zainteresować:</p>
                     <div class="col-md-2 col-10 mx-auto" v-for="prod in similarProducts" :key="prod.prodId">
-                        <product :product-source="prod" :order="false"/>
+                        <product :product-source="prod" :order="false" @add:position="() => {}"/>
                     </div>
                 </div>
 
@@ -81,6 +81,7 @@ export default {
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.product = response.data
+        console.log('images', JSON.stringify(this.product.images))
       })
     },
     async getSimilarProducts () {
@@ -91,7 +92,7 @@ export default {
       })
     },
     removeClasses () {
-      const img0 = this.product.images[0].imageUrl
+      const img0 = this.product.images[0].imageField
       $('.carousel-item').each(function () {
         if ($(this).children().attr('src') !== img0) {
           $(this).prop('classList').remove('active')
@@ -117,10 +118,12 @@ export default {
     }
   },
   mounted () {
-    this.getProduct().then(() => {
+    const sth = this.getProduct().then(() => {
       this.removeClasses()
       this.removePrevNext()
+      return 'wow'
     })
+    console.log(sth)
     this.getSimilarProducts()
   }
 }

@@ -64,7 +64,7 @@ class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 class ImageSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ['imageId', 'imageName', 'imageUrl', 'product']
+        fields = ['imageId', 'imageName', 'imageUrl', 'product', 'imageField']
 
     def create(self, validated_data):
         """

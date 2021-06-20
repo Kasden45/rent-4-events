@@ -5,6 +5,7 @@ from django.db import IntegrityError
 from django.db import models
 from django.contrib.auth import models as m
 import django.utils.timezone as timezones
+from datetime import datetime
 # Create your models here.
 from django.db.models import UniqueConstraint
 
@@ -199,6 +200,13 @@ class Course(models.Model):
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='Zaplanowany')  # Default = zaplanowany
 
 
+def user_directory_path(instance, filename):
+    print(instance)
+    # file will be uploaded to MEDIA_ROOT / user_<id>/<filename>
+    date = datetime.now().strftime("%Y-%m-%d-%H-%M-%S-%f ")
+    return 'uploads/{}/{}/{}-{}'.format(instance.product.category.catName, instance.product.prodName, date, filename)
+
+
 class Image(models.Model):
     imageId = models.BigAutoField(primary_key=True)
     imageName = models.CharField(max_length=255, blank=True, null=True)
@@ -211,3 +219,4 @@ class Image(models.Model):
         null=True
     )
     imageUrl = models.CharField(max_length=300)
+    imageField = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
