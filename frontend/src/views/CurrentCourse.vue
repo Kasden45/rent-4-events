@@ -1,7 +1,7 @@
 <template>
-    <div class="row">
+    <div class="row justify-content-center mt-3">
         <div class="col-11">
-            <current-course-details :order-source="order" :course-source="course" :courses-source="courses"/>
+            <current-course-details :key="detailsKey" :order-source="order" :course-source="course" :courses-source="courses" :map-address="mapAddress" @rerender:course="forceRerender"/>
         </div>
 
     </div>
@@ -20,7 +20,9 @@ export default {
       order: {},
       course: {},
       courses: [],
-      currentDate: new Date().toISOString().slice(0, 10)
+      currentDate: new Date().toISOString().slice(0, 10),
+      mapAddress: '',
+      detailsKey: 0
     }
   },
   methods: {
@@ -28,26 +30,39 @@ export default {
       const url = `${apiUrl}/courses/`
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
-        this.course = response.data['results'].find(course => course.status === 'W trasie')
+        const curCourse = response.data['results'].find(course => course.status === 'W trasie')
+        this.course = curCourse
+        if (typeof curCourse !== 'undefined') {
+          const address = curCourse.order.address.replace(' ', '+')
+          this.mapAddress = `https://maps.google.com/maps?q=${address}&output=embed`
+        }
+
         // console.log('dzisiaj', this.currentDate)
         // console.log(this.course)
         if (typeof this.course === 'undefined') {
           // console.log('puste')
           this.courses = response.data['results'].filter(course => course.courseDate === this.currentDate && course.status === 'Zaplanowany')
         }
-        // console.log('kurs', this.course)
-        // console.log('kursy', this.courses)
+        console.log('kurs', this.course)
+        console.log('kursy', this.courses)
       })
     },
     async getOrder () {
       if (typeof this.course !== 'undefined') {
-        const url = `${apiUrl}/orders/${this.course.order}/`
+        const url = `${apiUrl}/orders/${this.course.order.orderId}/`
         const token = await this.$auth.getTokenSilently()
         await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
           this.order = response.data
           // console.log(this.order)
         })
       }
+    },
+    forceRerender () {
+      this.getCourses().then(() => {
+        this.getOrder()
+      })
+      this.detailsKey += 1
+      console.log('key', this.detailsKey)
     }
   },
   mounted () {

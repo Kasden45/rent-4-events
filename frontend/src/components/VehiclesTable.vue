@@ -81,10 +81,9 @@ export default {
         if (confirm('Czy na pewno chcesz usunąć ten pojazd?')) {
           this.$emit('delete:vehicle', id)
         }
-      }
-      else {
-          console.log("Anuluj");
-            this.$emit('get:vehicles')
+      } else {
+        console.log('Anuluj')
+        this.$emit('get:vehicles')
       }
     },
     handleEdit: function (event) {
@@ -161,7 +160,7 @@ export default {
           licensePlate: $licensePlate.children().val(),
           carServiceTo: $carServiceTo.children().val(),
           type: $type.children().val(),
-          status: $status.children().val(),
+          status: $status.children().val()
         }
 
         if (this.invalidBrand || this.invalidModel || this.invalidYear || this.invalidLicensePlate || this.invalidCarServiceTo || this.invalidType || this.invalidStatus) {
