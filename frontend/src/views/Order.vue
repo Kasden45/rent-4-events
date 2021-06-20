@@ -2,7 +2,7 @@
     <div>
         <div class="row justify-content-end my-3 px-3 mw-100">
             <div class="col-md-7 col-12">
-                <new-order-dates :key="newOrder" :order-source="newOrder" :edit="false" @edit:order="editOrder"/>
+                <new-order-dates :key="newOrder" :availability-source="getAvailable" :order-source="newOrder" :edit="false"  @edit:order="editOrder"/>
             </div>
             <div class="col-md-3 col-11 align-self-end py-2">
                 <router-link class="btn btn-4 ml-auto" to="/Zamowienia">Powrót do zamówień</router-link>
@@ -24,7 +24,7 @@
             <div class="col-md-7 col-sm-7 col-10">
                 <div class="row align-content-center">
                     <div class="col-lg-4 col-md-6 col-12 px-5 py-3 products-gallery" v-for="prod in products" :key="prod.prodId">
-                        <product :product-source="prod" :order="true" @add:position="addProduct"/>
+                        <product :product-source="prod" :order="true" @add:position="addProduct" :key="productsAvailability"/>
                     </div>
                 </div>
             </div>
@@ -63,7 +63,8 @@ export default {
       categories: [],
       newOrder: {},
       products: [],
-      activeSearchWord: ''
+      activeSearchWord: '',
+      productsAvailability: []
     }
   },
   methods: {
@@ -84,14 +85,38 @@ export default {
       console.log(token)
       const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.products = response.data['results']
+        return this.getAvailable()
+      })
+      console.log(resp)
+    },
+    async getAvailable (from_ = new Date().toISOString().slice(0, 10), to_ = new Date().toISOString().slice(0, 10)) {
+      console.log('from', from_, 'to', to_)
+      const url = `${apiUrl}/available/?from=${from_}&to=${to_}`
+      console.log(this.$auth)
+      const token = await this.$auth.getTokenSilently()
+      console.log(token)
+      const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+        this.productsAvailability = response.data
+
+          console.log('ava response', JSON.stringify(response.data))
+          console.log('availability', this.productsAvailability)
+        this.products.forEach(prod => {
+          prod.availableAtDate = this.getAvailableForProduct(prod.prodId)
+        })
+        console.log('products with availability', JSON.stringify(this.products))
         return resp
       })
+    },
+    getAvailableForProduct (prodId) {
+      return this.productsAvailability.find(p => p.prodId === prodId).available
     },
     async getOrderCopied () {
       const url = `${apiUrl}/orders/${this.newOrder.orderId}/?query={*,positions{*,product{prodId,prodName, quantity, price}}}`
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.newOrder = response.data
+
+        this.getAvailable(this.newOrder.startDate, this.newOrder.endDate)
       })
     },
     async getOrderCopy () {
@@ -118,6 +143,8 @@ export default {
             }
             this.addPositionCopy(newPos)
           })
+
+        this.getAvailable(this.newOrder.startDate, this.newOrder.endDate)
         })
       })
     },
@@ -151,6 +178,7 @@ export default {
           console.log('STWORZ NOWY')
           this.addOrder()
         }
+        this.getAvailable(this.newOrder.startDate, this.newOrder.endDate)
       })
     },
     async addOrder () {
@@ -181,6 +209,7 @@ export default {
       } else {
         await this.getOrder()
       }
+      await this.getAvailable(order.startDate, order.endDate)
       console.log('NEW ORDER', this.newOrder)
     },
     getQuantityOfPosition (id) {
@@ -343,6 +372,7 @@ export default {
   mounted () {
     this.getCategories()
     this.getProducts()
+    this.getAvailable()
     if (this.$route.params.orderId) {
       this.getOrderCopy()
     } else {

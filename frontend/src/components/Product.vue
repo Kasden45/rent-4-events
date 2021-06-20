@@ -7,6 +7,9 @@
             <p>{{productSource.prodName}}</p>
         </div>
         <div class="row">
+            <p>{{productSource.availableAtDate}}</p>
+        </div>
+        <div class="row">
             <div class="col-7">
                 <p>{{productSource.price}} zł/dzień</p>
             </div>
