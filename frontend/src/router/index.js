@@ -14,6 +14,7 @@ import Vehicles from '../views/Vehicles'
 import Courses from '../views/Courses'
 import Products from '../views/Products'
 import CurrentCourse from '../views/CurrentCourse'
+import Reports from '../views/Reports'
 
 Vue.use(Router)
 
@@ -89,6 +90,12 @@ export default new Router({
       path: '/AktualnyKurs',
       name: 'CurrentCourse',
       component: CurrentCourse,
+      beforeEnter: authGuard
+    },
+    {
+      path: '/Raporty',
+      name: 'Reports',
+      component: Reports,
       beforeEnter: authGuard
     }
   ]
