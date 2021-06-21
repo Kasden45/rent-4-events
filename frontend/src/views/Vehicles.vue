@@ -1,13 +1,23 @@
 <template>
-    <div id="vehicles" class="container">
-        <div class="row justify-content-center">
-            <div class="col-11">
+    <div id="vehicles" class="container-fluid">
+        <div v-if="activeUser === 'Admin' || activeUser === 'Kierowca'" class="row justify-content-center mt-5">
+            <div class="col-11 px-5">
+                <h3>POJAZDY</h3>
+            </div>
+        </div>
+        <div v-if="activeUser === 'Admin'" class="row mw-100 justify-content-center">
+            <div class="col-11 px-5">
                 <vehicle-form @add:vehicle="addVehicle"/>
             </div>
         </div>
-        <div class="row justify-content-center">
-            <div class="col-11">
-                <vehicles-table :vehicles-source="vehicles" :key="vehicles" @edit:vehicle="editVehicle" @get:vehicles="getVehicles" @delete:vehicle="deleteVehicle"/>
+        <div v-if="activeUser === 'Admin' || activeUser === 'Kierowca'" class="row justify-content-center">
+            <div class="col-11 align-content-center px-5">
+                <vehicles-table :vehicles-source="vehicles" :active-user="$props.activeUser" :key="vehicles" @edit:vehicle="editVehicle" @get:vehicles="getVehicles" @delete:vehicle="deleteVehicle"/>
+            </div>
+        </div>
+        <div v-else class="row justify-content-center">
+            <div class="col-11 align-content-center px-5">
+                <no-access/>
             </div>
         </div>
     </div>
@@ -16,6 +26,7 @@
 <script>
 import VehiclesTable from '../components/VehiclesTable'
 import VehicleForm from '../components/VehicleForm'
+import NoAccess from '../components/NoAccess'
 import axios from 'axios'
 import { apiUrl } from '../../auth_config.json'
 export default {
@@ -24,6 +35,7 @@ export default {
     activeUser: String
   },
   components: {
+    NoAccess,
     VehiclesTable,
     VehicleForm
   },

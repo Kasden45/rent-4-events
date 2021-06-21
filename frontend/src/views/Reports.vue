@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="row mt-5">
-        <h1 class="ms-4">{{title}}</h1>
+        <h3 class="ms-4">{{title}}</h3>
     </div>
     <chart v-if="loaded" :chartData="chartData" :options="options"/>
 </div>

@@ -10,7 +10,7 @@
                     <th>Przegląd do</th>
                     <th>Typ</th>
                     <th>Status</th>
-                    <th></th>
+                    <th v-if="activeUser === 'Admin'"></th>
                 </tr>
             </thead>
             <tbody>
@@ -22,7 +22,7 @@
                     <td>{{vehicle.carServiceTo}}</td>
                     <td>{{vehicle.type}}</td>
                     <td>{{vehicle.status}}</td>
-                    <td>
+                    <td v-if="activeUser === 'Admin'">
                         <button type="button" class="btn btn-sm btn-info" :id="vehicle.vehicleId" @click="handleEdit">Edytuj</button>
                         <button type="button" class="btn btn-sm btn-danger" @click="handleDelete(vehicle.vehicleId)">Usuń</button>
                     </td>
@@ -37,7 +37,8 @@ import $ from 'jquery'
 export default {
   name: 'VehiclesTable',
   props: {
-    vehiclesSource: Array
+    vehiclesSource: Array,
+    activeUser: String
   },
   data () {
     return {
@@ -221,7 +222,7 @@ export default {
       return this.editedVehicle.year < 1950
     },
     invalidLicensePlate () {
-      return this.vehicle.licensePlate.length > 8
+      return this.editedVehicle.licensePlate.length > 8
     },
     invalidCarServiceTo () {
       return this.editedVehicle.carServiceTo < '1950-01-01'

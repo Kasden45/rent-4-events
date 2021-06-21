@@ -28,36 +28,23 @@
             <!-- Left links -->
             <ul class="navbar-nav me-auto">
               <li class="nav-item">
-                <router-link class="nav-link" to="/">Home</router-link>
+                <router-link class="nav-link" to="/" v-bind:class= "[$route.matched.some(({ name }) => name === 'Home') ? {'active': true} : {}]">Home</router-link>
               </li>
               <li class="nav-item">
-                <router-link class="nav-link" to="/Oferta">Oferta</router-link>
+                <router-link class="nav-link" to="/Oferta" v-bind:class= "[$route.matched.some(({ name }) => name === 'Offer' || name === 'ProductPreview') ? {'active': true} : {}]">Oferta</router-link>
               </li>
             </ul>
-
-<!--            <div v-if="!$auth.loading">-->
-<!--              &lt;!&ndash; show login when not authenticated &ndash;&gt;-->
-<!--              <button v-if="!$auth.isAuthenticated" @click="login">Log in</button>-->
-<!--              &lt;!&ndash; show logout when authenticated &ndash;&gt;-->
-<!--              <button v-if="$auth.isAuthenticated" @click="logout">Log out</button>-->
-<!--            </div>-->
-
-            <button
-              class="btn btn-4 mx-2"
-              @click="privateMessage()">
-              Call Private
-            </button>
             <button
               class="btn btn-4 mx-2"
               v-if="!this.$auth.isAuthenticated"
               @click="login()">
-              Log In
+              Zaloguj się
             </button>
             <button
               class="btn btn-4 mx-2"
               v-if="this.$auth.isAuthenticated"
               @click="logout()">
-              Log Out
+              Wyloguj się
             </button>
             <!-- Left links -->
           </div>
@@ -65,19 +52,13 @@
         </div>
         <!-- Container wrapper -->
       </nav>
-    <br>
     <slot/>
     <my-footer/>
   </div>
 </template>
 
 <script>
-// import AuthService from '../auth/AuthService'
-import axios from 'axios'
 import MyFooter from '../components/MyFooter'
-
-import { apiUrl } from '../../auth_config.json'
-// const auth = new AuthService()
 export default {
   name: 'LayoutGuest',
   components: {MyFooter},
@@ -88,14 +69,6 @@ export default {
     },
     logout () {
       this.$auth.logout()
-    },
-    privateMessage () {
-      const url = `${apiUrl}/rent-rest/api/private-scoped`
-      // const url = `${API_URL}/users/?query={email, username}`
-      return axios.get(url, {headers: {Authorization: `Bearer ${this.$auth.getTokenSilently()}`}}).then((response) => {
-        console.log(response.data)
-        this.message = JSON.stringify(response.data)
-      })
     },
     mounted () {
       this.$emit('edit:order', this.editedOrder)
@@ -109,7 +82,7 @@ export default {
   position: sticky;
 }
 
-.nav-link:focus, .nav-link:hover {
+.nav-link:focus, .nav-link:hover, .active {
     border-bottom: 1px solid var(--COLOR4);
 }
 </style>

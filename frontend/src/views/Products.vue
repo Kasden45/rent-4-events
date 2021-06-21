@@ -1,12 +1,13 @@
 <template>
-    <div id="products" class="container">
-        <div class="row justify-content-center">
-            <div class="col-11">
+    <div id="products" class="container-fluid">
+        <div class="row justify-content-center mt-5">
+            <div class="col-11 px-5">
+                <h3>ASORTYMENT</h3>
                 <product-form :categories-source="categories"  @add:product="addProduct"/>
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-11">
+            <div class="col-11 px-5">
                 <products-table :products-source="products" :categories-source="categories" :key="products" @edit:product="editProduct" @get:products="getProducts" @delete:product="deleteProduct"/>
             </div>
         </div>

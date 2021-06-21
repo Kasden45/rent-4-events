@@ -28,47 +28,41 @@
             <!-- Left links -->
             <ul class="navbar-nav me-auto">
               <li class="nav-item">
-                <router-link class="nav-link" to="/">Home</router-link>
+                <router-link class="nav-link" to="/" v-bind:class= "[$route.matched.some(({ name }) => name === 'Home') ? {'active': true} : {}]">Home</router-link>
               </li>
               <li class="nav-item">
-                <router-link class="nav-link" to="/Oferta">Oferta</router-link>
+                <router-link class="nav-link" to="/Oferta" v-bind:class= "[$route.matched.some(({ name }) => name === 'Offer' || name === 'ProductPreview') ? {'active': true} : {}]">Oferta</router-link>
               </li>
               <li class="nav-item">
-                <router-link class="nav-link" to="/Zamowienia">Zamówienia</router-link>
+                <router-link class="nav-link" to="/Zamowienia" v-bind:class= "[$route.matched.some(({ name }) => name === 'Orders' || name === 'OrderPreview') ? {'active': true} : {}]">Zamówienia</router-link>
               </li>
                 <li class="nav-item">
-                <router-link class="nav-link" to="/Kadra">Kadra</router-link>
+                <router-link class="nav-link" to="/Kadra" v-bind:class= "[$route.matched.some(({ name }) => name === 'Drivers') ? {'active': true} : {}]">Kadra</router-link>
               </li>
                 <li class="nav-item">
-                <router-link class="nav-link" to="/Pojazdy">Pojazdy</router-link>
+                <router-link class="nav-link" to="/Pojazdy" v-bind:class= "[$route.matched.some(({ name }) => name === 'Vehicles') ? {'active': true} : {}]">Pojazdy</router-link>
               </li>
                 <li class="nav-item">
-                <router-link class="nav-link" to="/Kursy">Kursy</router-link>
+                <router-link class="nav-link" to="/Kursy" v-bind:class= "[$route.matched.some(({ name }) => name === 'Courses') ? {'active': true} : {}]">Kursy</router-link>
               </li>
                 <li class="nav-item">
-                <router-link class="nav-link" to="/Asortyment">Asortyment</router-link>
+                <router-link class="nav-link" to="/Asortyment" v-bind:class= "[$route.matched.some(({ name }) => name === 'Products') ? {'active': true} : {}]">Asortyment</router-link>
               </li>
                 <li class="nav-item">
-                <router-link class="nav-link" to="/Raporty">Raporty</router-link>
+                <router-link class="nav-link" to="/Raporty" v-bind:class= "[$route.matched.some(({ name }) => name === 'Reports') ? {'active': true} : {}]">Raporty</router-link>
               </li>
             </ul>
             <button
               class="btn btn-4 mx-2"
-              id="idk"
-              @click="getActive()">
-              Call Private
-            </button>
-            <button
-              class="btn btn-4 mx-2"
               v-if="!this.$auth.isAuthenticated"
               @click="login()">
-              Log In
+              Zaloguj się
             </button>
             <button
               class="btn btn-4 mx-2"
               v-if="this.$auth.isAuthenticated"
               @click="logout()">
-              Log Out
+              Wyloguj się
             </button>
             <!-- Left links -->
           </div>
@@ -84,15 +78,12 @@
 <script>
 import MyFooter from '../components/MyFooter'
 import authRoles from '../../auth_config.json'
-// const API_URL = 'http://localhost:8000'
 
-// const auth = new AuthService()
 export default {
   name: 'LayoutManager',
   components: {MyFooter},
   data () {
     return {
-      message: 'a',
       roles: authRoles,
       user_token: this.$auth.getTokenSilently()
     }
@@ -104,26 +95,6 @@ export default {
     },
     logout () {
       this.$auth.logout()
-    },
-    // privateMessage () {
-    //   const url = `${apiUrl}/api/private-scoped`
-    //   // const url = `${API_URL}/users/?query={email, username}`
-    //
-    //   return axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
-    //     console.log(response.data)
-    //     this.message = JSON.stringify(response.data)
-    //   })
-    // },
-    async getActive () {
-      // const url = `${apiUrl}/users/?query={id,username,groups}`
-      // const url = `${API_URL}/users/?query={email, username}`
-      const token = await this.$auth.getTokenSilently()
-      var activeRole = await this.getActiveRole(token)
-      // return axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
-      //     this.message = JSON.stringify(response.data.results[0])
-      //     console.log("groups: " + this.message)
-      // })
-      console.log('Active role: ' + activeRole)
     }
   }
 }
@@ -134,7 +105,7 @@ export default {
   position: sticky;
 }
 
-.nav-link:focus, .nav-link:hover {
+.nav-link:focus, .nav-link:hover, .active {
     border-bottom: 1px solid var(--COLOR4);
 }
 </style>

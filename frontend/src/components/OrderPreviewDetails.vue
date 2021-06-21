@@ -26,7 +26,7 @@
                 <span class="fw-bolder">Koszt całkowity:</span>
                 <span>{{this.orderSource.totalCost}}</span>
             </div>
-            <div class="col-sm-6 col-12" v-if="activeUser === 'Klient' || !statusArray.includes(orderSource.status)">
+            <div class="col-sm-6 col-12" v-if="activeUser === 'Klient' || activeUser === 'Kierowca' || !statusArray.includes(orderSource.status)">
                 <span class="fw-bolder">Komentarz:</span>
                 <p>{{this.orderSource.comment}}</p>
             </div>

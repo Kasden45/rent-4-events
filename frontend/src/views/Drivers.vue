@@ -1,13 +1,21 @@
 <template>
-    <div id="drivers" class="container">
-        <div class="row justify-content-center">
-            <div class="col-11">
-                <driver-form :users-source="users" @add:driver="addDriver"/>
+    <div>
+        <div v-if="activeUser === 'Admin'" id="drivers" class="container-fluid">
+            <div class="row justify-content-center mt-5">
+                <div class="col-11 px-5">
+                    <h3>KADRA</h3>
+                    <driver-form :users-source="users" @add:driver="addDriver"/>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-11 px-5">
+                    <drivers-table :drivers-source="drivers" :key="drivers" @edit:driver="editDriver" @get:drivers="getDrivers" @delete:driver="deleteDriver"/>
+                </div>
             </div>
         </div>
-        <div class="row justify-content-center">
-            <div class="col-11">
-                <drivers-table :drivers-source="drivers" :key="drivers" @edit:driver="editDriver" @get:drivers="getDrivers" @delete:driver="deleteDriver"/>
+        <div v-else class="row justify-content-center">
+            <div class="col-11 align-content-center px-5">
+                <no-access/>
             </div>
         </div>
     </div>
@@ -16,6 +24,7 @@
 <script>
 import DriversTable from '../components/DriversTable'
 import DriverForm from '../components/DriverForm'
+import NoAccess from '../components/NoAccess'
 import axios from 'axios'
 import { apiUrl } from '../../auth_config.json'
 export default {
@@ -25,7 +34,8 @@ export default {
   },
   components: {
     DriversTable,
-    DriverForm
+    DriverForm,
+    NoAccess
   },
   data () {
     return {

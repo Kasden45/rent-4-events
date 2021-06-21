@@ -9,7 +9,7 @@
                     <th>Data kursu</th>
                     <th>Typ</th>
                     <th>Status</th>
-                    <th></th>
+                    <th v-if="activeUser === 'Admin'"></th>
                 </tr>
             </thead>
             <tbody>
@@ -55,7 +55,7 @@
                     <td>{{course.courseDate}}</td>
                     <td>{{course.type}}</td>
                     <td>{{course.status}}</td>
-                    <td>
+                    <td v-if="activeUser === 'Admin'">
                         <button type="button" class="btn btn-sm btn-info" :id="course.courseId" @click="handleEdit">Edytuj</button>
                         <button type="button" class="btn btn-sm btn-danger" @click="handleDelete(course.courseId)">Usuń</button>
                     </td>
@@ -73,7 +73,8 @@ export default {
     coursesSource: Array,
     ordersSource: Array,
     driversSource: Array,
-    vehiclesSource: Array
+    vehiclesSource: Array,
+    activeUser: String
   },
   data () {
     return {

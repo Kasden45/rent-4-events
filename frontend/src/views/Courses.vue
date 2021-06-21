@@ -1,8 +1,16 @@
 <template>
-    <div id="courses" class="container">
-        <div class="row justify-content-center">
-            <div class="col-11">
-                <courses-table :courses-source="courses" :orders-source="orders" :vehicles-source="vehicles" :drivers-source="drivers" :key="courses" @edit:course="editCourse" @get:courses="getCourses"  @delete:course="deleteCourse"/>
+    <div>
+        <div v-if="activeUser === 'Admin' || activeUser === 'Kierowca'" id="courses" class="container-fluid">
+            <div class="row justify-content-center mt-5">
+                <div class="col-11 px-5">
+                    <h3>KURSY</h3>
+                    <courses-table :courses-source="courses" :orders-source="orders" :vehicles-source="vehicles" :drivers-source="drivers" :active-user="$props.activeUser" :key="courses" @edit:course="editCourse" @get:courses="getCourses"  @delete:course="deleteCourse"/>
+                </div>
+            </div>
+        </div>
+        <div v-else class="row justify-content-center">
+            <div class="col-11 align-content-center px-5">
+                <no-access/>
             </div>
         </div>
     </div>
@@ -10,6 +18,7 @@
 
 <script>
 import CoursesTable from '../components/CoursesTable'
+import NoAccess from '../components/NoAccess'
 import axios from 'axios'
 import { apiUrl } from '../../auth_config.json'
 export default {
@@ -18,7 +27,8 @@ export default {
     activeUser: String
   },
   components: {
-    CoursesTable
+    CoursesTable,
+    NoAccess
   },
   data () {
     return {
