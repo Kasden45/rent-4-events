@@ -24,8 +24,8 @@
                     <td v-if="product.images[0]">
                         <img :src="product.images[0].imageField" class="d-block img-fluid img-prod mx-auto" alt="..." width="45" >
                     </td>
-                    <td v-else>                                    <img :src="'https://lh3.googleusercontent.com/proxy/6xkNivxoQ4YKOgNjHWkXaYQ24ulwey4My8yk7HLvkue_-QkZee3Zn4omfv4NLwwKvtfPpQx34rA4a4rjmyDrZ1yiJGn4ilSWVWvL21v2iml56fXx2ZiK20ofWG13r30QMOaWlcYOYGwhs1oBKzo'" class="d-block img-fluid img-prod mx-auto" alt="..." width="45" >
-
+                    <td v-else>
+                        <img :src="'https://autoborawski.pl/photo/nophoto.jpg'" class="d-block img-fluid img-prod mx-auto" alt="...2" width="45" >
                     </td>
                     <td>
                         <button type="button" class="btn btn-sm btn-info" :id="product.prodId" @click="handleEdit">Edytuj</button>

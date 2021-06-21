@@ -106,7 +106,7 @@ export default {
   position: sticky;
 }
 
-.nav-link:focus {
+.nav-link:focus, .nav-link:hover {
     border-bottom: 1px solid var(--COLOR4);
 }
 </style>
