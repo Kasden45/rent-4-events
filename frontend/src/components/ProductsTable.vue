@@ -16,13 +16,13 @@
             <tbody>
                 <tr v-for="product in productsSource" :key="product.prodId" @click="openPreview(product.prodId)">
                     <td>{{product.prodName}}</td>
-                    <td>{{product.category}}</td>
+                    <td>{{product.catName}}</td>
                     <td>{{product.quantity}}</td>
                     <td>{{product.available}}</td>
                     <td>{{product.price}} zł</td>
                     <td>{{product.description}}</td>
-                    <td v-if="product.images[0]">                                    <img :src="product.images[0].imageField" class="d-block img-fluid img-prod mx-auto" alt="..." width="45" >
-
+                    <td v-if="product.images[0]">
+                        <img :src="product.images[0].imageField" class="d-block img-fluid img-prod mx-auto" alt="..." width="45" >
                     </td>
                     <td v-else>                                    <img :src="'https://lh3.googleusercontent.com/proxy/6xkNivxoQ4YKOgNjHWkXaYQ24ulwey4My8yk7HLvkue_-QkZee3Zn4omfv4NLwwKvtfPpQx34rA4a4rjmyDrZ1yiJGn4ilSWVWvL21v2iml56fXx2ZiK20ofWG13r30QMOaWlcYOYGwhs1oBKzo'" class="d-block img-fluid img-prod mx-auto" alt="..." width="45" >
 
@@ -42,7 +42,8 @@ import $ from 'jquery'
 export default {
   name: 'ProductsTable',
   props: {
-    productsSource: Array
+    productsSource: Array,
+    categoriesSource: Array
   },
   data () {
     return {
@@ -63,7 +64,11 @@ export default {
   },
   methods: {
     openPreview (id) {
-      this.$router.push({ name: 'ProductPreview', params: { prodId: id } })
+      if (!this.isEdit) { this.$router.push({ name: 'ProductPreview', params: { prodId: id } }) }
+    },
+    catNameFromId (catId) {
+      alert('here')
+      return this.categoriesSource.find(c => c.catId === catId).catName
     },
     changeButtons (row) {
       var $btn1 = row.children().eq(7).children().eq(0)
@@ -85,6 +90,7 @@ export default {
     },
 
     handleDelete (id) {
+      event.stopPropagation()
       if (!this.isEdit) {
         if (confirm('Czy na pewno chcesz usunąć ten produkt?')) {
           this.$emit('delete:product', id)
@@ -95,6 +101,7 @@ export default {
       }
     },
     handleEdit: function (event) {
+      event.stopPropagation()
       this.isEdit = !this.isEdit
 
       var $prodId = parseInt(event.target.id)
@@ -122,8 +129,12 @@ export default {
         $prodName.html(function () {
           return '<input class="form-control"/>'
         })
+        let newHtml = '<select  class="form-select">'
+        this.categoriesSource.forEach(cat => { newHtml += `  <option value=${cat.catId}>${cat.catName}</option>` })
+        newHtml += '</select>'
+        console.log('new', newHtml)
         $category.html(function () {
-          return '<input class="form-control"/>'
+          return newHtml
         })
         $quantity.html(function () {
           return '<input class="form-control" type="number" min="0"/>'
@@ -155,12 +166,12 @@ export default {
         // take values
         this.editedProduct = {
           prodId: $product.prodId,
-          brand: $prodName.children().val(),
-          model: $category.children().val(),
-          year: $quantity.children().val(),
-          licensePlate: $available.children().val(),
-          carServiceTo: $price.children().val(),
-          type: $description.children().val(),
+          prodName: $prodName.children().val(),
+          category: $category.children().val(),
+          quantity: $quantity.children().val(),
+          available: $available.children().val(),
+          price: $price.children().val(),
+          description: $description.children().val(),
           status: $images.children().val()
         }
 
@@ -203,7 +214,7 @@ export default {
               return $product.description
             })
             $images.html(function () {
-              return $product.images
+              return `<img :src="$product.images[0].imageField" class="d-block img-fluid img-prod mx-auto" alt="..." width="45" >`
             })
           }})
       }
@@ -238,5 +249,8 @@ export default {
 </script>
 
 <style scoped>
-
+img {
+    height: 3rem;
+    width: auto;
+}
 </style>

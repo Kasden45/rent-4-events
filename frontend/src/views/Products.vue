@@ -7,7 +7,7 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-11">
-                <products-table :products-source="products" :key="products" @edit:product="editProduct" @get:products="getProducts" @delete:product="deleteProduct"/>
+                <products-table :products-source="products" :categories-source="categories" :key="products" @edit:product="editProduct" @get:products="getProducts" @delete:product="deleteProduct"/>
             </div>
         </div>
     </div>
@@ -51,19 +51,24 @@ export default {
         this.getProducts()
       })
     },
-    async getCategories () {
+    async getCategories (products) {
       const url = `${apiUrl}/categories/?query={catId, catName}`
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.categories = response.data['results']
-        console.log(this.$auth.getIdTokenClaims())
+        products.forEach(prod => {
+          prod.catName = this.categories.find(cat => cat.catId === prod.category).catName
+        })
+        console.log('productssss after', JSON.stringify(products))
+        this.products = products
       })
     },
     async getProducts () {
       const url = `${apiUrl}/products/`
       const token = await this.$auth.getTokenSilently()
       const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
-        this.products = response.data['results']
+        const products = response.data['results']
+        this.getCategories(products)
         return resp
       })
     },
@@ -80,6 +85,7 @@ export default {
       } catch (error) {
         console.log(error)
       }
+      await this.getProducts()
     },
     async getProductById (id, index, productData) {
       try {
@@ -106,7 +112,6 @@ export default {
   },
   mounted () {
     this.getProducts()
-    this.getCategories()
   }
 }
 </script>

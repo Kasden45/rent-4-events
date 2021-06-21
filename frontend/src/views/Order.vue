@@ -30,8 +30,8 @@
             </div>
             <div class="col-md-3 col-10 ">
                 <div class="row">
-                    <new-order v-if="this.$route.params.orderId" :key="newOrder" :order-source="newOrder" :active-user="activeUser" :edit="true" @delete:position="deletePosition" @edit:position="editPosition" @set:position="setPosition" @send:order="sendOrder"/>
-                    <new-order v-else :order-source="newOrder" :key="newOrder" :active-user="activeUser" :edit="false" @delete:position="deletePosition" @edit:position="editPosition" @set:position="setPosition" @send:order="sendOrder"/>
+                    <new-order v-if="this.$route.params.orderId" :key="newOrder" :availability-source="productsAvailability" :order-source="newOrder" :active-user="activeUser" :edit="true" @delete:position="deletePosition" @edit:position="editPosition" @set:position="setPosition" @send:order="sendOrder"/>
+                    <new-order v-else :availability-source="productsAvailability" :order-source="newOrder" :key="newOrder" :active-user="activeUser" :edit="false" @delete:position="deletePosition" @edit:position="editPosition" @set:position="setPosition" @send:order="sendOrder"/>
                 </div>
             </div>
         </div>
@@ -90,6 +90,7 @@ export default {
       console.log(resp)
     },
     async getAvailable (from_ = new Date().toISOString().slice(0, 10), to_ = new Date().toISOString().slice(0, 10)) {
+      if (from_ === undefined && to_ === undefined) { from_ = to_ = new Date().toISOString().slice(0, 10) }
       console.log('from', from_, 'to', to_)
       const url = `${apiUrl}/available/?from=${from_}&to=${to_}`
       console.log(this.$auth)
@@ -98,8 +99,8 @@ export default {
       const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.productsAvailability = response.data
 
-          console.log('ava response', JSON.stringify(response.data))
-          console.log('availability', this.productsAvailability)
+        console.log('ava response', JSON.stringify(response.data))
+        console.log('availability', this.productsAvailability)
         this.products.forEach(prod => {
           prod.availableAtDate = this.getAvailableForProduct(prod.prodId)
         })
@@ -144,7 +145,7 @@ export default {
             this.addPositionCopy(newPos)
           })
 
-        this.getAvailable(this.newOrder.startDate, this.newOrder.endDate)
+          this.getAvailable(this.newOrder.startDate, this.newOrder.endDate)
         })
       })
     },
@@ -301,6 +302,8 @@ export default {
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.products = response.data['results']
+
+        this.getAvailable(this.newOrder.startDate, this.newOrder.endDate)
       })
     },
     async searchProducts (searchWord, searchDescription) {
@@ -316,6 +319,8 @@ export default {
       const token = await this.$auth.getTokenSilently()
       await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
         this.products = response.data['results']
+
+        this.getAvailable(this.newOrder.startDate, this.newOrder.endDate)
       })
     },
     deleteFilters () {

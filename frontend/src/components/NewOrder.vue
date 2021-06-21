@@ -4,7 +4,7 @@
             <div class="row">
                 <h4>PODSUMOWANIE</h4>
             </div>
-
+<!--v-bind:style= "[availability(elem.product.prodId)<=0 ? {'background': 'rgba(100%, 0%, 0%, 0.1)'} : {}]-->
             <div class="row margin-bottom">
                 <div class="tab-content">
                     <table class="table table-sm table-borderless ">
@@ -16,13 +16,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="elem in this.orderSource.positions" :key="elem.product.prodId">
-                            <td>{{elem.product.prodName}}</td>
+                        <tr v-for="elem in this.orderSource.positions" :key="elem.product.prodId" >
+                            <td v-bind:class="[availability(elem.product.prodId)<=0 ? {'unavailable': true} : {}]">{{elem.product.prodName}}</td>
                             <td>
                                 <div>
-                                    <button class="btn btn-sm btn-4 d-inline" @click="deleteOne(elem.product.prodId)">-</button>
-                                    <input class="form-control w-50 d-inline size" :id="'write' + elem.product.prodId" type="number" :value="elem.quantity" @change="readQuantity(elem.product.prodId)">
-                                    <button class="btn btn-sm btn-4 d-inline" @click="addOne(elem.product.prodId)">+</button>
+                                    <button class="btn btn-sm btn-4 d-inline" v-bind:class="[availability(elem.product.prodId)<=0 ? {'unavailable': true} : {}]" @click="deleteOne(elem.product.prodId)">-</button>
+                                    <input class="form-control w-50 d-inline size" v-bind:class="[availability(elem.product.prodId)<=0 ? {'unavailable': true} : {}]" :id="'write' + elem.product.prodId" type="number" :value="elem.quantity" @change="readQuantity(elem.product.prodId)">
+                                    <button class="btn btn-sm btn-4 d-inline" v-bind:class="[availability(elem.product.prodId)<=0 ? {'unavailable': true} : {}]" @click="addOne(elem.product.prodId)">+</button>
                                 </div>
                             </td>
                             <td>
@@ -141,6 +141,7 @@ export default {
   name: 'NewOrder',
   props: {
     orderSource: Object,
+    availabilitySource: Array,
     activeUser: String,
     edit: Boolean
   },
@@ -177,6 +178,9 @@ export default {
       // myModal.hide()
       // $('#exampleModal').remove()
       this.$emit('send:order', this.redirect)
+    },
+    availability (prodId) {
+      return this.availabilitySource.find(prod => prod.prodId === prodId).available
     },
     redirect () {
       this.$router.push({ name: 'Orders' })
@@ -289,5 +293,9 @@ input[type=number] {
 
 .modal-title {
     font-weight: 600;
+}
+
+.unavailable {
+    opacity: 0.3;
 }
 </style>
