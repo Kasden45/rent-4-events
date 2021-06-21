@@ -1,20 +1,30 @@
 <template>
-    <div class="row justify-content-center mt-3">
-        <div class="col-11">
-            <current-course-details :key="detailsKey" :order-source="order" :course-source="course" :courses-source="courses" :map-address="mapAddress" @rerender:course="forceRerender"/>
+    <div>
+        <div v-if="activeUser === 'Kierowca'" class="row justify-content-center mt-5">
+            <div class="col-11 px-5">
+                <current-course-details :key="detailsKey" :order-source="order" :course-source="course" :courses-source="courses" :map-address="mapAddress" @rerender:course="forceRerender"/>
+            </div>
         </div>
-
+        <div v-else class="row justify-content-center">
+            <div class="col-11 align-content-center px-5">
+                <no-access/>
+            </div>
+        </div>
     </div>
+
 </template>
 
 <script>
 import CurrentCourseDetails from '../components/CurrentCourseDetails'
+import NoAccess from '../components/NoAccess'
 import {apiUrl} from '../../auth_config.json'
 import axios from 'axios'
-// import $ from 'jquery'
 export default {
   name: 'CurrentCourse',
-  components: {CurrentCourseDetails},
+  props: {
+    activeUser: String
+  },
+  components: { CurrentCourseDetails, NoAccess },
   data () {
     return {
       order: {},

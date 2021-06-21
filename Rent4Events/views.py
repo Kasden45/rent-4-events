@@ -293,7 +293,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         print("request user", request.user)
-        if request.user.is_staff:
+        if request.user.is_staff or request.user.groups.filter(name='Kierowca'):
             queryset = Order.objects.filter(~Q(status="Robocze"))
         else:
             queryset = Order.objects.filter(client__userId__username=request.user.username)

@@ -3,11 +3,6 @@
         <div class="row justify-content-center mt-3">
             <div class="col-11">
                 <div class="row">
-                    <div class="col-3">
-                        <button class="btn btn-4" @click="goBack">POWRÓT</button>
-                    </div>
-                </div>
-                <div class="row">
                     <div class="col-md-5 col-10 offset-1">
                         <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-indicators">
@@ -118,9 +113,6 @@ export default {
         $('.carousel-control-prev').remove()
         $('.carousel-control-next').remove()
       }
-    },
-    goBack () {
-      this.$router.go(-1)
     }
   },
   mounted () {

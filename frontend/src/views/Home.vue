@@ -1,5 +1,4 @@
 <template>
-
       <div id="intro" class="home">
         <div class="mask" id="bg">
           <div class="container">
@@ -70,10 +69,6 @@ export default {
   mounted () {
     this.createClient()
   }
-  // mounted () {
-  //   // window.history.replaceState({}, document.title, "/");
-  //     this.createClient()
-  // }
 }
 </script>
 

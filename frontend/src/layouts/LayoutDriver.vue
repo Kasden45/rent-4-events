@@ -28,37 +28,35 @@
             <!-- Left links -->
             <ul class="navbar-nav me-auto">
               <li class="nav-item">
-                <router-link class="nav-link" to="/">Home</router-link>
+                <router-link class="nav-link" to="/" v-bind:class= "[$route.matched.some(({ name }) => name === 'Home') ? {'active': true} : {}]">Home</router-link>
               </li>
               <li class="nav-item">
-                <router-link class="nav-link" to="/Oferta">Oferta</router-link>
+                <router-link class="nav-link" to="/Oferta" v-bind:class= "[$route.matched.some(({ name }) => name === 'Offer' || name === 'ProductPreview') ? {'active': true} : {}]">Oferta</router-link>
               </li>
               <li class="nav-item">
-                <router-link class="nav-link" to="/Zamowienia">Zamówienia</router-link>
+                <router-link class="nav-link" to="/Zamowienia" v-bind:class= "[$route.matched.some(({ name }) => name === 'Orders' || name === 'OrderPreview') ? {'active': true} : {}]">Zamówienia</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/Pojazdy" v-bind:class= "[$route.matched.some(({ name }) => name === 'Vehicles') ? {'active': true} : {}]">Pojazdy</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/Kursy" v-bind:class= "[$route.matched.some(({ name }) => name === 'Courses') ? {'active': true} : {}]">Moje kursy</router-link>
               </li>
                 <li class="nav-item">
-                <router-link class="nav-link" to="/Kursy">Moje kursy</router-link>
-              </li>
-                <li class="nav-item">
-                <router-link class="nav-link" to="/AktualnyKurs">Aktualny kurs</router-link>
+                <router-link class="nav-link" to="/AktualnyKurs" v-bind:class= "[$route.matched.some(({ name }) => name === 'CurrentCourse') ? {'active': true} : {}]">Aktualny kurs</router-link>
               </li>
             </ul>
             <button
               class="btn btn-4 mx-2"
-              id="idk">
-              Call Private
-            </button>
-            <button
-              class="btn btn-4 mx-2"
               v-if="!this.$auth.isAuthenticated"
               @click="login()">
-              Log In
+              Zaloguj się
             </button>
             <button
               class="btn btn-4 mx-2"
               v-if="this.$auth.isAuthenticated"
               @click="logout()">
-              Log Out
+              Wyloguj się
             </button>
             <!-- Left links -->
           </div>
@@ -72,21 +70,11 @@
 </template>
 
 <script>
-import axios from 'axios'
+
 import MyFooter from '../components/MyFooter'
-// import $ from 'jquery'
-
-import { apiUrl } from '../../auth_config.json'
-
-// const auth = new AuthService()
 export default {
   name: 'LayoutDriver',
   components: {MyFooter},
-  data () {
-    return {
-      message: 'a'
-    }
-  },
   methods: {
     // this method calls the AuthService login() method
     login () {
@@ -94,14 +82,6 @@ export default {
     },
     logout () {
       this.$auth.logout()
-    },
-    privateMessage () {
-      const url = `${apiUrl}/rent-rest/api/private-scoped`
-      // const url = `${API_URL}/users/?query={email, username}`
-      return axios.get(url, {headers: {Authorization: `Bearer ${this.$auth.getTokenSilently()}`}}).then((response) => {
-        console.log(response.data)
-        this.message = JSON.stringify(response.data)
-      })
     }
   }
 }
@@ -112,7 +92,7 @@ export default {
   position: sticky;
 }
 
-.nav-link:focus, .nav-link:hover {
+.nav-link:focus, .nav-link:hover, .active {
     border-bottom: 1px solid var(--COLOR4);
 }
 </style>
