@@ -17,12 +17,12 @@
                     </thead>
                     <tbody>
                         <tr v-for="elem in this.orderSource.positions" :key="elem.product.prodId" >
-                            <td v-bind:class="[availability(elem.product.prodId)<=0 ? {'unavailable': true} : {}]">{{elem.product.prodName}}</td>
+                            <td v-bind:class="[availability(elem.product.prodId)-elem.quantity<0 ? {'unavailable': true} : {}]">{{elem.product.prodName}}</td>
                             <td>
                                 <div>
-                                    <button class="btn btn-sm btn-4 d-inline" v-bind:class="[availability(elem.product.prodId)<=0 ? {'unavailable': true} : {}]" @click="deleteOne(elem.product.prodId)">-</button>
-                                    <input class="form-control w-50 d-inline size" v-bind:class="[availability(elem.product.prodId)<=0 ? {'unavailable': true} : {}]" :id="'write' + elem.product.prodId" type="number" :value="elem.quantity" @change="readQuantity(elem.product.prodId)">
-                                    <button class="btn btn-sm btn-4 d-inline" v-bind:class="[availability(elem.product.prodId)<=0 ? {'unavailable': true} : {}]" @click="addOne(elem.product.prodId)">+</button>
+                                    <button class="btn btn-sm btn-4 d-inline" v-bind:class="[availability(elem.product.prodId)-elem.quantity<0 ? {'unavailable': true} : {}]" @click="deleteOne(elem.product.prodId)">-</button>
+                                    <input class="form-control w-50 d-inline size" v-bind:class="[availability(elem.product.prodId)-elem.quantity<0 ? {'unavailable': true} : {}]" :id="'write' + elem.product.prodId" type="number" :value="elem.quantity" @change="readQuantity(elem.product.prodId)">
+                                    <button class="btn btn-sm btn-4 d-inline" v-bind:class="[availability(elem.product.prodId)-elem.quantity<0 ? {'unavailable': true} : {}]" @click="addOne(elem.product.prodId)">+</button>
                                 </div>
                             </td>
                             <td>

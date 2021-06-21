@@ -2,7 +2,7 @@
     <div>
         <div class="row justify-content-end my-3 px-3 mw-100">
             <div class="col-md-7 col-12">
-                <new-order-dates :key="newOrder" :availability-source="getAvailable" :order-source="newOrder" :edit="false"  @edit:order="editOrder"/>
+                <new-order-dates :key="newOrder" :availability-source="productsAvailability" :order-source="newOrder" :edit="false"  @edit:order="editOrder"/>
             </div>
             <div class="col-md-3 col-11 align-self-end py-2">
                 <router-link class="btn btn-4 ml-auto" to="/Zamowienia">Powrót do zamówień</router-link>
@@ -19,7 +19,7 @@
         </div>
         <div class="row justify-content-center mw-100">
             <div class="col-md-2 col-sm-4 col-10">
-                <new-order-filters :categories-source="categories" :delete-filters="cancel" ref="child" @filter:product="filterProducts" @search:product="searchProducts"/>
+                <new-order-filters :categories-source="categories" ref="child" @filter:product="filterProducts" @search:product="searchProducts"/>
             </div>
             <div class="col-md-7 col-sm-7 col-10">
                 <div class="row align-content-center">

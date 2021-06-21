@@ -367,7 +367,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         if request.user.is_staff:
             queryset = Course.objects.all()
         else:
-            queryset = Course.objects.filter(driver__userId__username=request.user.username)
+            queryset = Course.objects.filter(driver__userId__username=request.user.username).order_by("courseDate")
 
         page = self.paginate_queryset(queryset)
         if page is not None:

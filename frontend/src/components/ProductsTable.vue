@@ -148,9 +148,6 @@ export default {
         $description.html(function () {
           return '<input class="form-control"/>'
         })
-        $images.html(function () {
-          return '<input class="form-control"/>'
-        })
         // select values that book has
         $prodName.children().val($product.prodName)
         $category.children().val($product.category)
@@ -158,7 +155,7 @@ export default {
         $available.children().val($product.available)
         $price.children().val($product.price)
         $description.children().val($product.description)
-        $images.children().val($product.images)
+        // $images.children().val($product.images)
       } else {
         this.submitting = true
         this.clearStatus()
@@ -181,6 +178,10 @@ export default {
         //
         //   return
         // }
+        if (this.invalidName || this.invalidCategory || this.invalidQuantity || this.invalidAvailable || this.invalidPrice || this.invalidDescription || this.invalidImages) {
+          this.error = true
+          return
+        }
 
         // enable buttons
         $('.btn-danger').prop('disabled', false)
@@ -213,9 +214,9 @@ export default {
             $description.html(function () {
               return $product.description
             })
-            $images.html(function () {
-              return `<img :src="$product.images[0].imageField" class="d-block img-fluid img-prod mx-auto" alt="..." width="45" >`
-            })
+            // $images.html(function () {
+            //   return `<img :src="$product.images[0].imageField" class="d-block img-fluid img-prod mx-auto" alt="..." width="45" >`
+            // })
           }})
       }
 
@@ -223,26 +224,24 @@ export default {
     }
   },
   computed: {
-    invalidBrand () {
-      return this.editedProduct.brand === ''
+    invalidName () {
+      return this.editedProduct.prodName === '' || this.editedProduct.prodName.length > 50
     },
-    invalidModel () {
-      return this.editedProduct.model === ''
+    invalidCategory () {
+      console.log(this.editedProduct.category)
+      return false
     },
-    invalidYear () {
-      return this.editedProduct.year < 1950
+    invalidQuantity () {
+      return this.editedProduct.quantity < 1
     },
-    invalidLicensePlate () {
-      return this.product.licensePlate.length > 8
+    invalidAvailable () {
+      return this.editedProduct.available < 0
     },
-    invalidCarServiceTo () {
-      return this.editedProduct.carServiceTo < '1950-01-01'
+    invalidPrice () {
+      return parseFloat(this.editedProduct.price) < 0
     },
-    invalidType () {
-      return this.editedProduct.type === ''
-    },
-    invalidStatus () {
-      return this.editedProduct.status === ''
+    invalidDescription () {
+      return this.editedProduct.description.length > 500
     }
   }
 }
