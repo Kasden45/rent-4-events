@@ -54,7 +54,8 @@
                     </p>
                     <p>
                         <span>Koszt zamówienia: </span>
-                        <span class="data">{{orderSource.totalCost}} zł</span>
+                        <span v-if="!orderSource.isTransport" class="data">{{orderSource.totalCost}} zł</span>
+                        <span v-if="orderSource.isTransport" class="data">{{orderSource.totalCost}} zł + transport</span>
                     </p>
                     <button class="btn btn-4 float-end" v-if="orderSource.status === 'W trakcie negocjacji' || orderSource.status === 'Oczekujące'" data-bs-toggle="modal" data-bs-target="#exampleModal">AKTUALIZUJ</button>
                     <button class="btn btn-4 float-end" v-else data-bs-toggle="modal" data-bs-target="#exampleModal">PRZEJDŹ DALEJ</button>

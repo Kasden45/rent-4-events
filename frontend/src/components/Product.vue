@@ -6,8 +6,8 @@
         <div class="row mt-2">
             <p>{{productSource.prodName}}</p>
         </div>
-        <div class="row" v-if="order && productSource.availableAtDate">
-            <p v-bind:style= "[productSource.availableAtDate<=0 ? {'color':'red'} : {'color':'green'}]" >Dostępne: {{productSource.availableAtDate}}</p>
+        <div class="row" v-if="order && productSource.availableAtDate !== null">
+            <p v-bind:style= "[productSource.availableAtDate<=0 ? {'color':'red'} : {}]" >{{productSource.availableAtDate>0 ? 'Dostępne: ' + Math.max(0,productSource.availableAtDate) : 'Niedostępne'}}</p>
         </div>
         <div class="row">
             <div class="col-7">

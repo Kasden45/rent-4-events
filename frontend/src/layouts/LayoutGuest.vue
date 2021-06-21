@@ -65,8 +65,6 @@
         </div>
         <!-- Container wrapper -->
       </nav>
-      <!-- Navbar -->
-    {{ message }}
     <br>
     <slot/>
     <my-footer/>
@@ -83,11 +81,6 @@ import { apiUrl } from '../../auth_config.json'
 export default {
   name: 'LayoutGuest',
   components: {MyFooter},
-  data () {
-    return {
-      message: 'a'
-    }
-  },
   methods: {
     // this method calls the AuthService login() method
     login () {
@@ -112,6 +105,10 @@ export default {
 </script>
 
 <style scoped>
+.navbar {
+  position: sticky;
+}
+
 .nav-link:focus {
     border-bottom: 1px solid var(--COLOR4);
 }

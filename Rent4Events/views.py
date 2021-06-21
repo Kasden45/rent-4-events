@@ -144,7 +144,7 @@ class AvailableProductsView(viewsets.ModelViewSet):
         for product in products:
             prod_availability_dict[product['prodId']] = {'prodName' : product['prodName'],'available' : product['quantity']}
 
-        orders = Order.objects.filter(~(Q(endDate__lt=from_) | Q(startDate__gt=to_)))
+        orders = Order.objects.filter((~(Q(endDate__lt=from_) | Q(startDate__gt=to_))) & ~Q(status__in=['Robocze', 'Anulowane', 'Odrzucone']))
         for order in orders:
             positions = order.positions.all()
             for position in positions:
