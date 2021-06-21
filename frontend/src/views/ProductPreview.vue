@@ -78,16 +78,22 @@ export default {
   methods: {
     async getProduct () {
       const url = `${apiUrl}/products/${this.$route.params.prodId}/`
-      const token = await this.$auth.getTokenSilently()
-      await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+      let token = null
+      if (this.$auth.isAuthenticated) {
+        token = await this.$auth.getTokenSilently()
+      }
+      await axios.get(url, token !== null ? {headers: {Authorization: `Bearer ${token}`}} : {}).then((response) => {
         this.product = response.data
         console.log('images', JSON.stringify(this.product.images))
       })
     },
     async getSimilarProducts () {
       const url = `${apiUrl}/products/${this.$route.params.prodId}/similar/?query={prodId, prodName, price, images}`
-      const token = await this.$auth.getTokenSilently()
-      await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+      let token = null
+      if (this.$auth.isAuthenticated) {
+        token = await this.$auth.getTokenSilently()
+      }
+      await axios.get(url, token !== null ? {headers: {Authorization: `Bearer ${token}`}} : {}).then((response) => {
         this.similarProducts = response.data['results']
       })
     },

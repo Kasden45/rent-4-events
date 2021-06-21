@@ -78,7 +78,7 @@ export default new Router({
       path: '/Produkt/:prodId',
       name: 'ProductPreview',
       component: ProductPreview,
-      beforeEnter: authGuard
+      beforeEnter: auth
     },
     {
       path: '/Asortyment',

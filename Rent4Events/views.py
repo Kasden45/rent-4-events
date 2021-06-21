@@ -13,7 +13,7 @@ from django_restql.mixins import QueryArgumentsMixin
 from rest_framework.decorators import api_view, permission_classes, action
 from django.contrib.auth import models as m
 import django.contrib.auth.models as auth
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, generics, views
 from rest_framework import permissions
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import get_object_or_404
@@ -90,6 +90,16 @@ TESTING
 """
 
 
+@api_view(['GET'])
+def available_date(request):
+    """
+
+    :param request: request with
+    :return:
+    """
+    return JsonResponse({'message': 'Hello from a public endpoint! You don\'t need to be authenticated to see this.'})
+
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -119,6 +129,33 @@ class UserViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class AvailableProductsView(viewsets.ModelViewSet):
+    serializer_class = YourSerializer
+    permission_classes = [permissions.AllowAny]
+    queryset = Product.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        from_ = request.GET.get('from')
+        to_ = request.GET.get('to')
+        products = Product.objects.values('prodId','prodName', 'quantity')
+        prod_availability_dict = {}
+        for product in products:
+            prod_availability_dict[product['prodId']] = {'prodName' : product['prodName'],'available' : product['quantity']}
+
+        orders = Order.objects.filter((~(Q(endDate__lt=from_) | Q(startDate__gt=to_))) & ~Q(status__in=['Robocze', 'Anulowane', 'Odrzucone']))
+        for order in orders:
+            positions = order.positions.all()
+            for position in positions:
+                prod_availability_dict[position.product_id]['available'] -= position.quantity
+            pass
+
+        yourdata = []
+        for prod, value in prod_availability_dict.items():
+            yourdata.append({'prodId': prod, 'prodName': value['prodName'], 'available': value['available']})
+        results = YourSerializer(yourdata, many=True).data
+        return Response(results)
 
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -416,5 +453,3 @@ class ImageViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         serializer = self.get_serializer(instance, context={"request": request})
         return Response(serializer.data)
-
-

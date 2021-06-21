@@ -60,11 +60,10 @@ class UserSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         return instance
 
 
-
 class ImageSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ['imageId', 'imageName', 'imageUrl', 'product', 'imageField']
+        fields = ['imageId', 'imageName', 'product', 'imageField']
 
     def create(self, validated_data):
         """
@@ -160,9 +159,11 @@ class ClientSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 
 class OrderSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     positions = ShowOrderPositionSerializer(many=True, allow_null=True, required=False)
+
     class Meta:
         model = Order
-        fields = ['orderId', 'client', 'startDate', 'endDate', 'address', 'isTransport', 'isEdited', 'totalCost', 'status', 'creationDate', 'comment', 'positions']
+        fields = ['orderId', 'client', 'startDate', 'endDate', 'address', 'isTransport', 'isEdited', 'totalCost',
+                  'status', 'creationDate', 'comment', 'positions']
 
     def create(self, validated_data):
         """
@@ -191,7 +192,8 @@ class ShowOrderSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['orderId', 'client', 'startDate', 'endDate', 'address', 'isTransport', 'isEdited', 'totalCost', 'status', 'creationDate', 'comment', 'positions']
+        fields = ['orderId', 'client', 'startDate', 'endDate', 'address', 'isTransport', 'isEdited', 'totalCost',
+                  'status', 'creationDate', 'comment', 'positions']
 
 
 class DriverSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
@@ -247,3 +249,17 @@ class ShowCourseSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         Create and return a new `Snippet` instance, given the validated data.
         """
         return Course.objects.create(**validated_data)
+
+
+class YourSerializer(serializers.Serializer):
+    """Your data serializer, define your fields here."""
+
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
+
+    prodId = serializers.IntegerField()
+    prodName = serializers.CharField()
+    available = serializers.IntegerField()

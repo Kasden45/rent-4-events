@@ -32,6 +32,9 @@ class Driver(models.Model):
     salary = models.DecimalField(max_digits=10, decimal_places=2)
     phoneNumber = models.CharField(max_length=12, unique=True)
 
+    def __str__(self):
+        return f'{self.userId} {self.firstName} {self.lastName} {self.birthDate}'
+
 
 class Client(models.Model):
     # clientId = models.BigAutoField(primary_key=True)
@@ -45,7 +48,11 @@ class Client(models.Model):
     firstName = models.CharField(max_length=30, blank=True, null=True)  # nullable
     lastName = models.CharField(max_length=30, blank=True, null=True)  # nullable
     phoneNumber = models.CharField(max_length=12, unique=True, blank=True, null=True)  # nullable
+
     # address?
+
+    def __str__(self):
+        return f'{self.userId} {self.firstName} {self.lastName} {self.phoneNumber}'
 
 
 class Order(models.Model):
@@ -64,7 +71,8 @@ class Order(models.Model):
         ('W trakcie realizacji', 'W trakcie realizacji'),
         ('Zrealizowane', 'Zrealizowane'),
         ('Robocze', 'Robocze'),
-        ('Anulowane', 'Anulowane')
+        ('Anulowane', 'Anulowane'),
+        ('Edytowane', 'Edytowane')
     )
     orderId = models.BigAutoField(primary_key=True)
     client = models.ForeignKey(
@@ -82,6 +90,7 @@ class Order(models.Model):
     totalCost = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
     comment = models.CharField(max_length=1000, blank=True, null=True)
+
 
 class Category(models.Model):
     catId = models.BigAutoField(primary_key=True)
@@ -115,6 +124,7 @@ class Product(models.Model):
     available = models.PositiveIntegerField()  # <= quantity
     price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.CharField(max_length=500, blank=True, null=True)  # nullable
+    isActive = models.BooleanField(default=True)
 
     def __str__(self):
         return self.prodName
@@ -165,6 +175,9 @@ class Vehicle(models.Model):
     type = models.CharField(max_length=10, choices=TYPE_CHOICE, blank=True, null=True)  # nullable
     status = models.CharField(max_length=12, choices=STATUS_CHOICE, blank=True, null=True)  # nullable
 
+    def __str__(self):
+        return f'{self.brand} {self.model} {self.year} {self.licensePlate}'
+
 
 class Course(models.Model):
     TYPE_CHOICES = (
@@ -199,6 +212,11 @@ class Course(models.Model):
     type = models.CharField(max_length=7, choices=TYPE_CHOICES)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='Zaplanowany')  # Default = zaplanowany
 
+    def __str__(self):
+        return f'{self.courseId} Driver: {self.driver.firstName} {self.driver.lastName} ' \
+               f'Client: {self.order.client.firstName} {self.order.client.lastName} Date: {self.courseDate}' \
+               f' Status: {self.status}'
+
 
 def user_directory_path(instance, filename):
     print(instance)
@@ -218,5 +236,4 @@ class Image(models.Model):
         related_name='images',
         null=True
     )
-    imageUrl = models.CharField(max_length=300)
     imageField = models.ImageField(upload_to=user_directory_path, null=True, blank=True)

@@ -56,19 +56,24 @@ export default {
     async getCategories () {
       const url = `${apiUrl}/categories/?query={catId, catName}`
       console.log(this.$auth)
-      const token = await this.$auth.getTokenSilently()
+      let token = null
+      if (this.$auth.isAuthenticated) {
+        token = await this.$auth.getTokenSilently()
+      }
       console.log(token)
-      const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+      const resp = await axios.get(url, token !== null ? {headers: {Authorization: `Bearer ${token}`}} : {}).then((response) => {
         this.categories = response.data['results']
         return resp
       })
     },
     async getProducts () {
       const url = `${apiUrl}/products/?query={prodId, prodName, price, images}`
-      console.log(this.$auth)
-      const token = await this.$auth.getTokenSilently()
-      console.log(token)
-      const resp = await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+      console.log('Auth', this.$auth)
+      let token = null
+      if (this.$auth.isAuthenticated) {
+        token = await this.$auth.getTokenSilently()
+      }
+      const resp = await axios.get(url, token !== null ? {headers: {Authorization: `Bearer ${token}`}} : {}).then((response) => {
         this.products = response.data['results']
         return resp
       })
@@ -89,8 +94,11 @@ export default {
         }
       }
       this.activeSearchWord = searchWord
-      const token = await this.$auth.getTokenSilently()
-      await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+      let token = null
+      if (this.$auth.isAuthenticated) {
+        token = await this.$auth.getTokenSilently()
+      }
+      await axios.get(url, token !== null ? {headers: {Authorization: `Bearer ${token}`}} : {}).then((response) => {
         this.products = response.data['results']
       })
     },
@@ -104,8 +112,11 @@ export default {
         }
       }
       this.activeSearchWord = searchWord
-      const token = await this.$auth.getTokenSilently()
-      await axios.get(url, {headers: {Authorization: `Bearer ${token}`}}).then((response) => {
+      let token = null
+      if (this.$auth.isAuthenticated) {
+        token = await this.$auth.getTokenSilently()
+      }
+      await axios.get(url, token !== null ? {headers: {Authorization: `Bearer ${token}`}} : {}).then((response) => {
         this.products = response.data['results']
       })
     },

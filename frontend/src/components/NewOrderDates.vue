@@ -30,6 +30,7 @@ export default {
   name: 'NewOrderDates',
   props: {
     orderSource: Object,
+    availabilitySource: Array,
     edit: Boolean
   },
   data () {
