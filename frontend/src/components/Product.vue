@@ -60,8 +60,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .unavailable {
     opacity: 0.7;
-    outline: 110px solid rgba(76, 75, 75, 0.1) !important;
-    outline-offset: -100px;
+    outline: 220px solid rgba(76, 75, 75, 0.1) !important;
+    outline-offset: -200px;
     overflow: hidden;
     position: relative;
 }

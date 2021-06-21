@@ -167,7 +167,6 @@ export default {
       this.clearStatus()
       // return;
       if (this.invalidName || this.invalidCategory || this.invalidQuantity || this.invalidAvailable || this.invalidPrice || this.invalidDescription || this.invalidImages) {
-        console.log('shit')
         this.error = true
         return
       }
@@ -201,6 +200,7 @@ export default {
         price: '',
         description: ''
       }
+      this.selectedImages = []
 
       this.error = false
       this.success = true
@@ -256,7 +256,7 @@ export default {
   },
   computed: {
     invalidName () {
-      return this.product.prodName === ''
+      return this.product.prodName === '' || this.product.prodName.length > 50
     },
     invalidCategory () {
       console.log(this.product.category)
@@ -272,10 +272,10 @@ export default {
       return parseFloat(this.product.price) < 0
     },
     invalidDescription () {
-      return this.product.description === ''
+      return this.product.description.length > 500
     },
     invalidImages () {
-      return false
+      return this.selectedImages === []
     }
   }
 }
