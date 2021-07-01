@@ -24,7 +24,7 @@
     "vue": "^2.5.2",
     "vue-chartjs": "^3.5.1",
     "vue-router": "^3.0.1",
-    "express":"*",
+    "express": "^4.17.1",
     "body-parser":"*"
   },
   "devDependencies": {
