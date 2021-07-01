@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-p1a%cev1kwtsmer9#1h!8@rmv!(=^%clhkhs)h1ku8vo%-e$hs
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', 'localhost:8000']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', 'localhost:8000', 'rent-4-events.herokuapp.com']
 
 
 
