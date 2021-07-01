@@ -61,6 +61,10 @@ export default {
 
           axios.post(url, clientInfo, {headers: {Authorization: `Bearer ${token}`}})
         })
+          .catch((error) => {
+            console.log(error.response.data.error)
+            axios.post(url, clientInfo, {headers: {Authorization: `Bearer ${token}`}})
+          })
       } else {
         console.log('not authenticated!')
       }
