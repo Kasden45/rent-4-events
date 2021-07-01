@@ -17,15 +17,16 @@
     "@ivanv/vue-collapse-transition": "^1.0.2",
     "auth0-js": "^9.16.0",
     "axios": "^0.21.1",
+    "body-parser": "*",
     "bootstrap": "^5.0.0-beta2",
     "chart.js": "^2.9.4",
     "eventemitter3": "^4.0.7",
+    "express": "^4.17.1",
     "jquery": "^3.6.0",
     "vue": "^2.5.2",
     "vue-chartjs": "^3.5.1",
     "vue-router": "^3.0.1",
-    "express": "^4.17.1",
-    "body-parser":"*"
+    "vue-style-loader": "^3.0.1"
   },
   "devDependencies": {
     "@auth0/auth0-spa-js": "^1.15.0",
@@ -70,7 +71,7 @@
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "^0.5.8",
     "vue-cli-plugin-fontawesome": "~0.3.1",
-    "vue-loader": "^13.3.0",
+    "vue-loader": "^13.7.3",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.5.2",
     "webpack": "^3.6.0",
